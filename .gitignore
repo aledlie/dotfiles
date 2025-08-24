@@ -1,0 +1,28 @@
+# Ignore sensitive files
+.env
+.env.local
+.env.*.local
+
+# Ignore backup files
+*.backup.*
+*~
+.*.swp
+.*.swo
+
+# Ignore OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Ignore local customizations
+*.local
+local/

@@ -1,0 +1,9 @@
+# Bash profile
+
+# Load bashrc if it exists
+[[ -f ~/.bashrc ]] && source ~/.bashrc
+
+# macOS specific: Add Homebrew to PATH
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi

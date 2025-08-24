@@ -1,0 +1,26 @@
+[user]
+	name = Alyshia Ledlie
+	email = alyshialedlie@gmail.com
+[credential]
+	helper = osxkeychain
+[core]
+	editor = vim -X
+[color]
+	ui = auto
+[init]
+	defaultBranch = main
+[push]
+	default = current
+[pull]
+	rebase = false
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	ca = commit -a
+	ps = push
+	pl = pull
+	lg = log --oneline --graph --decorate --all
+	last = log -1 HEAD
+	unstage = reset HEAD --

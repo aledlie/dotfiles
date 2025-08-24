@@ -1,0 +1,41 @@
+# Bash configuration
+
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/bashrc.pre.bash"
+
+# Set dotfiles directory
+export DOTFILES_DIR="$HOME/dotfiles"
+
+# Load common shell configuration
+[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
+
+# Bash-specific settings
+shopt -s histappend        # append to history file, don't overwrite
+shopt -s checkwinsize      # check window size after each command
+shopt -s cdspell           # autocorrect typos in path names when using cd
+
+# History settings
+HISTCONTROL=ignoredups:erasedups
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# Enable color support of ls
+if [ -x ~/.local/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+fi
+
+# Load git prompt if available
+if [[ -f "$HOME/.git-prompt.sh" ]]; then
+    source "$HOME/.git-prompt.sh"
+    # Configure git prompt
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
+fi
+
+# Load custom prompt
+[[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/bashrc.post.bash"

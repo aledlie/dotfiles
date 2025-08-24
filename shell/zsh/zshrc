@@ -1,0 +1,52 @@
+# Zsh configuration
+
+# Amazon Q pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
+
+# Set dotfiles directory
+export DOTFILES_DIR="$HOME/dotfiles"
+
+# Load common shell configuration
+[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
+
+# Zsh-specific settings
+setopt AUTO_CD              # cd by typing directory name if it's not a command
+setopt CORRECT_ALL          # autocorrect commands
+setopt AUTO_LIST            # automatically list choices on ambiguous completion
+setopt AUTO_MENU            # automatically use menu completion
+setopt ALWAYS_TO_END        # move cursor to end if word had one match
+setopt HIST_VERIFY          # show command with history expansion to user before running it
+setopt SHARE_HISTORY        # share command history data
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
+# History settings
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+# Load git prompt if available
+if [[ -f "$HOME/.git-prompt.sh" ]]; then
+    source "$HOME/.git-prompt.sh"
+    # Configure git prompt
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
+fi
+
+# Load custom prompt
+[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
+
+# Zsh completions
+autoload -Uz compinit
+compinit
+
+# Case insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
+# Amazon Q post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
