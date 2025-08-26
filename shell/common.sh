@@ -27,6 +27,14 @@ fi
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
+
+# Add python settings to path
+# Ensure Python builds can find Homebrew Tcl/Tk
+export LDFLAGS="-L$(brew --prefix tcl-tk)/lib $LDFLAGS"
+export CPPFLAGS="-I$(brew --prefix tcl-tk)/include $CPPFLAGS"
+export PKG_CONFIG_PATH="$(brew --prefix tcl-tk)/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+
 # Ruby settings (if chruby is available)
 if [[ "$PLATFORM" == "macos" ]] && [[ -f "/opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
     source /opt/homebrew/opt/chruby/share/chruby/chruby.sh

@@ -45,6 +45,9 @@ fi
 autoload -Uz compinit
 compinit
 
+#python config
+alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
+
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 

@@ -22,24 +22,18 @@ alias l='ls -CF'
 # Enable aliases to be sudo'ed
 alias sudo='sudo '
 
-# Python virtual environment
-# TODO: Make this more dynamic or use a Python version manager
-if [[ -f "$HOME/Sites/Python/.venvs/MyEnv/bin/python" ]]; then
-    alias python="$HOME/Sites/Python/.venvs/MyEnv/bin/python"
-fi
-
 # macOS specific aliases
 if [[ "$PLATFORM" == "macos" ]]; then
     # System update
     alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
-    
+
     # Applications
     alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-    
+
     # Network
     alias localip="ipconfig getifaddr en0"
     alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
-    
+
     # Network monitoring
     alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
     alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
