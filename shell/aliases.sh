@@ -54,3 +54,6 @@ alias serve='python -m http.server 8000'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+
+#Authentication
+alias doppler="doppler secrets --project integrity-studio --config dev --"
