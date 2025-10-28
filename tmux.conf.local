@@ -1,1 +1,15 @@
 # Add your local tmux config here
+#
+# Examples:
+#
+# # Change status bar colors
+# set-option -g status-style bg=blue
+#
+# # Add custom key bindings
+# bind-key r source-file ~/.tmux.conf \; display "Reloaded!"
+#
+# # Adjust pane border colors
+# set-option -g pane-active-border-style fg=green
+#
+# # Custom plugins
+# set -g @plugin 'tmux-plugins/tmux-resurrect'

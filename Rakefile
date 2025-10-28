@@ -147,10 +147,12 @@ namespace :install do
     brew_install 'ctags'
   end
 
-  desc 'Install reattach-to-user-namespace'
+  # NOTE: reattach-to-user-namespace is no longer needed on macOS 10.12+ (Sierra and later)
+  # Keeping this task for backwards compatibility but it's a no-op
+  desc 'Install reattach-to-user-namespace (deprecated on modern macOS)'
   task :reattach_to_user_namespace do
-    step 'reattach-to-user-namespace'
-    brew_install 'reattach-to-user-namespace'
+    step 'reattach-to-user-namespace (skipped - not needed on macOS 10.12+)'
+    puts "Skipping reattach-to-user-namespace - not needed on modern macOS"
   end
 
   desc 'Install tmux'
