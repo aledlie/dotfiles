@@ -1,3 +1,6 @@
 vim/.netrwhist
 vim/autoload/
 vim/pack/
+
+# Repomix output files
+repomix-output.xml
