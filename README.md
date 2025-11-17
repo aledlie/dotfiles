@@ -3,12 +3,34 @@
 Config files for vim and tmux, lovingly tended by a small subculture of
 peace-loving hippies. Built for Mac OS X.
 
+## Directory Structure
+
+```
+.
+├── .git/
+├── iterm2-colors-solarized/    # Solarized color schemes for iTerm2
+├── vim/                        # Vim configuration and plugins
+│   ├── autoload/              # Auto-generated plugin files (gitignored)
+│   ├── bundle/                # Vundle-managed plugins
+│   └── snippets/              # Code snippets
+├── Rakefile                   # Installation and management tasks
+├── tmux.conf                  # tmux configuration
+├── tmux.conf.local           # User-specific tmux customizations
+├── vimrc                      # Vim configuration
+├── vimrc.bundles             # Vim plugin definitions
+├── vimrc.bundles.local       # User-specific plugin additions
+└── vimrc.local               # User-specific vim customizations
+```
+
 ## What's in it?
 
 * [MacVim](https://github.com/macvim-dev/macvim) (independent or for use in a terminal)
 * [iTerm 2](https://www.iterm2.com/)
 * [tmux](https://tmux.github.io/)
 * Awesome syntax highlighting with the [Solarized color scheme](https://ethanschoonover.com/solarized/)
+* 43 curated Vim plugins for enhanced editing (see Plugin Summary below)
+* Smart vim-tmux navigation with seamless pane switching
+* Modern macOS clipboard integration
 * Want to know more? [Fly Vim, First Class](https://developer.squareup.com/blog/fly-vim-first-class)
 
 ### vim
@@ -95,6 +117,40 @@ covers our bases and makes sure you're eligible to contribute.
 When you have a change you'd like to see in the master repository, [send a pull
 request](https://github.com/square/maximum-awesome/pulls). Before we merge your
 request, we'll make sure you're in the list of people who have signed a CLA.
+
+## Recent Improvements
+
+### Modernization Updates
+* **Smart vim-tmux navigation** - Seamless C-h/j/k/l navigation between vim splits and tmux panes using vim-tmux-navigator
+* **Modern macOS clipboard** - Removed obsolete `reattach-to-user-namespace`, now using native `pbcopy`
+* **Clean git status** - Added vim/autoload/ and vim/pack/ to .gitignore
+* **Enhanced .local files** - Added helpful template comments with configuration examples
+
+### Configuration Testing
+```bash
+# Reload tmux configuration
+tmux source-file ~/.tmux.conf
+
+# Test vim-tmux navigation: Open vim in tmux, create splits, use C-h/j/k/l
+
+# Test clipboard: Enter copy mode (prefix + [), select with v, copy with y
+```
+
+## Plugin Summary
+
+### Essential Plugins (Keep)
+* **Git**: vim-gitgutter, vim-fugitive
+* **Navigation**: ctrlp.vim (consider fzf.vim upgrade), NERDTree, ag.vim
+* **Editing**: vim-commentary, vim-surround, vim-repeat, vim-unimpaired
+* **Languages**: vim-ruby, vim-rails, vim-javascript, typescript-vim (if actively used)
+
+### Optimization Opportunities
+* **Replace syntastic** with ALE for async linting
+* **Replace ctrlp** with fzf.vim for faster fuzzy finding
+* **Remove outdated**: jshint.vim (use ESLint), vim-coffee-script (deprecated), vim-pastie (defunct), matchit.zip (built into Vim 8+)
+* **Conditional removal**: 7 Rails plugins if not doing Rails development
+
+**Potential savings**: Reduce from 43 to ~25-30 plugins (30-50% faster startup)
 
 ## Acknowledgements
 

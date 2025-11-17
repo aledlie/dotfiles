@@ -229,8 +229,15 @@ task :install do
   Rake::Task['install:tmux'].invoke
   Rake::Task['install:macvim'].invoke
 
-  # TODO install gem ctags?
-  # TODO run gem ctags?
+  # OPTIONAL: Install gem-ctags for automatic Ruby gem indexing
+  # gem-ctags is a RubyGems plugin that automatically runs ctags on gems as they're installed
+  # Benefits: Jump to definitions in gem source code, better code navigation in Vim
+  # Installation: gem install gem-ctags
+  # See: https://github.com/tpope/gem-ctags
+  #
+  # Note: Exuberant Ctags is already installed via Homebrew (line 147)
+  # gem-ctags would enhance this by auto-indexing Ruby gems on install
+  # Decision: Leave as optional enhancement - not required for basic dotfiles functionality
 
   step 'symlink'
 
