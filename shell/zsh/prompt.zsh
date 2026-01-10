@@ -40,6 +40,3 @@ PROMPT='${user_color}%n${reset_color}@${host_color}%m${reset_color}:${dir_color}
 
 # Right prompt with timestamp (optional)
 # RPROMPT='%{$fg[grey]%}%D{%H:%M:%S}%{$reset_color%}'
-[[ -d /bin ]] && export PATH=/bin:/Users/alyshialedlie/.gem/ruby/3.4.4/bin:/Users/alyshialedlie/.rubies/ruby-3.4.4/lib/ruby/gems/3.4.0/bin:/Users/alyshialedlie/.rubies/ruby-3.4.4/bin:/Users/alyshialedlie/.local/bin:/opt/homebrew/sbin:/opt/homebrew/bin:/Users/alyshialedlie/.local/bin:/opt/homebrew/sbin:/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/opt/X11/bin:/opt/homebrew/bin:/Users/alyshialedlie/.local/bin
-export PYENV_ROOT=/Users/alyshialedlie/.pyenv
-export PYENV_ROOT=/Users/alyshialedlie/.pyenv

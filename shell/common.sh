@@ -35,12 +35,8 @@ export CPPFLAGS="-I$(brew --prefix tcl-tk)/include $CPPFLAGS"
 export PKG_CONFIG_PATH="$(brew --prefix tcl-tk)/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 
-# Ruby settings (if chruby is available)
-if [[ "$PLATFORM" == "macos" ]] && [[ -f "/opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
-    source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-    source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-    chruby ruby-3.4.4 2>/dev/null || true
-fi
+# Ruby settings are configured in ~/.zshrc
+# (chruby is loaded there with auto-switching enabled)
 
 # Load additional modules
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
