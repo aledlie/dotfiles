@@ -1,11 +1,7 @@
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
 # Zsh configuration
-
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
-
-# Disable malloc stack logging warnings
-unset MallocStackLogging
-
 # Set dotfiles directory
 export DOTFILES_DIR="$HOME/dotfiles"
 
@@ -48,11 +44,75 @@ fi
 autoload -Uz compinit
 compinit
 
-#python config
+# python config
 alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
 
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-# Amazon Q post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
+export GOPATH="$HOME/code-env/go"
+export PATH="$GOPATH/bin:$PATH"
+
+# Added by dev-env-organizer 2025-10-22
+export PYENV_ROOT="$HOME/code-env/python/pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+# Added by dev-env-organizer 2025-10-22
+export NPM_CONFIG_PREFIX="$HOME/code-env/node"
+export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+
+# Rust configuration
+export RUSTUP_HOME="$HOME/code-env/rust/rustup"
+export CARGO_HOME="$HOME/code-env/rust/cargo"
+export PATH="$CARGO_HOME/bin:$PATH"
+
+# Ruby configuration via chruby
+export BUNDLE_USER_CONFIG="$HOME/code-env/ruby/bundle/config"
+
+# chruby configuration - auto-switch Ruby versions
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+
+# Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
+chruby ruby-3.4.4
+
+export TAILSCALE_API_KEY="tskey-api-kngMa1VVM511CNTRL-vRro3kzeizQajBPKWxNGzQ4E4WN5qgxJ"
+export TAILSCALE_TAILNET="TuyPEBage421CNTRL"
+eval "$(direnv hook zsh)"
+
+# Claude Code Aliases
+[ -f ~/.claude/shell-aliases.sh ] && source ~/.claude/shell-aliases.sh
+
+# ============================================================================
+# Claude Code Environment Variables
+# ============================================================================
+# Global environment variables for Claude Code (loaded in all shells)
+
+# Claude infrastructure paths
+export CLAUDE_CONFIG_DIR="$HOME/.claude"
+export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
+export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
+export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
+export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
+export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
+
+# Dev docs directories
+export CLAUDE_PROJECT_DIR="$HOME/dev"
+export CLAUDE_ACTIVE_DOCS="$CLAUDE_PROJECT_DIR/active"
+export CLAUDE_ARCHIVE_DOCS="$CLAUDE_PROJECT_DIR/archive"
+
+# Add Claude scripts to PATH
+export PATH="$CLAUDE_SCRIPTS_DIR:$PATH"
+
+# Dart/Flutter pub cache (Flutter installed via Homebrew)
+export PATH="$PATH:$HOME/.pub-cache/bin"
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh ]] && . /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
+
