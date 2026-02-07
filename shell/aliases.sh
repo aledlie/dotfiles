@@ -1,5 +1,32 @@
 # Shell aliases
 
+# Doppler project names
+export DOPPLER_PROJECT_STUDIO="integrity-studio"
+export DOPPLER_PROJECT_ANALYTICS="analyticsbot"
+export DOPPLER_PROJECT_TAILSCALE="tailscale-mcp"
+export DOPPLER_PROJECT_PERSONAL="personal-info"
+export DOPPLER_PROJECT_ACCOUNTING="accounting"
+export DOPPLER_PROJECT_ATX="atx-movement"
+export DOPPLER_PROJECT_BOTTLENECK="bottleneck"
+export DOPPLER_PROJECT_FINANCIAL="financial-hub"
+export DOPPLER_PROJECT_LEGAL="legal"
+export DOPPLER_PROJECT_PROPERTY="property"
+export DOPPLER_CONFIG_DEFAULT="dev"
+
+# Doppler secret key names (project: tailscale-mcp)
+export DOPPLER_KEY_TAILSCALE_API="TAILSCALE_API_KEY"
+export DOPPLER_KEY_TAILSCALE_TAILNET="TAILSCALE_TAILNET"
+
+# Doppler secret key names (project: analyticsbot)
+export DOPPLER_KEY_SIGNOZ_INGESTION="SIGNOZ_INGESTION_KEY"
+export DOPPLER_KEY_SIGNOZ_API="SIGNOZ_API_KEY"
+export DOPPLER_KEY_LANGTRACE="LANGTRACE_API_KEY"
+export DOPPLER_KEY_META_ACCESS="META_ACCESS_TOKEN"
+export DOPPLER_KEY_GOOGLE_EMAIL="GOOGLE_CLIENT_EMAIL"
+export DOPPLER_KEY_GOOGLE_PRIVKEY="GOOGLE_PRIVATE_KEY"
+export DOPPLER_KEY_GA_PROPERTY="GA_PROPERTY_ID"
+export DOPPLER_KEY_RESEND="RESEND_API_KEY"
+
 # Platform-specific color flags
 if [[ "$PLATFORM" == "macos" ]]; then
     colorflag="-G"

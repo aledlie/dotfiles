@@ -77,8 +77,8 @@ source /opt/homebrew/opt/chruby/share/chruby/auto.sh
 # Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
 chruby ruby-3.4.4
 
-export TAILSCALE_API_KEY="tskey-api-kngMa1VVM511CNTRL-vRro3kzeizQajBPKWxNGzQ4E4WN5qgxJ"
-export TAILSCALE_TAILNET="TuyPEBage421CNTRL"
+export TAILSCALE_API_KEY="$(doppler secrets get "$DOPPLER_KEY_TAILSCALE_API" --project "$DOPPLER_PROJECT_TAILSCALE" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
+export TAILSCALE_TAILNET="$(doppler secrets get "$DOPPLER_KEY_TAILSCALE_TAILNET" --project "$DOPPLER_PROJECT_TAILSCALE" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
 eval "$(direnv hook zsh)"
 
 # Claude Code Aliases
@@ -105,6 +105,14 @@ export CLAUDE_ARCHIVE_DOCS="$CLAUDE_PROJECT_DIR/archive"
 # Add Claude scripts to PATH
 export PATH="$CLAUDE_SCRIPTS_DIR:$PATH"
 
+# OpenTelemetry / SigNoz (global for hooks in any directory)
+export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://ingest.us.signoz.cloud"
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_SERVICE_NAME="claude-code-hooks"
+export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
+export SIGNOZ_INGESTION_KEY="$(doppler secrets get "$DOPPLER_KEY_SIGNOZ_INGESTION" --project "$DOPPLER_PROJECT_ANALYTICS" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
+
 # Dart/Flutter pub cache (Flutter installed via Homebrew)
 export PATH="$PATH:$HOME/.pub-cache/bin"
 
@@ -116,3 +124,9 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 [[ -f /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh ]] && . /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
+
+# MCP server quick toggle
+alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
+
+# Sync SigNoz key from Doppler to Claude Code settings
+~/.claude/scripts/sync-signoz-key.sh 2>/dev/null || true

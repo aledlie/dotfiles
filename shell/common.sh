@@ -43,7 +43,6 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 [[ -f "$DOTFILES_DIR/shell/aliases.sh" ]] && source "$DOTFILES_DIR/shell/aliases.sh"
 [[ -f "$DOTFILES_DIR/shell/functions.sh" ]] && source "$DOTFILES_DIR/shell/functions.sh"
 
-# Load environment variables (if file exists and is readable)
-if [[ -f "$HOME/.env" ]] && [[ -r "$HOME/.env" ]]; then
-    source "$HOME/.env"
-fi
+# Secrets are managed via Doppler (https://doppler.com)
+# Use: doppler secrets get <KEY> --project <project> --config dev --plain
+# Or:  doppler run --project <project> --config dev -- <command>
