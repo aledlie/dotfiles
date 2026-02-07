@@ -40,7 +40,7 @@ backup_file() {
     local file="$1"
     if [ -f "$HOME/$file" ] || [ -L "$HOME/$file" ]; then
         print_warning "Backing up existing $file"
-        mv "$HOME/$file" "$BACKUP_DIR/"
+        mv -f "$HOME/$file" "$BACKUP_DIR/"
     fi
 }
 
