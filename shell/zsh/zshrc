@@ -1,6 +1,9 @@
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
+# Suppress macOS MallocStackLogging diagnostic noise (Kiro pre-block sets this)
+unset MallocStackLogging MallocStackLoggingDirectory 2>/dev/null
+
 # Zsh configuration
 # Set dotfiles directory
 export DOTFILES_DIR="$HOME/dotfiles"
