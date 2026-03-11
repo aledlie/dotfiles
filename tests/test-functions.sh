@@ -68,7 +68,7 @@ _backup_dir=$(mktemp -d)
 test_file="$_backup_dir/testfile"
 echo "test content" > "$test_file"
 backup "$test_file"
-backup_file=$(ls "$test_file".backup.* 2>/dev/null | head -1)
+backup_file=$(printf '%s\n' "$test_file".backup.* | head -1)
 _check "backup creates timestamped copy" '[ -n "$backup_file" ] && [ -f "$backup_file" ]'
 _check "backup preserves content" 'diff -q "$test_file" "$backup_file"'
 rm -rf "$_backup_dir"

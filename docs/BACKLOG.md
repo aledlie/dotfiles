@@ -50,7 +50,7 @@ Line 56 checks only `-f` (regular files), skipping directories and symlinks. Use
 **Priority**: P3 | **Source**: code-review session
 Line 68 checks `alias ll` inside non-interactive bash script where aliases are disabled by default. Add `shopt -s expand_aliases` in generated script header, or use `type ll` which works in both bash/zsh. -- `tests/test-common-env.sh:68`
 
-#### M4: Replace ls glob with safer pattern matching in test-functions.sh
+#### M4: Replace ls glob with safer pattern matching in test-functions.sh ✅ Done
 **Priority**: P3 | **Source**: code-review session
 Line 75 uses `ls "$test_file".backup.* | head -1` for fragile pattern matching. Use `$(echo "$test_file".backup.* | tr ' ' '\n' | head -1)` or direct glob for robustness. -- `tests/test-functions.sh:75`
 
