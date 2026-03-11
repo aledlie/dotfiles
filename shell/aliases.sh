@@ -15,8 +15,8 @@ export DOPPLER_CONFIG_PRODUCTION="production"
 # Sentry org-level values
 export SENTRY_DISPLAY_NAME="integrity"
 export SENTRY_ORG_SLUG="integrity-jq"
-export SENTRT_ORG="integrity-jq"
-export SENTRT_ORG_ID=4510317437124608
+export SENTRY_ORG="integrity-jq"
+export SENTRY_ORG_ID=4510317437124608
 # Global config values for OTEL-based obtool-ingest
 export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
 export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
@@ -144,7 +144,6 @@ export TCAD_WORKER_URL="$(doppler_get "TCAD_WORKER_URL")"
 # Cloudflare
 export CLOUDFLARE_KV_NAMESPACE_ID="$(doppler_get "CLOUDFLARE_KV_NAMESPACE_ID")"
 export CLOUDFLARE_WORKER_TOKEN="$(doppler_get "CLOUDFLARE_WORKER_TOKEN")"
-export TCAD_WORKER_URL="$(doppler_get "TCAD_WORKER_URL")"
 export DEV_WORKER_URL="$(doppler_get "DEV_WORKER_URL")"
 export CLOUDFLARE_ACCOUNT_ID="$(doppler_get "CLOUDFLARE_ACCOUNT_ID")"
 export CLOUDFLARE_API_TOKEN="$(doppler_get "CLOUDFLARE_API_TOKEN")"
