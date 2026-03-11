@@ -9,6 +9,11 @@ FAIL=0
 TIMEOUT=30
 PROBE='export DOTFILES_DIR="$HOME/dotfiles"; source "$DOTFILES_DIR/shell/common.sh"'
 
+# Global temp file tracked for cleanup on exit/signal
+_TMPFILE=""
+_cleanup() { rm -f "$_TMPFILE"; }
+trap '_cleanup' EXIT INT TERM
+
 # Run all checks for a shell in a single invocation.
 # Each assert previously spawned a new process that sourced common.sh,
 # triggering a Doppler network call every time. Batching into one invocation
@@ -22,13 +27,12 @@ run_shell_checks() {
     alias_check_cmd='whence -w ll | grep -q alias'
   else
     fn_check_cmd="declare -f"
-    alias_check_cmd='compgen -a | grep -qx ll'
+    alias_check_cmd='alias ll'
   fi
 
-  local tmpfile
-  tmpfile=$(mktemp /tmp/shell-test-XXXXXX.sh)
+  _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/shell-test-XXXXXX.sh")
 
-  cat > "$tmpfile" <<SCRIPT
+  cat > "$_TMPFILE" <<SCRIPT
 $PROBE
 
 _check() {
@@ -52,8 +56,8 @@ _check "aliases.sh defines ll alias"                '$alias_check_cmd'
 SCRIPT
 
   local output total=0
-  output=$(timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
-  rm -f "$tmpfile"
+  output=$(timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
+  rm -f "$_TMPFILE"; _TMPFILE=""
 
   while IFS= read -r line; do
     [[ -n "$line" ]] || continue
