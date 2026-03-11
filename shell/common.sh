@@ -35,9 +35,12 @@ unset NPM_CONFIG_PREFIX
 unset npm_config_prefix
 export NVM_DIR="$HOME/.nvm"
 if command -v brew >/dev/null 2>&1; then
-  _nvm_sh="$(brew --prefix nvm 2>/dev/null)/nvm.sh"
-  [ -s "$_nvm_sh" ] && . "$_nvm_sh"
-  unset _nvm_sh
+  _nvm_prefix="$(brew --prefix nvm 2>/dev/null)"
+  if [[ -n "$_nvm_prefix" ]]; then
+    _nvm_sh="${_nvm_prefix}/nvm.sh"
+    [ -s "$_nvm_sh" ] && . "$_nvm_sh"
+  fi
+  unset _nvm_prefix _nvm_sh
 fi
 
 # custom GO setup
@@ -58,7 +61,9 @@ if [[ "$PLATFORM" == "macos" ]]; then
   [[ -f "$_chruby_sh" ]] && source "$_chruby_sh"
   [[ -f "$_chruby_auto" ]] && source "$_chruby_auto"
   # Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
-  command -v chruby >/dev/null 2>&1 && chruby ruby-3.4.4 2>/dev/null || true
+  if command -v chruby >/dev/null 2>&1; then
+    chruby ruby-3.4.4 2>/dev/null || echo "[dotfiles] warning: ruby-3.4.4 not found, skipping chruby" >&2
+  fi
   unset _chruby_sh _chruby_auto
 fi
 
@@ -108,7 +113,7 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # Secrets are managed via Doppler (https://doppler.com) and can be accessed via doppler_get [key_name]
 # to avoid reads every time, load the default values (--project integrity-studio --config dev) into cache
-if command -v doppler >/dev/null 2>&1 && declare -F load_doppler_cache >/dev/null 2>&1; then
+if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
   load_doppler_cache
 fi
 # To change doppler projects or configs: load_doppler_cache [project] [config]

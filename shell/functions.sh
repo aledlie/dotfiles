@@ -87,12 +87,12 @@ doppler_cache_debug() {
 # Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {
     local tmpfile
-    tmpfile=$(mktemp)
+    tmpfile=$(mktemp) || return 1
+    trap 'rm -f "$tmpfile"' RETURN
     du -shx * .[a-zA-Z0-9_]* 2>/dev/null | \
     grep -E '^ *[0-9.]*[MG]' | sort -n > "$tmpfile"
     grep -E '^ *[0-9.]*M' "$tmpfile"
     grep -E '^ *[0-9.]*G' "$tmpfile"
-    rm -f "$tmpfile"
 }
 
 # Create directory and cd into it
@@ -136,10 +136,6 @@ backup() {
 weather() {
     local city="${1:-}"
     if [ -n "$city" ]; then
-        if [[ "$city" =~ [^a-zA-Z0-9\ ,+\-] ]]; then
-            echo "Invalid city name" >&2
-            return 1
-        fi
         curl -s "wttr.in/${city// /+}"
     else
         curl -s "wttr.in"
