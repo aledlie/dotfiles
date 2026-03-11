@@ -45,17 +45,17 @@ _check "PATH contains pub-cache/bin" 'echo "$PATH" | grep -qF ".pub-cache/bin"'
 
 # Homebrew (macOS)
 if [ "$PLATFORM" = "macos" ]; then
-  _check "PATH contains homebrew" 'echo "$PATH" | grep -q "/opt/homebrew"'
+  _check "PATH contains homebrew" 'echo "$PATH" | grep -qF "/opt/homebrew"'
 fi
 
 # Go
 _check "GOPATH is set" '[ -n "$GOPATH" ]'
-_check "PATH contains GOPATH/bin" 'echo "$PATH" | grep -q "$GOPATH/bin"'
+_check "PATH contains GOPATH/bin" 'echo "$PATH" | grep -qF "$GOPATH/bin"'
 
 # Rust
 _check "CARGO_HOME is set" '[ -n "$CARGO_HOME" ]'
 _check "RUSTUP_HOME is set" '[ -n "$RUSTUP_HOME" ]'
-_check "PATH contains CARGO_HOME/bin" 'echo "$PATH" | grep -q "$CARGO_HOME/bin"'
+_check "PATH contains CARGO_HOME/bin" 'echo "$PATH" | grep -qF "$CARGO_HOME/bin"'
 
 # Python/pyenv
 _check "PYENV_ROOT is set" '[ -n "$PYENV_ROOT" ]'
