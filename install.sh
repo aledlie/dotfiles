@@ -49,7 +49,7 @@ create_symlink() {
     local source="$1"
     local target="$2"
 
-    if [ -f "$DOTFILES_DIR/$source" ]; then
+    if [ -e "$DOTFILES_DIR/$source" ] || [ -L "$DOTFILES_DIR/$source" ]; then
         backup_file "$target"
         ln -sf "$DOTFILES_DIR/$source" "$HOME/$target"
         print_status "Linked $source -> ~/$target"
