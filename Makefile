@@ -46,11 +46,13 @@ test: test-syntax test-suite
 
 test-syntax:
 	@echo "=== Syntax checks ==="
-	@bash -n shell/bash/bashrc && echo "  ✓ bashrc" || echo "  ✗ bashrc"
-	@bash -n shell/common.sh && echo "  ✓ common.sh" || echo "  ✗ common.sh"
-	@bash -n shell/functions.sh && echo "  ✓ functions.sh" || echo "  ✗ functions.sh"
-	@bash -n shell/aliases.sh && echo "  ✓ aliases.sh" || echo "  ✗ aliases.sh"
-	@zsh -n shell/zsh/zshrc && echo "  ✓ zshrc" || echo "  ✗ zshrc"
+	@failed=0; \
+	bash -n shell/bash/bashrc && echo "  ✓ bashrc" || { echo "  ✗ bashrc"; failed=1; }; \
+	bash -n shell/common.sh && echo "  ✓ common.sh" || { echo "  ✗ common.sh"; failed=1; }; \
+	bash -n shell/functions.sh && echo "  ✓ functions.sh" || { echo "  ✗ functions.sh"; failed=1; }; \
+	bash -n shell/aliases.sh && echo "  ✓ aliases.sh" || { echo "  ✗ aliases.sh"; failed=1; }; \
+	zsh -n shell/zsh/zshrc && echo "  ✓ zshrc" || { echo "  ✗ zshrc"; failed=1; }; \
+	exit $$failed
 
 test-suite:
 	@echo ""
