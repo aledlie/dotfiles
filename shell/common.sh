@@ -81,16 +81,6 @@ fi
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
 
-if command -v pyenv >/dev/null 2>&1; then
-  if [ -n "$ZSH_VERSION" ]; then
-    eval "$(pyenv init - zsh)"
-  elif [ -n "$BASH_VERSION" ]; then
-    eval "$(pyenv init - bash)"
-  else
-    eval "$(pyenv init -)"
-  fi
-fi
-
 # Platform-specific color flags
 if [[ "$PLATFORM" == "macos" ]]; then
     export colorflag="-G"

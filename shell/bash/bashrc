@@ -8,6 +8,17 @@ export DOTFILES_DIR="$HOME/dotfiles"
 # Load common shell configuration
 [[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
 
+# Initialize pyenv for bash (kept shell-specific).
+if command -v pyenv >/dev/null 2>&1; then
+    _pyenv_init_cmd="$(pyenv init - bash)"
+    # Avoid startup warnings when shims are not writable.
+    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | sed '/^command pyenv rehash$/d')"
+    fi
+    eval "$_pyenv_init_cmd"
+    unset _pyenv_init_cmd
+fi
+
 # Bash-specific settings
 shopt -s histappend        # append to history file, don't overwrite
 shopt -s checkwinsize      # check window size after each command
