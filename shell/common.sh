@@ -29,8 +29,8 @@ export HISTFILESIZE=2000
 
 # Add Homebrew to PATH (macOS)
 if [[ "$PLATFORM" == "macos" ]]; then
-    _path_prepend "/opt/homebrew/sbin"
     _path_prepend "/opt/homebrew/bin"
+    _path_prepend "/opt/homebrew/sbin"
 fi
 
 #add local bin to PATH
