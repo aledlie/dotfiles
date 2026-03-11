@@ -57,10 +57,11 @@ _check "doppler_cache_info shows secrets count" 'echo "$info" | grep -q "Secrets
 # --- mkcd behavior ---
 _mkcd_parent=$(mktemp -d)
 test_dir="$_mkcd_parent/mkcd_test"
-mkcd "$test_dir"
-_check "mkcd creates directory" '[ -d "$test_dir" ]'
-_check "mkcd changes to directory" '[ "$(pwd)" = "$test_dir" ]'
-cd /tmp
+(
+  mkcd "$test_dir"
+  _check "mkcd creates directory" '[ -d "$test_dir" ]'
+  _check "mkcd changes to directory" '[ "$(pwd)" = "$test_dir" ]'
+)
 rm -rf "$_mkcd_parent"
 
 # --- backup behavior ---
