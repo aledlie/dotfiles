@@ -16,15 +16,15 @@ NC='\033[0m' # No Color
 
 # Print colored output
 print_status() {
-    echo -e "${GREEN}[INFO]${NC} $1"
+    printf '%b\n' "${GREEN}[INFO]${NC} $1"
 }
 
 print_warning() {
-    echo -e "${YELLOW}[WARN]${NC} $1" >&2
+    printf '%b\n' "${YELLOW}[WARN]${NC} $1" >&2
 }
 
 print_error() {
-    echo -e "${RED}[ERROR]${NC} $1" >&2
+    printf '%b\n' "${RED}[ERROR]${NC} $1" >&2
 }
 
 # Create backup directory
