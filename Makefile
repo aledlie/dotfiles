@@ -1,6 +1,6 @@
 # Dotfiles Makefile
 
-.PHONY: help install backup clean test
+.PHONY: help install backup clean test test-syntax test-suite
 
 # Default target
 help:
@@ -42,9 +42,23 @@ clean:
 	fi
 
 # Test shell configurations
-test:
-	@echo "Testing shell configurations..."
-	@bash -n shell/bash/bashrc && echo "✓ bashrc syntax OK" || echo "✗ bashrc syntax error"
-	@zsh -n shell/zsh/zshrc && echo "✓ zshrc syntax OK" || echo "✗ zshrc syntax error"
-	@echo "Testing function loading..."
-	@bash -c "source shell/common.sh && echo '✓ common.sh loaded successfully'" || echo "✗ common.sh failed to load"
+test: test-syntax test-suite
+
+test-syntax:
+	@echo "=== Syntax checks ==="
+	@bash -n shell/bash/bashrc && echo "  ✓ bashrc" || echo "  ✗ bashrc"
+	@bash -n shell/common.sh && echo "  ✓ common.sh" || echo "  ✗ common.sh"
+	@bash -n shell/functions.sh && echo "  ✓ functions.sh" || echo "  ✗ functions.sh"
+	@bash -n shell/aliases.sh && echo "  ✓ aliases.sh" || echo "  ✗ aliases.sh"
+	@zsh -n shell/zsh/zshrc && echo "  ✓ zshrc" || echo "  ✗ zshrc"
+
+test-suite:
+	@echo ""
+	@if ! ls tests/test-*.sh >/dev/null 2>&1; then \
+		echo "  No test files found in tests/"; exit 0; \
+	fi; \
+	for t in tests/test-*.sh; do \
+		echo "--- Running $$t ---"; \
+		bash "$$t" || exit 1; \
+		echo ""; \
+	done
