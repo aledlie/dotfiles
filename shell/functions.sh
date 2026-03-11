@@ -136,6 +136,10 @@ backup() {
 weather() {
     local city="${1:-}"
     if [ -n "$city" ]; then
+        if [[ "$city" =~ [^[:alpha:][:digit:]\ ,.\-] ]]; then
+            echo "[dotfiles] weather: invalid city name" >&2
+            return 1
+        fi
         curl -s "wttr.in/${city// /+}"
     else
         curl -s "wttr.in"
