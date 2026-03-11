@@ -93,7 +93,7 @@ fi
 
 # Platform-specific color flags
 if [[ "$PLATFORM" == "macos" ]]; then
-    colorflag="-G"
+    export colorflag="-G"
     # Use GNU ls if available (installed via brew install coreutils)
     if command -v gls >/dev/null 2>&1; then
         alias ls='gls --color=auto'
@@ -101,7 +101,7 @@ if [[ "$PLATFORM" == "macos" ]]; then
         alias ls='ls -G'
     fi
 else
-    colorflag="--color=auto"
+    export colorflag="--color=auto"
     alias ls='ls --color=auto'
 fi
 
