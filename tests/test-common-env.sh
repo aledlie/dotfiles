@@ -8,16 +8,13 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
-_TMPFILE=""
-_cleanup() { rm -f "$_TMPFILE"; }
-trap '_cleanup' EXIT INT TERM
-
 run_env_checks() {
   local sh="$1"
+  local tmpfile
 
-  _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/env-test-XXXXXX.sh")
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/env-test-XXXXXX.sh")
 
-  cat > "$_TMPFILE" <<'SCRIPT'
+  cat > "$tmpfile" <<'SCRIPT'
 export DOTFILES_DIR="$HOME/dotfiles"
 source "$DOTFILES_DIR/shell/common.sh"
 
@@ -69,8 +66,8 @@ _check "aliases.sh loaded (ll alias exists)" 'alias ll'
 SCRIPT
 
   local output total=0
-  output=$(timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
-  rm -f "$_TMPFILE"; _TMPFILE=""
+  output=$(timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  rm -f "$tmpfile"
 
   while IFS= read -r line; do
     [[ -n "$line" ]] || continue

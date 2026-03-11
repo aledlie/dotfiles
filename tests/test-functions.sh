@@ -8,23 +8,19 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
-_TMPFILE=""
-_cleanup() { rm -f "$_TMPFILE"; }
-trap '_cleanup' EXIT INT TERM
-
 run_fn_checks() {
   local sh="$1"
-  local fn_exists
+  local fn_exists tmpfile
   if [ "$sh" = "zsh" ]; then
     fn_exists="whence"
   else
     fn_exists="declare -f"
   fi
 
-  _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/fn-test-XXXXXX.sh")
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/fn-test-XXXXXX.sh")
 
   # Pass shell-specific command via env var so heredoc can stay single-quoted
-  FN_EXISTS="$fn_exists" cat > "$_TMPFILE" <<'SCRIPT'
+  cat > "$tmpfile" <<'SCRIPT'
 export DOTFILES_DIR="$HOME/dotfiles"
 source "$DOTFILES_DIR/shell/common.sh"
 
@@ -88,8 +84,8 @@ _check "extract reports error for missing file" 'echo "$result" | grep -q "not a
 SCRIPT
 
   local output total=0
-  output=$(FN_EXISTS="$fn_exists" timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
-  rm -f "$_TMPFILE"; _TMPFILE=""
+  output=$(FN_EXISTS="$fn_exists" timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  rm -f "$tmpfile"
 
   while IFS= read -r line; do
     [[ -n "$line" ]] || continue

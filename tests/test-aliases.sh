@@ -8,23 +8,19 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
-_TMPFILE=""
-_cleanup() { rm -f "$_TMPFILE"; }
-trap '_cleanup' EXIT INT TERM
-
 run_alias_checks() {
   local sh="$1"
-  local alias_check_cmd
+  local alias_check_cmd tmpfile
   if [ "$sh" = "zsh" ]; then
     alias_check_cmd="whence -w"
   else
     alias_check_cmd="alias"
   fi
 
-  _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/alias-test-XXXXXX.sh")
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/alias-test-XXXXXX.sh")
 
   # Pass shell-specific command via env var so heredoc stays single-quoted
-  cat > "$_TMPFILE" <<'SCRIPT'
+  cat > "$tmpfile" <<'SCRIPT'
 export DOTFILES_DIR="$HOME/dotfiles"
 source "$DOTFILES_DIR/shell/common.sh"
 
@@ -69,8 +65,8 @@ fi
 SCRIPT
 
   local output total=0
-  output=$(ALIAS_CHECK="$alias_check_cmd" timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
-  rm -f "$_TMPFILE"; _TMPFILE=""
+  output=$(ALIAS_CHECK="$alias_check_cmd" timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  rm -f "$tmpfile"
 
   while IFS= read -r line; do
     [[ -n "$line" ]] || continue

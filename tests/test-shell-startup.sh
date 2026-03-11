@@ -8,18 +8,13 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
-# Global temp file tracked for cleanup on exit/signal
-_TMPFILE=""
-_cleanup() { rm -f "$_TMPFILE"; }
-trap '_cleanup' EXIT INT TERM
-
 # Run all checks for a shell in a single invocation.
 # Each assert previously spawned a new process that sourced common.sh,
 # triggering a Doppler network call every time. Batching into one invocation
 # means load_doppler_cache runs once per shell type instead of once per check.
 run_shell_checks() {
   local sh="$1"
-  local fn_check_cmd alias_check_cmd
+  local fn_check_cmd alias_check_cmd tmpfile
 
   if [ "$sh" = "zsh" ]; then
     fn_check_cmd="whence"
@@ -29,12 +24,12 @@ run_shell_checks() {
     alias_check_cmd='alias ll'
   fi
 
-  _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/shell-test-XXXXXX.sh")
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/shell-test-XXXXXX.sh")
 
   # Write the probe (source line) separately to avoid unquoted heredoc expansion
-  printf 'export DOTFILES_DIR="$HOME/dotfiles"\nsource "$DOTFILES_DIR/shell/common.sh"\n\n' > "$_TMPFILE"
+  printf 'export DOTFILES_DIR="$HOME/dotfiles"\nsource "$DOTFILES_DIR/shell/common.sh"\n\n' > "$tmpfile"
 
-  cat >> "$_TMPFILE" <<'SCRIPT'
+  cat >> "$tmpfile" <<'SCRIPT'
 _check() {
   local desc="$1" cmd="$2"
   if eval "$cmd" >/dev/null 2>&1; then
@@ -46,7 +41,7 @@ _check() {
 SCRIPT
 
   # Append shell-specific checks (these need variable interpolation)
-  cat >> "$_TMPFILE" <<CHECKS
+  cat >> "$tmpfile" <<CHECKS
 _check "common.sh sets PLATFORM"                    '[ -n "\$PLATFORM" ]'
 _check "functions.sh defines load_doppler_cache"    '$fn_check_cmd load_doppler_cache'
 _check "functions.sh defines doppler_get"           '$fn_check_cmd doppler_get'
@@ -59,8 +54,8 @@ _check "aliases.sh defines ll alias"                '$alias_check_cmd'
 CHECKS
 
   local output total=0
-  output=$(timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
-  rm -f "$_TMPFILE"; _TMPFILE=""
+  output=$(timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  rm -f "$tmpfile"
 
   while IFS= read -r line; do
     [[ -n "$line" ]] || continue
