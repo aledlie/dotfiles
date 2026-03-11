@@ -8,10 +8,6 @@ set -e
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.dotfiles.backup"
 
-# Load common shell configuration
-[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
-
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
