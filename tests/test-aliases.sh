@@ -29,8 +29,8 @@ export DOTFILES_DIR="$HOME/dotfiles"
 source "$DOTFILES_DIR/shell/common.sh"
 
 _check() {
-  local desc="$1"; shift
-  if eval "$@" >/dev/null 2>&1; then
+  local desc="$1" cmd="$2"
+  if eval "$cmd" >/dev/null 2>&1; then
     printf 'PASS:%s\n' "$desc"
   else
     printf 'FAIL:%s\n' "$desc"

@@ -7,7 +7,6 @@ set -euo pipefail
 PASS=0
 FAIL=0
 TIMEOUT=30
-PROBE='export DOTFILES_DIR="$HOME/dotfiles"; source "$DOTFILES_DIR/shell/common.sh"'
 
 # Global temp file tracked for cleanup on exit/signal
 _TMPFILE=""
@@ -32,18 +31,22 @@ run_shell_checks() {
 
   _TMPFILE=$(mktemp "${TMPDIR:-/tmp}/shell-test-XXXXXX.sh")
 
-  cat > "$_TMPFILE" <<SCRIPT
-$PROBE
+  # Write the probe (source line) separately to avoid unquoted heredoc expansion
+  printf 'export DOTFILES_DIR="$HOME/dotfiles"\nsource "$DOTFILES_DIR/shell/common.sh"\n\n' > "$_TMPFILE"
 
+  cat >> "$_TMPFILE" <<'SCRIPT'
 _check() {
-  local desc="\$1"; shift
-  if eval "\$@" >/dev/null 2>&1; then
-    printf 'PASS:%s\n' "\$desc"
+  local desc="$1" cmd="$2"
+  if eval "$cmd" >/dev/null 2>&1; then
+    printf 'PASS:%s\n' "$desc"
   else
-    printf 'FAIL:%s\n' "\$desc"
+    printf 'FAIL:%s\n' "$desc"
   fi
 }
+SCRIPT
 
+  # Append shell-specific checks (these need variable interpolation)
+  cat >> "$_TMPFILE" <<CHECKS
 _check "common.sh sets PLATFORM"                    '[ -n "\$PLATFORM" ]'
 _check "functions.sh defines load_doppler_cache"    '$fn_check_cmd load_doppler_cache'
 _check "functions.sh defines doppler_get"           '$fn_check_cmd doppler_get'
@@ -53,7 +56,7 @@ _check "aliases.sh exports OTEL_API_KEY"            '[ -n "\$OTEL_API_KEY" ]'
 _check "aliases.sh exports STRIPE_API_KEY"          '[ -n "\$STRIPE_API_KEY" ]'
 _check "doppler cache is populated"                 '[ "\$(doppler_get GITHUB_TOKEN)" != "" ]'
 _check "aliases.sh defines ll alias"                '$alias_check_cmd'
-SCRIPT
+CHECKS
 
   local output total=0
   output=$(timeout "$TIMEOUT" "$sh" "$_TMPFILE" </dev/null 2>/dev/null) || true
