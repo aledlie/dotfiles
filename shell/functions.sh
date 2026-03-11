@@ -1,5 +1,89 @@
 # Custom shell functions
 
+# Load Doppler values into cache
+# both bash/zsh friendly
+load_doppler_cache() {
+  local project="${1:-integrity-studio}"
+  local config="${2:-dev}"
+
+  if [[ "${DOPPLER_CACHE_PROJECT:-}" == "$project" && "${DOPPLER_CACHE_CONFIG:-}" == "$config" ]]; then
+    return
+  fi
+
+  if [[ -n "${ZSH_VERSION:-}" ]]; then
+    typeset -gA DOPPLER_CACHE
+    typeset -g DOPPLER_CACHE_PROJECT
+    typeset -g DOPPLER_CACHE_CONFIG
+  else
+    declare -gA DOPPLER_CACHE
+    declare -g DOPPLER_CACHE_PROJECT
+    declare -g DOPPLER_CACHE_CONFIG
+  fi
+
+  DOPPLER_CACHE=()
+
+  while IFS=$'\t' read -r k v; do
+    DOPPLER_CACHE[$k]="$v"
+  done < <(
+    doppler secrets download \
+      --no-file \
+      --format json \
+      --project "$project" \
+      --config "$config" |
+    jq -r 'to_entries[] | [.key, (.value // "")] | @tsv'
+  )
+
+  DOPPLER_CACHE_PROJECT="$project"
+  DOPPLER_CACHE_CONFIG="$config"
+}
+
+# Check current doppler cache status
+doppler_cache_info() {
+  echo "Project: ${DOPPLER_CACHE_PROJECT:-none}"
+  echo "Config:  ${DOPPLER_CACHE_CONFIG:-none}"
+  echo "Secrets: ${#DOPPLER_CACHE[@]}"
+}
+
+# Read a doppler key from cache
+doppler_get() {
+  local key="$1"
+  local default="$2"
+
+  [[ -z "$key" ]] && {
+    printf '%s\n' "$default"
+    return
+  }
+
+  [[ -v "DOPPLER_CACHE[$key]" && -n "${DOPPLER_CACHE[$key]}" ]] && {
+    printf '%s\n' "${DOPPLER_CACHE[$key]}"
+    return
+  }
+
+  printf '%s\n' "$default"
+}
+
+# debug
+doppler_cache_has() {
+  local key="$1"
+
+  if [[ -n "${DOPPLER_CACHE[$key]+x}" ]]; then
+    echo "found: $key"
+  else
+    echo "missing: $key"
+  fi
+}
+
+doppler_cache_debug() {
+  local key="$1"
+
+  if [[ -v "DOPPLER_CACHE[$key]" ]]; then
+    echo "found key: $key"
+    echo "value length: ${#DOPPLER_CACHE[$key]}"
+    printf 'value: [%s]\n' "${DOPPLER_CACHE[$key]}"
+  else
+    echo "missing key: $key"
+  fi
+}
 # Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {
     du -shx * .[a-zA-Z0-9_]* 2> /dev/null | \

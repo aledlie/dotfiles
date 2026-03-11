@@ -1,9 +1,6 @@
-# Shell aliases
-
 # Doppler project names
-export DOPPLER_PROJECT_STUDIO="integrity-studio"
+export DOPPLER_PROJECT_INTEGRITY="integrity-studio"
 export DOPPLER_PROJECT_ANALYTICS="analyticsbot"
-export DOPPLER_PROJECT_TAILSCALE="tailscale-mcp"
 export DOPPLER_PROJECT_PERSONAL="personal-info"
 export DOPPLER_PROJECT_ACCOUNTING="accounting"
 export DOPPLER_PROJECT_ATX="atx-movement"
@@ -12,34 +9,159 @@ export DOPPLER_PROJECT_FINANCIAL="financial-hub"
 export DOPPLER_PROJECT_LEGAL="legal"
 export DOPPLER_PROJECT_PROPERTY="property"
 export DOPPLER_CONFIG_DEFAULT="dev"
+export DOPPLER_CONFIG_PRODUCTION="production"
 
-# Doppler secret key names (project: tailscale-mcp)
-export DOPPLER_KEY_TAILSCALE_API="TAILSCALE_API_KEY"
-export DOPPLER_KEY_TAILSCALE_TAILNET="TAILSCALE_TAILNET"
+# Doppler secret key name (integrity-studio)
+export SENTRY_DSN_SINGLE_SITE_SCRAPER="SENTRY_DSN_SINGLE_SITE_SCRAPER"
+export SENTRY_DSN_TOOL_VISUALIZER="SENTRY_DSN_TOOL_VISUALIZER"
+export SENTRY_ENVIRONMENT="SENTRY_ENVIRONMENT"
+export SENTRY_HEADER_TYPE="SENTRY_HEADER_TYPE"
+export SENTRY_DISPLAY_NAME="integrity"
+export SENTRY_ORG_SLUG="integrity-jq"
+export TCAD_SENTRY_BACKEND_DSN="TCAD_SENTRY_BACKEND_DSN"
+export TCAD_SENTRY_FRONTEND_DSN="TCAD_SENTRY_FRONTEND_DSN"
 
 # Doppler secret key names (project: analyticsbot)
-export DOPPLER_KEY_SIGNOZ_INGESTION="SIGNOZ_INGESTION_KEY"
-export DOPPLER_KEY_SIGNOZ_API="SIGNOZ_API_KEY"
-export DOPPLER_KEY_LANGTRACE="LANGTRACE_API_KEY"
-export DOPPLER_KEY_META_ACCESS="META_ACCESS_TOKEN"
-export DOPPLER_KEY_GOOGLE_EMAIL="GOOGLE_CLIENT_EMAIL"
-export DOPPLER_KEY_GOOGLE_PRIVKEY="GOOGLE_PRIVATE_KEY"
-export DOPPLER_KEY_GA_PROPERTY="GA_PROPERTY_ID"
-export DOPPLER_KEY_RESEND="RESEND_API_KEY"
+export DOPPLER_META_ACCESS_TOKEN="META_ACCESS_TOKEN"
+export DOPPLER_GOOGLE_CLIENT_EMAIL="GOOGLE_CLIENT_EMAIL"
+export DOPPLER_GOOGLE_PRIVATE_KEY="GOOGLE_PRIVATE_KEY"
+export DOPPLER_GA_PROPERTY_ID="GA_PROPERTY_ID"
+export DOPPLER_RESEND_API_KEY="RESEND_API_KEY"
 
-# Platform-specific color flags
-if [[ "$PLATFORM" == "macos" ]]; then
-    colorflag="-G"
-    # Use GNU ls if available (installed via brew install coreutils)
-    if command -v gls >/dev/null 2>&1; then
-        alias ls='gls --color=auto'
-    else
-        alias ls='ls -G'
-    fi
-else
-    colorflag="--color=auto"
-    alias ls='ls --color=auto'
-fi
+# OTEL values for obtool-ingest
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
+export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
+export OTEL_SERVICE_NAME="claude-code-hooks"
+export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
+
+# OpenTelemetry (global for hooks in any directory)
+export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
+
+# ------------------ Load Doppler-stored secrets -------------- #
+
+# Google Analytics4 and Meta/Facebook Marketing API (for meta-ads MCP server)
+export META_ACCESS_TOKEN="$(doppler_get "$DOPPLER_META_ACCESS_TOKEN")"
+export GOOGLE_ANALYTICS_MEASUREMENT_ID="$(doppler_get "GOOGLE_ANALYTICS_MEASUREMENT_ID")"
+# Google OAUTH
+export GOOGLE_CLIENT_EMAIL="$(doppler_get "$DOPPLER_GOOGLE_CLIENT_EMAIL")"
+export GOOGLE_PRIVATE_KEY="$(doppler_get "$DOPPLER_GOOGLE_PRIVATE_KEY")"
+export GOOGLE_OAUTH_CLIENT_ID_CALENDAR="$(doppler_get "GOOGLE_OAUTH_CLIENT_ID_CALENDAR")"
+export GOOGLE_OAUTH_CLIENT_SECRET_CALENDAR="$(doppler_get "GOOGLE_OAUTH_CLIENT_SECRET_CALENDAR")"
+# Resend Email API (for resend MCP server)
+export RESEND_API_KEY="$(doppler_get "$DOPPLER_RESEND_API_KEY")"
+# Obtool-ingest
+export OTEL_INGEST_ROUTE="$(doppler_get "OBTOOL_INGEST_ROUTE")"
+export OTEL_INGEST_URL="$(doppler_get "OBTOOL_INGEST_URL")"
+export OTEL_INGEST_PREVIEW_URL="$(doppler_get "OBTOOL_INGEST_PREVIEW_URL")"
+export OTEL_API_KEY="$(doppler_get "OBTOOL_API_KEY")"
+# Doppler project: integrity-studio (by default) SENTRY values
+export SENTRY_ORG_ID="$(doppler_get "SENTRY_ORG_ID")"
+export SENTRY_DSN="$(doppler_get "SENTRY_DSN")"
+export SENTRY_AUTH_TOKEN="$(doppler_get "SENTRY_AUTH_TOKEN")"
+export SENTRY_API_TOKEN="$(doppler_get "SENTRY_API_TOKEN")"
+export SENTRY_TOKEN="$(doppler_get "SENTRY_TOKEN")"
+export SENTRY_TOKEN_HEADER="$(doppler_get "SENTRY_TOKEN_HEADER")"
+# Facebook/Meta
+export FB_ANALYTICS_APP_ID="$(doppler_get "FB_ANALYTICS_APP_ID")"
+export FB_APP_ID="$(doppler_get "FB_APP_ID")"
+export FB_APP_SECRET="$(doppler_get "FB_APP_SECRET")"
+export FB_PIXEL_ID="$(doppler_get "FB_PIXEL_ID")"
+export FB_REDIRECT_URI="$(doppler_get "FB_REDIRECT_URI")"
+# Google
+export GCLOUD_RW_API_KEY="$(doppler_get "GCLOUD_RW_API_KEY")"
+export GEMINI_API_KEY="$(doppler_get "GEMINI_API_KEY")"
+export GOOGLE_ANALYTICS_API_SECRET="$(doppler_get "GOOGLE_ANALYTICS_API_SECRET")"
+export GMAIL_APP_CLIENT_ID="$(doppler_get "GMAIL_APP_CLIENT_ID")"
+export GMAIL_APP_SECRET="$(doppler_get "GMAIL_APP_SECRET")"
+# Google (continued)
+export GOOGLE_AUTH_CLIENT_SECRET_JSON_2="$(doppler_get "GOOGLE_AUTH_CLIENT_SECRET_JSON_2")"
+export GOOGLE_CALENDAR_ACCESS_TOKEN="$(doppler_get "GOOGLE_CALENDAR_ACCESS_TOKEN")"
+export GOOGLE_CALENDAR_REFRESH_TOKEN="$(doppler_get "GOOGLE_CALENDAR_REFRESH_TOKEN")"
+export GOOGLE_MAPS_API_KEY="$(doppler_get "GOOGLE_MAPS_API_KEY")"
+export GOOGLE_OAUTH_AUTH_PROVIDER_X509_CERT_URL="$(doppler_get "GOOGLE_OAUTH_AUTH_PROVIDER_X509_CERT_URL")"
+export GOOGLE_OAUTH_CLIENT_ID_PERSONAL="$(doppler_get "GOOGLE_OAUTH_CLIENT_ID_PERSONAL")"
+export GOOGLE_OAUTH_CLIENT_ID_SCHEDULER="$(doppler_get "GOOGLE_OAUTH_CLIENT_ID_SCHEDULER")"
+export GOOGLE_OAUTH_CLIENT_SECRET="$(doppler_get "GOOGLE_OAUTH_CLIENT_SECRET")"
+export GOOGLE_OAUTH_CLIENT_SECRET_PERSONAL="$(doppler_get "GOOGLE_OAUTH_CLIENT_SECRET_PERSONAL")"
+export GOOGLE_OAUTH_CLIENT_SECRET_SCHEDULER="$(doppler_get "GOOGLE_OAUTH_CLIENT_SECRET_SCHEDULER")"
+export GOOGLE_OAUTH_PROJECT_ID="$(doppler_get "GOOGLE_OAUTH_PROJECT_ID")"
+export GOOGLE_OAUTH_REDIRECT_URIS="$(doppler_get "GOOGLE_OAUTH_REDIRECT_URIS")"
+export GOOGLE_OAUTH_TOKEN_URI="$(doppler_get "GOOGLE_OAUTH_TOKEN_URI")"
+export GOOGLE_PUBLIC_KEY="$(doppler_get "GOOGLE_PUBLIC_KEY")"
+export GOOGLE_TAG_MANAGER_CONTAINER_ID="$(doppler_get "GOOGLE_TAG_MANAGER_CONTAINER_ID")"
+export GTM_CONTAINER_ID="$(doppler_get "GTM_CONTAINER_ID")"
+# HubSpot
+export HUBSPOT_ACCOUNT_ID="$(doppler_get "HUBSPOT_ACCOUNT_ID")"
+export HUBSPOT_DEV_KEY="$(doppler_get "HUBSPOT_DEV_KEY")"
+export HUBSPOT_PAT="$(doppler_get "HUBSPOT_PAT")"
+# JWT
+export JWT_SECRET="$(doppler_get "JWT_SECRET")"
+# Langtrace
+export LANGTRACE_ACCESS_TOKEN="$(doppler_get "LANGTRACE_ACCESS_TOKEN")"
+export LANGTRACE_API_KEY="$(doppler_get "LANGTRACE_API_KEY")"
+# LinkedIn
+export LINKEDIN_API_KEY="$(doppler_get "LINKEDIN_API_KEY")"
+export LINKEDIN_CLIENT_ID="$(doppler_get "LINKEDIN_CLIENT_ID")"
+export LINKEDIN_CLIENT_SECRET="$(doppler_get "LINKEDIN_CLIENT_SECRET")"
+# Supabase
+export NEXT_PUBLIC_SUPABASE_ANON_KEY="$(doppler_get "NEXT_PUBLIC_SUPABASE_ANON_KEY")"
+export NEXT_PUBLIC_SUPABASE_URL="$(doppler_get "NEXT_PUBLIC_SUPABASE_URL")"
+# NPM
+export NPM_TOKEN="$(doppler_get "NPM_TOKEN")"
+# OpenAI
+export OPEN_AI_ADMIN_KEY="$(doppler_get "OPEN_AI_ADMIN_KEY")"
+export OPEN_AI_KEY="$(doppler_get "OPEN_AI_KEY")"
+export OPENAI_ACCESS_TOKEN="$(doppler_get "OPENAI_ACCESS_TOKEN")"
+export OPENAI_API_KEY="$(doppler_get "OPENAI_API_KEY")"
+export OPENAI_REFRESH_TOKEN="$(doppler_get "OPENAI_REFRESH_TOKEN")"
+# Playwright
+export PLAYWRIGHT_BROWSERS_PATH="$(doppler_get "PLAYWRIGHT_BROWSERS_PATH")"
+# Porkbun
+export PORKBUN_API_KEY="$(doppler_get "PORKBUN_API_KEY")"
+export PORKBUN_SECRET_API_KEY="$(doppler_get "PORKBUN_SECRET_API_KEY")"
+# Supabase (React)
+export REACT_APP_SUPABASE_ANON_KEY="$(doppler_get "REACT_APP_SUPABASE_ANON_KEY")"
+export REACT_APP_SUPABASE_URL="$(doppler_get "REACT_APP_SUPABASE_URL")"
+# Redis
+export REDIS_HOST="$(doppler_get "REDIS_HOST")"
+export REDIS_PORT="$(doppler_get "REDIS_PORT")"
+export REDIS_URL="$(doppler_get "REDIS_URL")"
+# Render
+export RENDER_API_KEY="$(doppler_get "RENDER_API_KEY")"
+export RENDER_JOBS_API_KEY="$(doppler_get "RENDER_JOBS_API_KEY")"
+# SSH
+export SSH_PUBLIC_KEY_ED25519="$(doppler_get "SSH_PUBLIC_KEY_ED25519")"
+# Stripe
+export STRIPE_API_KEY="$(doppler_get "STRIPE_API_KEY")"
+# Supabase
+export SUPABASE_ACCESS_TOKEN="$(doppler_get "SUPABASE_ACCESS_TOKEN")"
+export SUPABASE_DB_PASSWORD="$(doppler_get "SUPABASE_DB_PASSWORD")"
+export SUPABASE_JWT_SECRET="$(doppler_get "SUPABASE_JWT_SECRET")"
+export SUPABASE_SERVICE_KEY="$(doppler_get "SUPABASE_SERVICE_KEY")"
+export SUPABASE_SERVICE_ROLE_KEY="$(doppler_get "SUPABASE_SERVICE_ROLE_KEY")"
+export SUPABASE_URL="$(doppler_get "SUPABASE_URL")"
+# Vite
+export VITE_ANALYTICSBOT_API_URL="$(doppler_get "VITE_ANALYTICSBOT_API_URL")"
+export VITE_ANALYTICSBOT_PROJECT_ID="$(doppler_get "VITE_ANALYTICSBOT_PROJECT_ID")"
+export VITE_AUTH0_AUDIENCE="$(doppler_get "VITE_AUTH0_AUDIENCE")"
+export VITE_AUTH0_CLIENT_ID="$(doppler_get "VITE_AUTH0_CLIENT_ID")"
+export VITE_AUTH0_CLIENT_SECRET="$(doppler_get "VITE_AUTH0_CLIENT_SECRET")"
+export VITE_AUTH0_DOMAIN="$(doppler_get "VITE_AUTH0_DOMAIN")"
+export VITE_SENTRY_DSN="$(doppler_get "VITE_SENTRY_DSN")"
+export VITE_SUPABASE_ANON_KEY="$(doppler_get "VITE_SUPABASE_ANON_KEY")"
+export VITE_SUPABASE_URL="$(doppler_get "VITE_SUPABASE_URL")"
+# TCAD
+export TCAD_WORKER_URL="$(doppler_get "TCAD_WORKER_URL")"
+# Cloudflare
+export CLOUDFLARE_KV_NAMESPACE_ID="$(doppler_get "CLOUDFLARE_KV_NAMESPACE_ID")"
+export CLOUDFLARE_WORKER_TOKEN="$(doppler_get "CLOUDFLARE_WORKER_TOKEN")"
+# Misc
+export COOKIE_SECRET="$(doppler_get "COOKIE_SECRET")"
+export FILE_SYSTEM_SENTRY_DSN="$(doppler_get "FILE_SYSTEM_SENTRY_DSN")"
+export DEV_WORKER_URL="$(doppler_get "DEV_WORKER_URL")"
+# GitHub
+export GITHUB_TOKEN="$(doppler_get "GITHUB_TOKEN")"
 
 # Basic aliases
 alias ll='ls -al'
@@ -69,15 +191,7 @@ fi
 # IP addresses
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
-# Git aliases (if not using git aliases)
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline'
-
 # Development
-alias serve='python -m http.server 8000'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'

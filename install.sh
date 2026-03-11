@@ -8,6 +8,10 @@ set -e
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.dotfiles.backup"
 
+# Load common shell configuration
+[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
+
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -48,7 +52,7 @@ backup_file() {
 create_symlink() {
     local source="$1"
     local target="$2"
-    
+
     if [ -f "$DOTFILES_DIR/$source" ]; then
         backup_file "$target"
         ln -sf "$DOTFILES_DIR/$source" "$HOME/$target"
@@ -61,28 +65,28 @@ create_symlink() {
 # Main installation
 main() {
     print_status "Starting dotfiles installation..."
-    
+
     # Check if we're in the right directory
     if [ ! -d "$DOTFILES_DIR" ]; then
         print_error "Dotfiles directory not found at $DOTFILES_DIR"
         exit 1
     fi
-    
+
     create_backup_dir
-    
+
     # Create symlinks for shell configurations
     create_symlink "shell/zsh/zshrc" ".zshrc"
     create_symlink "shell/bash/bashrc" ".bashrc"
     create_symlink "shell/bash/bash_profile" ".bash_profile"
-    
+
     # Create symlinks for other configurations
     create_symlink "git/gitconfig" ".gitconfig"
     create_symlink "vim/vimrc" ".vimrc"
     create_symlink "tmux/tmux.conf" ".tmux.conf"
-    
+
     print_status "Installation complete!"
     print_status "Restart your shell or run: source ~/.zshrc"
-    
+
     if [ -d "$BACKUP_DIR" ] && [ "$(ls -A $BACKUP_DIR)" ]; then
         print_warning "Your original dotfiles have been backed up to: $BACKUP_DIR"
     fi

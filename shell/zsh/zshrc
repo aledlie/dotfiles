@@ -1,12 +1,8 @@
+# Skip kiro-cli-term PTY wrapper (suppresses MallocStackLogging noise)
+SHOULD_QTERM_LAUNCH=1
+
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
-
-# Suppress macOS MallocStackLogging diagnostic noise (Kiro pre-block sets this)
-unset MallocStackLogging MallocStackLoggingDirectory 2>/dev/null
-
-# Zsh configuration
-# Set dotfiles directory
-export DOTFILES_DIR="$HOME/dotfiles"
 
 # Load common shell configuration
 [[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
@@ -47,78 +43,14 @@ fi
 autoload -Uz compinit
 compinit
 
-# python config
-alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
-
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-export GOPATH="$HOME/code-env/go"
-export PATH="$GOPATH/bin:$PATH"
-
-# Added by dev-env-organizer 2025-10-22
-export PYENV_ROOT="$HOME/code-env/python/pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# Added by dev-env-organizer 2025-10-22
-export NPM_CONFIG_PREFIX="$HOME/code-env/node"
-export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-
-# Rust configuration
-export RUSTUP_HOME="$HOME/code-env/rust/rustup"
-export CARGO_HOME="$HOME/code-env/rust/cargo"
-export PATH="$CARGO_HOME/bin:$PATH"
-
-# Ruby configuration via chruby
-export BUNDLE_USER_CONFIG="$HOME/code-env/ruby/bundle/config"
-
-# chruby configuration - auto-switch Ruby versions
-source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-
-# Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
-chruby ruby-3.4.4
-
-export TAILSCALE_API_KEY="$(doppler secrets get "$DOPPLER_KEY_TAILSCALE_API" --project "$DOPPLER_PROJECT_TAILSCALE" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
-export TAILSCALE_TAILNET="$(doppler secrets get "$DOPPLER_KEY_TAILSCALE_TAILNET" --project "$DOPPLER_PROJECT_TAILSCALE" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
 eval "$(direnv hook zsh)"
 
 # Claude Code Aliases
 [ -f ~/.claude/shell-aliases.sh ] && source ~/.claude/shell-aliases.sh
-
-# ============================================================================
-# Claude Code Environment Variables
-# ============================================================================
-# Global environment variables for Claude Code (loaded in all shells)
-
-# Claude infrastructure paths
-export CLAUDE_CONFIG_DIR="$HOME/.claude"
-export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
-export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
-export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
-export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
-export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
-
-# Dev docs directories
-export CLAUDE_PROJECT_DIR="$HOME/dev"
-export CLAUDE_ACTIVE_DOCS="$CLAUDE_PROJECT_DIR/active"
-export CLAUDE_ARCHIVE_DOCS="$CLAUDE_PROJECT_DIR/archive"
-
-# Add Claude scripts to PATH
-export PATH="$CLAUDE_SCRIPTS_DIR:$PATH"
-
-# OpenTelemetry / SigNoz (global for hooks in any directory)
-export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
-export OTEL_EXPORTER_OTLP_ENDPOINT="https://ingest.us.signoz.cloud"
-export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
-export OTEL_SERVICE_NAME="claude-code-hooks"
-export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
-export SIGNOZ_INGESTION_KEY="$(doppler secrets get "$DOPPLER_KEY_SIGNOZ_INGESTION" --project "$DOPPLER_PROJECT_ANALYTICS" --config "$DOPPLER_CONFIG_DEFAULT" --plain 2>/dev/null || echo '')"
-
-# Dart/Flutter pub cache (Flutter installed via Homebrew)
-export PATH="$PATH:$HOME/.pub-cache/bin"
-
+# OpenTelemetry (global for hooks in any directory)
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
 
@@ -127,9 +59,8 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 [[ -f /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh ]] && . /Users/alyshialedlie/.dart-cli-completion/zsh-config.zsh || true
 ## [/Completion]
 
-
 # MCP server quick toggle
 alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
 
-# Sync SigNoz key from Doppler to Claude Code settings
-~/.claude/scripts/sync-signoz-key.sh 2>/dev/null || true
+# Sync obtool API key from Doppler to Claude Code settings
+~/.claude/scripts/sync-obtool-key.sh 2>/dev/null || true
