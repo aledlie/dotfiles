@@ -14,6 +14,14 @@ case "$(uname -s)" in
         ;;
 esac
 
+# Prepend to PATH only if the entry is not already present
+_path_prepend() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
+}
+
 # Common exports
 export EDITOR=vim
 export HISTSIZE=1000
@@ -21,11 +29,12 @@ export HISTFILESIZE=2000
 
 # Add Homebrew to PATH (macOS)
 if [[ "$PLATFORM" == "macos" ]]; then
-    export PATH="/opt/homebrew/sbin:/opt/homebrew/bin:$PATH"
+    _path_prepend "/opt/homebrew/sbin"
+    _path_prepend "/opt/homebrew/bin"
 fi
 
 #add local bin to PATH
-export PATH="$HOME/.local/bin:$PATH"
+_path_prepend "$HOME/.local/bin"
 
 # Dart/Flutter pub cache (Flutter installed via Homebrew)
 export PATH="$PATH:$HOME/.pub-cache/bin"
@@ -45,12 +54,12 @@ fi
 
 # custom GO setup
 export GOPATH="$HOME/code-env/go"
-export PATH="$GOPATH/bin:$PATH"
+_path_prepend "$GOPATH/bin"
 
 # custom Rust configuration
 export RUSTUP_HOME="$HOME/code-env/rust/rustup"
 export CARGO_HOME="$HOME/code-env/rust/cargo"
-export PATH="$CARGO_HOME/bin:$PATH"
+_path_prepend "$CARGO_HOME/bin"
 
 # custom Ruby configuration via chruby
 export BUNDLE_USER_CONFIG="$HOME/code-env/ruby/bundle/config"
@@ -70,7 +79,7 @@ fi
 # python macOS support
 # macOS specific path config for python
 export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+[[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
 
 if command -v pyenv >/dev/null 2>&1; then
   if [ -n "$ZSH_VERSION" ]; then
