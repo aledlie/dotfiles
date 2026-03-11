@@ -1,4 +1,6 @@
 ## ----------------- Base values ----------------- ##
+# Leviathan (macOS) architecture
+export ARCH="amd64"
 
 # Doppler project names
 export DOPPLER_PROJECT_INTEGRITY="integrity-studio"
@@ -28,6 +30,10 @@ export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
 
 # ------------------ Doppler secrets -------------- #
 
+# Anthropic
+export ANTHROPIC_API_KEY="$(doppler_get "ANTHROPIC_API_KEY")"
+export CLAUDE_API_KEY_ADMIN="$(doppler_get "CLAUDE_API_KEY_ADMIN")"
+export CLAUDE_API_KEY_SUDO="$(doppler_get "CLAUDE_API_KEY_SUDO")"
 # Google Analytics4 and Meta/Facebook Marketing API (for meta-ads MCP server)
 export META_ACCESS_TOKEN="$(doppler_get "META_ACCESS_TOKEN")"
 export GOOGLE_ANALYTICS_MEASUREMENT_ID="$(doppler_get "GOOGLE_ANALYTICS_MEASUREMENT_ID")"
@@ -40,9 +46,9 @@ export GOOGLE_OAUTH_CLIENT_SECRET_CALENDAR="$(doppler_get "GOOGLE_OAUTH_CLIENT_S
 export GOOGLE_TAG_MANAGER_CONTAINER_ID="$(doppler_get "GOOGLE_TAG_MANAGER_CONTAINER_ID")"
 # Resend Email API (for resend MCP server)
 export RESEND_API_KEY="$(doppler_get "RESEND_API_KEY")"
-# Oexport LANGTRACE_ACCESS_TOKEN="$(doppler_get "LANGTRACE_ACCESS_TOKEN")"
+export LANGTRACE_ACCESS_TOKEN="$(doppler_get "LANGTRACE_ACCESS_TOKEN")"
 export LANGTRACE_API_KEY="$(doppler_get "LANGTRACE_API_KEY")"
-#btool-ingest
+# Obtool-ingest
 export OTEL_INGEST_ROUTE="$(doppler_get "OBTOOL_INGEST_ROUTE")"
 export OTEL_INGEST_URL="$(doppler_get "OBTOOL_INGEST_URL")"
 export OTEL_INGEST_PREVIEW_URL="$(doppler_get "OBTOOL_INGEST_PREVIEW_URL")"
