@@ -151,8 +151,12 @@ git_current_branch() {
     git branch 2>/dev/null | grep '^*' | colrm 1 2
 }
 
-# Quick git commit
+# Quick git commit — stages all tracked/untracked files including secrets; use with care
 qcommit() {
+    if [ -z "$1" ]; then
+        echo "Usage: qcommit <message>" >&2
+        return 1
+    fi
     git add -A && git commit -m "$1"
 }
 
