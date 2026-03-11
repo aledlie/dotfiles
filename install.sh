@@ -52,6 +52,7 @@ create_symlink() {
 
     if [ -e "$DOTFILES_DIR/$source" ] || [ -L "$DOTFILES_DIR/$source" ]; then
         backup_file "$target"
+        [ -d "$HOME/$target" ] && rm -rf "$HOME/$target"
         ln -sf "$DOTFILES_DIR/$source" "$HOME/$target"
         print_status "Linked $source -> ~/$target"
     else
