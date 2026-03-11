@@ -83,7 +83,7 @@ main() {
     print_status "Installation complete!"
     print_status "Restart your shell or run: source ~/.zshrc"
 
-    if [ -d "$BACKUP_DIR" ] && [ "$(ls -A $BACKUP_DIR)" ]; then
+    if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR")" ]; then
         print_warning "Your original dotfiles have been backed up to: $BACKUP_DIR"
     fi
 }
