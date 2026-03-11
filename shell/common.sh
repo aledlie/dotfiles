@@ -37,7 +37,7 @@ fi
 _path_prepend "$HOME/.local/bin"
 
 # Dart/Flutter pub cache (Flutter installed via Homebrew)
-export PATH="$PATH:$HOME/.pub-cache/bin"
+_path_prepend "$HOME/.pub-cache/bin"
 
 # Use nvm instead of brew default for node and typescript
 unset NPM_CONFIG_PREFIX
@@ -123,7 +123,7 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 # Secrets are managed via Doppler (https://doppler.com) and can be accessed via doppler_get [key_name]
 # to avoid reads every time, load the default values (--project integrity-studio --config dev) into cache
 if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
-  load_doppler_cache
+  load_doppler_cache >/dev/null 2>&1 || true
 fi
 # To change doppler projects or configs: load_doppler_cache [project] [config]
 # For a list of doppler projects, see ~/dotfiles/shell/aliases.sh
