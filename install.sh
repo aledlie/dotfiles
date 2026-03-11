@@ -39,6 +39,7 @@ create_backup_dir() {
 backup_file() {
     local file="$1"
     if [ -f "$HOME/$file" ] || [ -L "$HOME/$file" ]; then
+        mkdir -p "$BACKUP_DIR"
         print_warning "Backing up existing $file"
         mv -f "$HOME/$file" "$BACKUP_DIR/"
     fi
