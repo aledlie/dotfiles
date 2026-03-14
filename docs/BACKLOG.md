@@ -28,6 +28,10 @@ Line 27 has `FN_EXISTS=... cat > "$_TMPFILE"` which sets env on cat (ignored), n
 **Priority**: P2 | **Source**: code-review session
 Lines 51-53 assert GITHUB_TOKEN, OTEL_API_KEY, STRIPE_API_KEY are non-empty. These fail if Doppler is offline or cache is stale, making tests flaky in CI. Either guard with reachability check or move to separate `test-integration` target. -- `tests/test-shell-startup.sh:51-53`
 
+#### H10: Validate identifier names in doppler_export function
+**Priority**: P2 | **Source**: code-reviewer agent (2026-03-14)
+`doppler_export "$var"=...` should validate that `$var` is a legal identifier before exporting. If a caller passes a string containing `=` or special characters (e.g. `doppler_export "FOO=bar BAZ"`), the `export` builtin will misparse it. Add regex check: `[[ "$var" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]` before exporting. -- `shell/doppler-secrets.sh:145`
+
 #### H1: Implement timestamped backup directory to prevent overwrite loss ✅ Done
 **Priority**: P2 | **Source**: code-review + auto-error-resolver session
 Currently `backup_file` uses `mv -f` to a fixed `$BACKUP_DIR`, which silently overwrites previous backups on re-run. Users lose their original backup. Change `BACKUP_DIR` to include timestamp: `$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)`. -- `install.sh:9`
@@ -70,6 +74,14 @@ Lines 53, 58 in test-common-env.sh use `grep -q` without fixed-string flag. If `
 **Priority**: P3 | **Source**: manual
 `CLAUDE_CONFIG_DIR`, `CLAUDE_LOGS_DIR`, `CLAUDE_PROJECT_DIR`, `CLAUDE_TELEMETRY_DIR` should be renamed to `OBTOOL_CONFIG_DIR`, `OBTOOL_LOGS_DIR`, `OBTOOL_PROJECT_DIR`, `OBTOOL_TELEMETRY_DIR` to decouple from upstream Claude Code naming. Update `shell/aliases.sh`, `~/.claude/hooks/lib/constants.ts`, and all hook consumers. Keep `CLAUDE_*` as fallback aliases during migration.
 
+#### M7: Add user feedback to dirsize when no directories exceed 1M
+**Priority**: P3 | **Source**: code-reviewer agent (2026-03-14)
+`dirsize` silently discards all `K`-sized directories via `grep -E '^ *[0-9.]*[MG]'` with no feedback. A user running `dirsize` in a directory of small files gets no output and no explanation. Consider printing a "nothing above 1M" message when tmpfile is empty after filtering. -- `shell/functions.sh:117-119`
+
+#### M8: Add argument validation to newbranch function
+**Priority**: P3 | **Source**: code-reviewer agent (2026-03-14)
+`newbranch ""` runs `git checkout -b ""` and emits a confusing git error. Add guard: `[[ -n "$1" ]] || { echo "Usage: newbranch <name>" >&2; return 1; }` to catch empty arguments early. -- `shell/functions.sh:166-168`
+
 ## Low (P4)
 
 #### L1: Replace echo -e with printf for POSIX portability ✅ Done
@@ -91,6 +103,10 @@ Every re-source of `common.sh` prepends all PATH entries again with no deduplica
 #### L5: Add input validation to qcommit function ✅ Done
 **Priority**: P4 | **Source**: code-review session (functions.sh)
 `qcommit` uses `git add -A` which stages everything including untracked secrets/artifacts. Consider documenting this as a known footgun or adding a guard. -- `functions.sh:149-151`
+
+#### L6: Document setup_tcl_tk_flags as intentional no-op stub
+**Priority**: P4 | **Source**: code-reviewer agent (2026-03-14)
+`setup_tcl_tk_flags() { :; }` is defined as a global no-op stub that always exists in the environment. This design is intentional, but not documented at the call site. Any script checking `typeset -f setup_tcl_tk_flags` to detect tcl-tk support will get a false positive. Add a comment noting "this is an intentional no-op stub" to prevent confusion. -- `shell/common.sh:99`
 
 ---
 

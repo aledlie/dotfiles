@@ -75,5 +75,9 @@ eval "$(direnv hook zsh)"
 # MCP server quick toggle
 alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
 
-# Sync obtool API key from Doppler to Claude Code settings
-{ ~/.claude/scripts/otel/sync-obtool-key.sh 2>/dev/null; } &!
+# Sync obtool API key from Doppler to Claude Code settings (throttled to once/hour)
+local _sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
+if [[ ! -f "$_sync_stamp" ]] || (( $(date +%s) - $(stat -f %m "$_sync_stamp") > 3600 )); then
+  touch "$_sync_stamp"
+  { ~/.claude/scripts/otel/sync-obtool-key.sh 2>/dev/null; } &!
+fi

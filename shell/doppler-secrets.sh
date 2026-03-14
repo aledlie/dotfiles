@@ -7,6 +7,9 @@
 #   doppler_export GITHUB_TOKEN STRIPE_API_KEY   # export specific vars
 #   doppler_export_all                           # export everything (rare)
 
+# zsh-only: associative arrays and typeset -gA are not available in bash
+[[ -n "${ZSH_VERSION:-}" ]] || return 0
+
 # Env var name -> doppler key name (only non-identity mappings needed)
 typeset -gA _DOPPLER_SECRET_NAMES
 _DOPPLER_SECRET_NAMES=(
@@ -17,6 +20,7 @@ _DOPPLER_SECRET_NAMES=(
 )
 
 # All available secret names (for doppler_export_all and discoverability)
+typeset -ga _DOPPLER_ALL_SECRETS
 _DOPPLER_ALL_SECRETS=(
   ANTHROPIC_API_KEY
   CLAUDE_API_KEY_ADMIN
@@ -132,9 +136,16 @@ _DOPPLER_ALL_SECRETS=(
 )
 
 # Get a secret value without exporting (reads from cache)
+# Returns exit code 1 if the secret is empty or missing.
 secret() {
   local key="${_DOPPLER_SECRET_NAMES[$1]:-$1}"
-  doppler_get "$key"
+  local val
+  val="$(doppler_get "$key")"
+  if [[ -z "$val" ]]; then
+    printf 'secret: %s not found\n' "$1" >&2
+    return 1
+  fi
+  printf '%s' "$val"
 }
 
 # Export specific secrets into the environment
