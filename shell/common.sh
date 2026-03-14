@@ -96,6 +96,7 @@ else
 fi
 
 # Set Tcl/Tk build flags only when needed (e.g. pyenv install)
+setup_tcl_tk_flags() { :; }
 if [[ "$PLATFORM" == "macos" ]] && command -v brew >/dev/null 2>&1; then
   setup_tcl_tk_flags() {
     local _tcl_tk_prefix

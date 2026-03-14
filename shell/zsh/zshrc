@@ -76,4 +76,4 @@ eval "$(direnv hook zsh)"
 alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
 
 # Sync obtool API key from Doppler to Claude Code settings
-{ ~/.claude/scripts/sync-obtool-key.sh 2>/dev/null; } &!
+{ ~/.claude/scripts/otel/sync-obtool-key.sh 2>/dev/null; } &!
