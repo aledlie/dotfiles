@@ -98,7 +98,7 @@ Every re-source of `common.sh` prepends all PATH entries again with no deduplica
 
 ### Critical (P1)
 
-#### CR1: Lazy-load Doppler secrets instead of eager export
+#### CR1: Lazy-load Doppler secrets instead of eager export ✅ Done
 **Priority**: P1 | **Source**: code-reviewer agent (shell pack review)
 50+ secrets (`GITHUB_TOKEN`, `STRIPE_API_KEY`, `OPENAI_API_KEY`, `JWT_SECRET`, etc.) are exported as environment variables on every shell startup. Exported vars are visible to every subprocess (`ps auxe`, `/proc/<pid>/environ`, npm scripts, build tools). Read secrets lazily at the call site or via `direnv` `.envrc` per-project instead of exporting globally. -- `shell/aliases.sh:407-544`
 

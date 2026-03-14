@@ -121,5 +121,6 @@ fi
 # To change doppler projects or configs: load_doppler_cache [project] [config]
 # For a list of doppler projects, see ~/dotfiles/shell/aliases.sh
 # to check current doppler cache loaded, run doppler_cache_info
+[[ -f "$DOTFILES_DIR/shell/doppler-secrets.sh" ]] && source "$DOTFILES_DIR/shell/doppler-secrets.sh"
 
 [[ -f "$DOTFILES_DIR/shell/aliases.sh" ]] && source "$DOTFILES_DIR/shell/aliases.sh"

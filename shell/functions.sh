@@ -107,6 +107,7 @@ doppler_cache_debug() {
     echo "missing key: $key"
   fi
 }
+
 # Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {
     local tmpfile
