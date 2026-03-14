@@ -25,7 +25,10 @@ export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
 export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 export OTEL_SERVICE_NAME="claude-code-hooks"
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
-# OpenTelemetry (global for hooks in any directory)
+# Claude Code directories (global for hooks in any directory)
+export CLAUDE_CONFIG_DIR="$HOME/.claude"
+export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
+export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
 
 # ------------------ Doppler secrets -------------- #
@@ -172,14 +175,12 @@ export GITHUB_TOKEN="$(doppler_get "GITHUB_TOKEN")"
 
 # -------------------- Convenience Aliases ---------------- #
 
-# Color output for ls
-colorflag="-G"
-alias ls='gls --color=auto'
+# LS_COLORS for GNU ls (colorflag and ls alias are set in common.sh)
 export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
 
-# Listing variants
+# Listing variants (uses ls alias from common.sh)
 alias l="ls -lF ${colorflag}"
-alias ll="gls -lv --group-directories-first"
+alias ll="ls -lv --group-directories-first"
 alias lm="ll --color |more"
 alias lr="ll -r --color"
 alias la="ll -laf --color"
@@ -217,7 +218,7 @@ alias reports="~/reports"
 alias ast="~/code/ast-grep-mcp"
 
 # Doppler shorthand
-alias doppler="doppler secrets --project integrity-studio --config dev --"
+alias dp="doppler secrets --project integrity-studio --config dev --"
 
 # IP addresses
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
@@ -255,7 +256,7 @@ command -v md5sum > /dev/null || alias md5sum="md5"
 command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
 # URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
 # Merge PDF files
 alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'

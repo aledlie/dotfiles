@@ -28,7 +28,7 @@ git_prompt_info() {
     if command -v __git_ps1 >/dev/null 2>&1; then
         __git_ps1 " (%s)"
     elif git rev-parse --git-dir >/dev/null 2>&1; then
-        local branch=$(git branch 2>/dev/null | grep '^*' | colrm 1 2)
+        local branch=$(git branch --show-current 2>/dev/null)
         if [[ -n "$branch" ]]; then
             echo " ($branch)"
         fi

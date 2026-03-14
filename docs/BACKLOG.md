@@ -66,6 +66,10 @@ Lines 53, 58 in test-common-env.sh use `grep -q` without fixed-string flag. If `
 **Priority**: P3 | **Source**: auto-error-resolver session
 `ln -sf` at line 58 will create a symlink *inside* an existing directory with the same name instead of replacing it. Verify target does not exist as a directory before calling `ln`, or use `rm -rf` before `ln -sf`. -- `install.sh:58`
 
+#### M6: Rename CLAUDE_* env vars to OBTOOL_* across dotfiles and hooks
+**Priority**: P3 | **Source**: manual
+`CLAUDE_CONFIG_DIR`, `CLAUDE_LOGS_DIR`, `CLAUDE_PROJECT_DIR`, `CLAUDE_TELEMETRY_DIR` should be renamed to `OBTOOL_CONFIG_DIR`, `OBTOOL_LOGS_DIR`, `OBTOOL_PROJECT_DIR`, `OBTOOL_TELEMETRY_DIR` to decouple from upstream Claude Code naming. Update `shell/aliases.sh`, `~/.claude/hooks/lib/constants.ts`, and all hook consumers. Keep `CLAUDE_*` as fallback aliases during migration.
+
 ## Low (P4)
 
 #### L1: Replace echo -e with printf for POSIX portability ✅ Done
@@ -87,3 +91,37 @@ Every re-source of `common.sh` prepends all PATH entries again with no deduplica
 #### L5: Add input validation to qcommit function ✅ Done
 **Priority**: P4 | **Source**: code-review session (functions.sh)
 `qcommit` uses `git add -A` which stages everything including untracked secrets/artifacts. Consider documenting this as a known footgun or adding a guard. -- `functions.sh:149-151`
+
+---
+
+## Shell Code Review (2026-03-14)
+
+### Critical (P1)
+
+#### CR1: Lazy-load Doppler secrets instead of eager export
+**Priority**: P1 | **Source**: code-reviewer agent (shell pack review)
+50+ secrets (`GITHUB_TOKEN`, `STRIPE_API_KEY`, `OPENAI_API_KEY`, `JWT_SECRET`, etc.) are exported as environment variables on every shell startup. Exported vars are visible to every subprocess (`ps auxe`, `/proc/<pid>/environ`, npm scripts, build tools). Read secrets lazily at the call site or via `direnv` `.envrc` per-project instead of exporting globally. -- `shell/aliases.sh:407-544`
+
+### High (P2)
+
+#### CR3: qcommit stages all files including secrets ✅ Done
+**Priority**: P2 | **Source**: code-reviewer agent (shell pack review)
+`qcommit` uses `git add -A` unconditionally, risking staging `.env` files, credential dumps, and Doppler cache artifacts. Remove the function or replace `git add -A` with explicit file staging. -- `shell/functions.sh:149`
+
+#### CR4: Remove hardcoded absolute PATH in zsh/.prompt.zsh ✅ Done
+**Priority**: P2 | **Source**: code-reviewer agent (shell pack review)
+Hardcoded `/Users/alyshialedlie` throughout a 200+ character `PATH` assignment. Duplicates entries already managed by `_path_prepend` in `common.sh`. Appears to be a leftover snapshot. Delete or rewrite using `$HOME`. -- `shell/zsh/.prompt.zsh:228-229`
+
+### Medium (P3)
+
+#### CR7: load_doppler_cache silently swallows failures ✅ Done
+**Priority**: P3 | **Source**: code-reviewer agent (shell pack review)
+If `doppler` or `jq` fails (network error, auth failure), the `while` loop exits with an empty cache and no error. All subsequent `doppler_get` calls return empty strings. The caller in `common.sh` suppresses output with `>/dev/null 2>&1 || true`. Add stderr warning on failure. -- `shell/functions.sh:826-834`
+
+#### CR10: dirsize glob expansion unquoted and brittle ✅ Done
+**Priority**: P3 | **Source**: code-reviewer agent (shell pack review)
+`du -shx * .[a-zA-Z0-9_]*` fails in empty directories (error suppressed by `2>/dev/null`). Dotfile glob misses entries like `..hidden-file`. Use `du -shx -- */ .[^.]*/` or similar. -- `shell/functions.sh:893`
+
+#### CR11: colorflag/ls alias in aliases.sh overrides common.sh unconditionally ✅ Done
+**Priority**: P3 | **Source**: code-reviewer agent (shell pack review)
+`aliases.sh` unconditionally sets `colorflag="-G"` and `alias ls='gls --color=auto'` without a platform check, overriding the conditional logic in `common.sh`. Breaks `ls` on Linux or Mac without coreutils. Remove these lines and rely on `common.sh`. -- `shell/aliases.sh:549-550`

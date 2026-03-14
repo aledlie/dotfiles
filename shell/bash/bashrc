@@ -3,7 +3,7 @@
 
 # Bash configuration
 # Set dotfiles directory
-export DOTFILES_DIR="$HOME/dotfiles"
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # Load common shell configuration
 [[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
