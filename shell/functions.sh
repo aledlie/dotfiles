@@ -22,16 +22,39 @@ load_doppler_cache() {
 
   DOPPLER_CACHE=()
 
-  while IFS=$'\t' read -r k v; do
-    DOPPLER_CACHE[$k]="$v"
-  done < <(
-    doppler secrets download \
+  local json doppler_err
+  doppler_err=$(mktemp) || return 1
+  if ! json=$(doppler secrets download \
       --no-file \
       --format json \
       --project "$project" \
-      --config "$config" |
-    jq -r 'to_entries[] | [.key, (.value // "")] | @tsv'
-  )
+      --config "$config" 2>"$doppler_err"); then
+    printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
+      "$project" "$config" "$(cat "$doppler_err")" >&2
+    rm -f "$doppler_err"
+    return 1
+  fi
+  rm -f "$doppler_err"
+
+  local parsed jq_err
+  jq_err=$(mktemp) || return 1
+  if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
+    printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
+    rm -f "$jq_err"
+    return 1
+  fi
+  rm -f "$jq_err"
+
+  while IFS=$'\t' read -r k v; do
+    [[ -n "$k" ]] || continue
+    DOPPLER_CACHE[$k]="$v"
+  done <<< "$parsed"
+
+  if [[ ${#DOPPLER_CACHE[@]} -eq 0 ]]; then
+    printf 'load_doppler_cache: warning: 0 secrets loaded for %s/%s\n' \
+      "$project" "$config" >&2
+    return 1
+  fi
 
   DOPPLER_CACHE_PROJECT="$project"
   DOPPLER_CACHE_CONFIG="$config"
@@ -132,23 +155,9 @@ backup() {
     cp "$1" "$1.backup.$(date +%Y%m%d_%H%M%S)"
 }
 
-# Weather function (requires curl)
-weather() {
-    local city="${1:-}"
-    if [ -n "$city" ]; then
-        if [[ "$city" =~ [^[:alpha:][:digit:]\ ,.\-] ]]; then
-            echo "[dotfiles] weather: invalid city name" >&2
-            return 1
-        fi
-        curl -s "wttr.in/${city// /+}"
-    else
-        curl -s "wttr.in"
-    fi
-}
-
 # Git functions
 git_current_branch() {
-    git branch 2>/dev/null | grep '^*' | colrm 1 2
+    git branch --show-current 2>/dev/null
 }
 
 # Quick git commit — stages all tracked/untracked files including secrets; use with care
