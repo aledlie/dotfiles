@@ -112,7 +112,7 @@ dirsize() {
     local tmpfile
     tmpfile=$(mktemp) || return 1
     trap 'rm -f "$tmpfile"' RETURN
-    du -shx * .[a-zA-Z0-9_]* 2>/dev/null | \
+    du -shx ./* ./.[^.]* ./..?* 2>/dev/null | \
     grep -E '^ *[0-9.]*[MG]' | sort -n > "$tmpfile"
     grep -E '^ *[0-9.]*M' "$tmpfile"
     grep -E '^ *[0-9.]*G' "$tmpfile"
