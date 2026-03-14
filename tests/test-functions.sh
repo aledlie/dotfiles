@@ -34,7 +34,7 @@ _check() {
 }
 
 # --- Function existence ---
-for fn in load_doppler_cache doppler_get doppler_cache_info doppler_cache_has doppler_cache_debug dirsize mkcd extract findproc backup weather git_current_branch qcommit newbranch; do
+for fn in load_doppler_cache doppler_get doppler_cache_info doppler_cache_has doppler_cache_debug dirsize mkcd extract findproc backup weather git_current_branch newbranch; do
   _check "function $fn defined" "$FN_EXISTS $fn"
 done
 

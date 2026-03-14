@@ -160,23 +160,6 @@ git_current_branch() {
     git branch --show-current 2>/dev/null
 }
 
-# Quick git commit — stages tracked changes only; use -a/--all for untracked files
-qcommit() {
-    local all=false
-    if [[ "$1" == "-a" || "$1" == "--all" ]]; then
-        all=true
-        shift
-    fi
-    if [ -z "$1" ]; then
-        echo "Usage: qcommit [-a|--all] <message>" >&2
-        return 1
-    fi
-    if "$all"; then
-        git add -A && git commit -m "$1"
-    else
-        git add -u && git commit -m "$1"
-    fi
-}
 
 # Create and switch to new git branch
 newbranch() {

@@ -66,7 +66,7 @@ dotfiles/
   - `findproc` - Find processes by name
   - `backup` - Quick file backup with timestamp
   - `weather` - Display weather info
-  - Git helpers: `qcommit`, `newbranch`, `git_current_branch`
+  - Git helpers: `newbranch`, `git_current_branch`
 
 ### Aliases
 - Directory navigation shortcuts (`..`, `...`, `....`)
