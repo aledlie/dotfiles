@@ -152,6 +152,10 @@ secret() {
 doppler_export() {
   local var key
   for var in "$@"; do
+    if [[ ! "$var" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+      printf 'doppler_export: invalid identifier: %s\n' "$var" >&2
+      return 1
+    fi
     key="${_DOPPLER_SECRET_NAMES[$var]:-$var}"
     export "$var"="$(doppler_get "$key")"
   done

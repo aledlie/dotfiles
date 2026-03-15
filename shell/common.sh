@@ -95,20 +95,6 @@ else
     alias ls='ls --color=auto'
 fi
 
-# Set Tcl/Tk build flags only when needed (e.g. pyenv install)
-setup_tcl_tk_flags() { :; }
-if [[ "$PLATFORM" == "macos" ]] && command -v brew >/dev/null 2>&1; then
-  setup_tcl_tk_flags() {
-    local _tcl_tk_prefix
-    _tcl_tk_prefix="$(brew --prefix tcl-tk 2>/dev/null)"
-    if [[ -n "$_tcl_tk_prefix" ]]; then
-      export LDFLAGS="-L${_tcl_tk_prefix}/lib ${LDFLAGS:-}"
-      export CPPFLAGS="-I${_tcl_tk_prefix}/include ${CPPFLAGS:-}"
-      export PKG_CONFIG_PATH="${_tcl_tk_prefix}/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
-    fi
-  }
-fi
-
 # Load additional modules
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 [[ -f "$DOTFILES_DIR/shell/functions.sh" ]] && source "$DOTFILES_DIR/shell/functions.sh"

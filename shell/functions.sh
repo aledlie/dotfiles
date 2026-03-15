@@ -115,6 +115,10 @@ dirsize() {
     trap 'rm -f "$tmpfile"' RETURN
     du -shx ./* ./.[^.]* ./..?* 2>/dev/null | \
     grep -E '^ *[0-9.]*[MG]' | sort -n > "$tmpfile"
+    if [[ ! -s "$tmpfile" ]]; then
+        echo "No directories above 1M" >&2
+        return 0
+    fi
     grep -E '^ *[0-9.]*M' "$tmpfile"
     grep -E '^ *[0-9.]*G' "$tmpfile"
 }
@@ -164,5 +168,6 @@ git_current_branch() {
 
 # Create and switch to new git branch
 newbranch() {
+    [[ -n "$1" ]] || { echo "Usage: newbranch <name>" >&2; return 1; }
     git checkout -b "$1"
 }
