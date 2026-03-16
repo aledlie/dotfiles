@@ -10,3 +10,9 @@
 
 ## Low (P4)
 
+## Done
+
+#### M3: Fix test-shell-startup.sh hanging + bash 3.2 compat
+**Priority**: P3 | **Source**: manual
+Replaced bash 4.2+ `-v` operator in `functions.sh` (`doppler_get`, `doppler_cache_debug`) with bash 3.2-compatible `${var+set}` parameter expansion. Test harness already batches checks into single shell invocation per shell type.
+

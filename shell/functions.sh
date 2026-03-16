@@ -77,7 +77,7 @@ doppler_get() {
     return
   }
 
-  [[ -v "DOPPLER_CACHE[$key]" && -n "${DOPPLER_CACHE[$key]}" ]] && {
+  [[ -n "${DOPPLER_CACHE[$key]+set}" && -n "${DOPPLER_CACHE[$key]}" ]] && {
     printf '%s\n' "${DOPPLER_CACHE[$key]}"
     return
   }
@@ -99,7 +99,7 @@ doppler_cache_has() {
 doppler_cache_debug() {
   local key="$1"
 
-  if [[ -v "DOPPLER_CACHE[$key]" ]]; then
+  if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
     echo "found key: $key"
     echo "value length: ${#DOPPLER_CACHE[$key]}"
     printf 'value: [%s]\n' "${DOPPLER_CACHE[$key]}"
