@@ -51,15 +51,19 @@ export OTEL_CONFIG_DIR="$HOME/.claude"
 
 # Sync OBTOOL API key (throttled to once per hour)
 _STAMP="$OTEL_CONFIG_DIR/.sync-obtool-key.stamp"
+_SYNC_SCRIPT="$OTEL_CONFIG_DIR/scripts/otel/sync-obtool-key.sh"
 if [[ ! -f "$_STAMP" ]]; then
   _STAMP_MTIME=0
 else
   _STAMP_MTIME=$(python3 -c "import os; print(int(os.path.getmtime('$_STAMP')))" 2>/dev/null || echo 0)
 fi
 if (( $(date +%s) - _STAMP_MTIME > 3600 )); then
-  "$OTEL_CONFIG_DIR/scripts/otel/sync-obtool-key.sh" 2>/dev/null && touch "$_STAMP"
+  # Only execute if script exists and is executable
+  if [[ -x "$_SYNC_SCRIPT" ]]; then
+    "$_SYNC_SCRIPT" 2>/dev/null && touch "$_STAMP"
+  fi
 fi
-unset _STAMP _STAMP_MTIME
+unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
