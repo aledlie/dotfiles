@@ -1,5 +1,5 @@
 # Skip kiro-cli-term PTY wrapper (suppresses MallocStackLogging noise)
-SHOULD_QTERM_LAUNCH=1
+export SHOULD_QTERM_LAUNCH=1
 export PROCESS_LAUNCHED_BY_Q=1
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
@@ -7,7 +7,7 @@ export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
 # Load common shell configuration
-[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
+[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && builtin source "$DOTFILES_DIR/shell/common.sh"
 
 # Initialize pyenv for zsh (kept shell-specific).
 if command -v pyenv >/dev/null 2>&1; then
@@ -35,13 +35,13 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
 # History settings
-HISTFILE=~/.zsh_history
+HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=10000
 
 # Load git prompt if available
-if [[ -f "$HOME/.git-prompt.sh" ]]; then
-    source "$HOME/.git-prompt.sh"
+if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
+    builtin source "$DOTFILES_DIR/git/git-prompt.sh"
     # Configure git prompt
     export GIT_PS1_SHOWDIRTYSTATE=1
     export GIT_PS1_SHOWSTASHSTATE=1
@@ -50,11 +50,15 @@ if [[ -f "$HOME/.git-prompt.sh" ]]; then
 fi
 
 # Load custom prompt
-[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
+[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && builtin source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
 
-# Zsh completions
+# Zsh completions (rebuild dump only if >24h old)
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -62,11 +66,16 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 eval "$(direnv hook zsh)"
 
 # Claude Code Aliases
-[ -f ~/.claude/shell-aliases.sh ] && source ~/.claude/shell-aliases.sh
+[[ -f "$HOME/.claude/shell-aliases.sh" ]] && builtin source "$HOME/.claude/shell-aliases.sh"
 # OpenTelemetry (global for hooks in any directory)
-# Kiro CLI post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
-
+export CLAUDE_CONFIG_DIR="$HOME/.claude"
+export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
+export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$HOME}"
+export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
+export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
+export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
+export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
+export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && . "$HOME/.dart-cli-completion/zsh-config.zsh" || true
@@ -76,8 +85,14 @@ eval "$(direnv hook zsh)"
 alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
 
 # Sync obtool API key from Doppler to Claude Code settings (throttled to once/hour)
-local _sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
-if [[ ! -f "$_sync_stamp" ]] || (( $(date +%s) - $(stat -f %m "$_sync_stamp") > 3600 )); then
+_sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
+_stamp_age=$(( $(date +%s) - $(stat -f %m "$_sync_stamp" 2>/dev/null || echo 0) ))
+if [[ ! -f "$_sync_stamp" ]] || (( _stamp_age > 3600 )); then
   touch "$_sync_stamp"
-  { ~/.claude/scripts/otel/sync-obtool-key.sh 2>/dev/null; } &!
+  { ~/.claude/scripts/otel/sync-obtool-key.sh >> "$HOME/.claude/logs/sync-obtool-key.log" 2>&1; } &!
 fi
+unset _sync_stamp _stamp_age
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+

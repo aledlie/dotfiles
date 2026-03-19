@@ -74,6 +74,7 @@ main() {
 
     # Create symlinks for shell configurations
     create_symlink "shell/zsh/zshrc" ".zshrc"
+    create_symlink "shell/zsh/zsh_profile" ".zprofile"
     create_symlink "shell/bash/bashrc" ".bashrc"
     create_symlink "shell/bash/bash_profile" ".bash_profile"
 

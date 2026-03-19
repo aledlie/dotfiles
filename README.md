@@ -6,27 +6,30 @@ Personal dotfiles for macOS development environment.
 
 ```
 dotfiles/
-├── README.md           # This file
-├── Makefile            # Make targets for install/backup/test
-├── install.sh          # Installation script
-├── shell/              # Shell configurations
-│   ├── common.sh       # Shared shell config and exports
-│   ├── aliases.sh      # Command aliases
-│   ├── functions.sh    # Custom shell functions
-│   ├── bash/           # Bash-specific configs
+├── README.md              # This file
+├── Makefile               # Make targets for install/backup/test
+├── install.sh             # Installation script
+├── shell/                 # Shell configurations
+│   ├── common.sh          # Shared shell config, exports, Doppler cache init
+│   ├── aliases.sh         # Command aliases
+│   ├── functions.sh       # Custom shell functions (incl. Doppler cache)
+│   ├── doppler-secrets.sh # Doppler secret registry and export helpers (zsh-only)
+│   ├── dircolors          # LS_COLORS configuration
+│   ├── bash/              # Bash-specific configs
 │   │   ├── bashrc
 │   │   ├── bash_profile
 │   │   └── prompt.bash
-│   └── zsh/            # Zsh-specific configs
+│   └── zsh/               # Zsh-specific configs
 │       ├── zshrc
 │       └── prompt.zsh
-├── git/                # Git configuration
+├── git/                   # Git configuration
 │   └── gitconfig
-├── vim/                # Vim configuration
+├── vim/                   # Vim configuration
 │   └── vimrc
-├── tmux/               # Tmux configuration
+├── tmux/                  # Tmux configuration
 │   └── tmux.conf
-└── bin/                # Custom scripts (currently empty)
+├── tests/                 # Shell startup and function tests
+└── docs/                  # Changelogs and backlog
 ```
 
 ## Installation
@@ -67,6 +70,15 @@ dotfiles/
   - `backup` - Quick file backup with timestamp
   - `weather` - Display weather info
   - Git helpers: `newbranch`, `git_current_branch`
+  - Doppler cache: `load_doppler_cache`, `unload_doppler_cache`, `doppler_cache_info`, `doppler_cache_has`, `doppler_cache_debug`
+
+### Doppler Secrets Management
+- Secrets loaded into an in-memory associative array (`DOPPLER_CACHE`) at shell startup via `load_doppler_cache`
+- `secret KEY` - read a secret without exporting (zsh-only)
+- `doppler_export KEY1 KEY2 ...` - export specific secrets as env vars (zsh-only)
+- `doppler_export_all` - export all registered secrets (zsh-only)
+- `unload_doppler_cache` - clear the cache from shell memory after extracting needed secrets
+- Name mappings in `_DOPPLER_SECRET_NAMES` allow env var names to differ from Doppler key names (e.g., `OTEL_API_KEY` → `OBTOOL_API_KEY`)
 
 ### Aliases
 - Directory navigation shortcuts (`..`, `...`, `....`)
@@ -74,7 +86,6 @@ dotfiles/
 - macOS-specific system commands
 - Development server (`serve`)
 - Network utilities (`localip`, `flush`, `ips`)
-- Doppler secrets management integration
 
 ### Environment Setup
 - Homebrew integration

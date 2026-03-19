@@ -22,8 +22,11 @@ load_doppler_cache() {
 
   DOPPLER_CACHE=()
 
-  local json doppler_err
+  local json doppler_err jq_err
   doppler_err=$(mktemp) || return 1
+  jq_err=$(mktemp) || { rm -f "$doppler_err"; return 1; }
+  trap 'rm -f "$doppler_err" "$jq_err"' RETURN
+
   if ! json=$(doppler secrets download \
       --no-file \
       --format json \
@@ -31,19 +34,14 @@ load_doppler_cache() {
       --config "$config" 2>"$doppler_err"); then
     printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
       "$project" "$config" "$(cat "$doppler_err")" >&2
-    rm -f "$doppler_err"
     return 1
   fi
-  rm -f "$doppler_err"
 
-  local parsed jq_err
-  jq_err=$(mktemp) || return 1
+  local parsed
   if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
     printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
-    rm -f "$jq_err"
     return 1
   fi
-  rm -f "$jq_err"
 
   while IFS=$'\t' read -r k v; do
     [[ -n "$k" ]] || continue
@@ -68,34 +66,41 @@ doppler_cache_info() {
 }
 
 # Read a doppler key from cache
+# Returns exit 1 when key is missing and no default is provided.
 doppler_get() {
   local key="$1"
-  local default="$2"
+  local default="${2-}"
 
   [[ -z "$key" ]] && {
     printf '%s\n' "$default"
     return
   }
 
-  [[ -n "${DOPPLER_CACHE[$key]+set}" && -n "${DOPPLER_CACHE[$key]}" ]] && {
+  [[ -n "${DOPPLER_CACHE[$key]+set}" ]] && {
     printf '%s\n' "${DOPPLER_CACHE[$key]}"
     return
   }
 
-  printf '%s\n' "$default"
+  # Key missing — return default if provided, otherwise signal failure
+  if [[ $# -ge 2 ]]; then
+    printf '%s\n' "$default"
+    return 0
+  fi
+  return 1
 }
 
 # debug
 doppler_cache_has() {
   local key="$1"
 
-  if [[ -n "${DOPPLER_CACHE[$key]+x}" ]]; then
+  if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
     echo "found: $key"
   else
     echo "missing: $key"
   fi
 }
 
+# UNSAFE: prints raw secret value — only use interactively for debugging
 doppler_cache_debug() {
   local key="$1"
 
@@ -106,6 +111,15 @@ doppler_cache_debug() {
   else
     echo "missing key: $key"
   fi
+}
+
+# Clear the in-memory Doppler cache (secrets remain in any already-exported env vars)
+unload_doppler_cache() {
+  if [[ -n "${ZSH_VERSION:-}" ]]; then
+    typeset -gA DOPPLER_CACHE
+  fi
+  DOPPLER_CACHE=()
+  unset DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
 }
 
 # Directory size function - finds directory sizes and lists them for the current directory
@@ -125,7 +139,7 @@ dirsize() {
 
 # Create directory and cd into it
 mkcd() {
-    mkdir -p "$1" && cd "$1"
+    mkdir -p "$1" && cd "$1" || return
 }
 
 # Extract various archive formats
