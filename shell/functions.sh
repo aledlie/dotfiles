@@ -127,23 +127,10 @@ unload_doppler_cache() {
 
 # Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {
-    local tmpfile
-    tmpfile=$(mktemp) || return 1
-    du -shx ./* ./.[^.]* ./..?* 2>/dev/null | \
-    grep -E '^ *[0-9.]*[MG]' | sort -n > "$tmpfile"
-    if [[ ! -s "$tmpfile" ]]; then
-        echo "No directories above 1M" >&2
-        rm -f "$tmpfile"; return 0
-    fi
-    grep -E '^ *[0-9.]*M' "$tmpfile"
-    grep -E '^ *[0-9.]*G' "$tmpfile"
-    rm -f "$tmpfile"
+    find . -maxdepth 1 -type d -print0 | xargs -0 du -sh | \
+    grep -E ' [0-9.]*[MG]' | sort -h -k1
 }
 
-# Create directory and cd into it
-mkcd() {
-    mkdir -p "$1" && cd "$1" || return
-}
 
 # Extract various archive formats
 extract() {
@@ -151,6 +138,7 @@ extract() {
         case "$1" in
             *.tar.bz2)   tar xjf "$1"     ;;
             *.tar.gz)    tar xzf "$1"     ;;
+            *.tar.xz)    tar xJf "$1"     ;;
             *.bz2)       bunzip2 "$1"     ;;
             *.rar)       unrar x "$1"     ;;
             *.gz)        gunzip "$1"      ;;
@@ -169,7 +157,7 @@ extract() {
 
 # Find process by name
 findproc() {
-    ps aux | grep -i "[${1:0:1}]${1:1}"
+    ps aux | grep -v grep | grep -i "$1"
 }
 
 # Quick backup of a file
@@ -182,6 +170,10 @@ git_current_branch() {
     git branch --show-current 2>/dev/null
 }
 
+# mkdir and cd into it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
 
 # Create and switch to new git branch
 newbranch() {
