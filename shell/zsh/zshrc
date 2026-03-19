@@ -1,7 +1,9 @@
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
+
 # Load common shell configuration
+[[ -f "$DOTFILES_DIR/install.sh" ]] && builtin source "$DOTFILES_DIR/install.sh"
 [[ -f "$SHELL_DIR/common.sh" ]] && builtin source "$SHELL_DIR/common.sh"
 
 # Zsh-specific settings
@@ -20,9 +22,6 @@ setopt HIST_SAVE_NO_DUPS
 # History file (size governed by common.sh)
 HISTFILE="$HOME/.zsh_history"
 
-# Load custom prompt
-[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && builtin source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
-
 # Zsh completions (rebuild dump only if >24h old)
 autoload -Uz compinit
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
@@ -34,6 +33,17 @@ fi
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# Python via pyenv
+if command -v pyenv >/dev/null 2>&1; then
+    _pyenv_init_cmd="$(pyenv init - zsh)"
+    # Avoid startup warnings when shims are not writable.
+    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | grep -v '^command pyenv rehash$')"
+    fi
+    eval "$_pyenv_init_cmd"
+    unset _pyenv_init_cmd
+fi
+
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 # OTEL_* directory exports below; other shared exports in dotfiles/shell/common.sh
@@ -41,17 +51,22 @@ export OTEL_CONFIG_DIR="$HOME/.claude"
 
 # Sync OBTOOL API key (throttled to once per hour)
 _STAMP="$OTEL_CONFIG_DIR/.sync-obtool-key.stamp"
-if [[ ! -f "$_STAMP" ]] || (( $(date +%s) - $(stat -f %m "$_STAMP" 2>/dev/null || echo 0) > 3600 )); then
+if [[ ! -f "$_STAMP" ]]; then
+  _STAMP_MTIME=0
+else
+  _STAMP_MTIME=$(python3 -c "import os; print(int(os.path.getmtime('$_STAMP')))" 2>/dev/null || echo 0)
+fi
+if (( $(date +%s) - _STAMP_MTIME > 3600 )); then
   "$OTEL_CONFIG_DIR/scripts/otel/sync-obtool-key.sh" 2>/dev/null && touch "$_STAMP"
 fi
-unset _STAMP
+unset _STAMP _STAMP_MTIME
 
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && builtin source "$HOME/.dart-cli-completion/zsh-config.zsh" || true
 ## [/Completion]
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.fzf.zsh ] && builtin source ~/.fzf.zsh
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"

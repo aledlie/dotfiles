@@ -6,6 +6,7 @@
 set -e
 
 DOTFILES_DIR="$HOME/dotfiles"
+SHELL_DIR="$DOTFILES_DIR/shell"
 BACKUP_DIR="$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)"
 
 # Colors for output
@@ -40,7 +41,7 @@ backup_file() {
     local file="$1"
     if [ -f "$HOME/$file" ] || [ -L "$HOME/$file" ] || [ -d "$HOME/$file" ]; then
         mkdir -p "$BACKUP_DIR"
-        print_warning "Backing up existing $file"
+        print_status "Backing up existing $file"
         mv -f "$HOME/$file" "$BACKUP_DIR/"
     fi
 }
@@ -96,5 +97,6 @@ main() {
         print_warning "Your original dotfiles have been backed up to: $BACKUP_DIR"
     fi
 }
+
 
 main

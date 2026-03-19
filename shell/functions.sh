@@ -25,7 +25,7 @@ load_doppler_cache() {
   local json doppler_err jq_err
   doppler_err=$(mktemp) || return 1
   jq_err=$(mktemp) || { rm -f "$doppler_err"; return 1; }
-  _doppler_cleanup() { rm -f "$doppler_err" "$jq_err"; }
+  trap 'rm -f "$doppler_err" "$jq_err"' RETURN
 
   if ! json=$(doppler secrets download \
       --no-file \
@@ -34,13 +34,13 @@ load_doppler_cache() {
       --config "$config" 2>"$doppler_err"); then
     printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
       "$project" "$config" "$(cat "$doppler_err")" >&2
-    _doppler_cleanup; return 1
+    return 1
   fi
 
   local parsed
   if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
     printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
-    _doppler_cleanup; return 1
+    return 1
   fi
 
   while IFS=$'\t' read -r k v; do
@@ -51,12 +51,11 @@ load_doppler_cache() {
   if [[ ${#DOPPLER_CACHE[@]} -eq 0 ]]; then
     printf 'load_doppler_cache: warning: 0 secrets loaded for %s/%s\n' \
       "$project" "$config" >&2
-    _doppler_cleanup; return 1
+    return 1
   fi
 
   DOPPLER_CACHE_PROJECT="$project"
   DOPPLER_CACHE_CONFIG="$config"
-  _doppler_cleanup
 }
 
 # Check current doppler cache status
@@ -104,6 +103,12 @@ doppler_cache_has() {
 # UNSAFE: prints raw secret value — only use interactively for debugging
 doppler_cache_debug() {
   local key="$1"
+
+  # Guard: only allow on interactive terminal to prevent accidental secret leakage
+  if [[ ! -t 1 ]]; then
+    printf '[doppler_cache_debug] stdout is not a terminal; refusing to print secrets\n' >&2
+    return 1
+  fi
 
   if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
     echo "found key: $key"

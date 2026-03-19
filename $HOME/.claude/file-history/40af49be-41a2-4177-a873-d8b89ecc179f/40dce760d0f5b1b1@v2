@@ -93,6 +93,7 @@ doppler_export() {
 # Export all cached secrets (backward-compat escape hatch)
 # Exports each Doppler key under its env alias if one exists, otherwise under its own name.
 doppler_export_all() {
+  printf 'doppler_export_all: exporting %d secrets into environment\n' "${#_DOPPLER_ALL_SECRETS[@]}" >&2
   local failed=0
   local doppler_key env_name val
   for doppler_key in "${_DOPPLER_ALL_SECRETS[@]}"; do

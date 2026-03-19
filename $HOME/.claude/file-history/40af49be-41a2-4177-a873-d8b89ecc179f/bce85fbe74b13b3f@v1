@@ -1,16 +1,5 @@
 # Common shell configuration shared between bash and zsh
 
-# Validate required environment
-[[ -n "$DOTFILES_DIR" ]] || { printf '[dotfiles] DOTFILES_DIR is unset\n' >&2; return 1; }
-
-# Prepend to PATH only if the entry is not already present
-_path_prepend() {
-  case ":$PATH:" in
-    *":$1:"*) ;;
-    *) export PATH="$1:$PATH" ;;
-  esac
-}
-
 # ---------- shell quality-of-life ----------
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-$EDITOR}"
@@ -44,10 +33,17 @@ export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
 export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
 export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 export OTEL_SERVICE_NAME="claude-code-hooks"
-export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
+export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
 
 # ---------- dev dependency sanity ----------
 
+# Prepend to PATH only if the entry is not already present
+_path_prepend() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
+}
 # Add Homebrew to PATH (macOS)
 if [[ "$OSTYPE" == "darwin"* ]]; then
     _path_prepend "/opt/homebrew/bin"
@@ -66,7 +62,7 @@ _path_prepend "$HOME/.cargo/bin"
 # Use nvm instead of brew default for node and typescript
 export NVM_DIR="$HOME/.nvm"
 _nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "$_nvm_sh" ] && . "$_nvm_sh" --no-use
+[ -s "$_nvm_sh" ] && . "$_nvm_sh"
 unset _nvm_sh
 
 # chruby configuration - auto-switch Ruby versions
@@ -77,9 +73,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   [[ -f "$_chruby_auto" ]] && source "$_chruby_auto"
   # Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
   if command -v chruby >/dev/null 2>&1; then
-    if ! chruby ruby-3.4.4 >/dev/null 2>&1; then
-      echo "[dotfiles] warning: ruby-3.4.4 not found, skipping chruby" >&2
-    fi
+    chruby ruby-3.4.4 2>/dev/null || echo "[dotfiles] warning: ruby-3.4.4 not found, skipping chruby" >&2
   fi
   unset _chruby_sh _chruby_auto
 fi
@@ -88,10 +82,18 @@ fi
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
 
-# Shell-specific pyenv initialization is in bash/bashrc and zsh/zshrc
-
-# All _path_prepend calls must precede this line
-unset -f _path_prepend
+# Initialize pyenv (shell name detected automatically)
+if command -v pyenv >/dev/null 2>&1; then
+    _pyenv_shell="${ZSH_VERSION:+zsh}"
+    _pyenv_shell="${_pyenv_shell:-bash}"
+    _pyenv_init_cmd="$(pyenv init - "$_pyenv_shell")"
+    # Avoid startup warnings when shims are not writable.
+    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | sed '/^command pyenv rehash$/d')"
+    fi
+    eval "$_pyenv_init_cmd"
+    unset _pyenv_shell _pyenv_init_cmd
+fi
 
 # ---------- secret management quality-of-life ----------
 
@@ -118,3 +120,5 @@ if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/nul
 fi
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 
+# doppler cache is no longer needed after secrets have been loaded to process.env by doppler-secrets.sh
+unload_doppler_cache

@@ -11,6 +11,8 @@
 # hlsearch on (H) or off (h):
 ~h
 # Command Line History (newest to oldest):
+:q!
+|2,0,1773921724,,"q!"
 
 # Search String History (newest to oldest):
 
@@ -22,266 +24,329 @@
 
 # Registers:
 "0	LINE	0
-	    create_symlink "shell/bash/bash_profile" ".bash_profile"
-|3,0,0,1,1,0,1773919711,"    create_symlink \"shell/bash/bash_profile\" \".bash_profile\""
+	[[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
+|3,0,0,1,1,0,1773921073,"[[ -f \"$SHELL_DIR/aliases.sh\" ]] && source \"$SHELL_DIR/aliases.sh\""
 ""1	LINE	0
-	
-|3,1,1,1,1,0,1773919712,""
+	unset -f _path_prepend
+|3,1,1,1,1,0,1773921736,"unset -f _path_prepend"
 "2	LINE	0
-	export SHELL_DIR="$DOTFILES_DIR/shell"
-|3,0,2,1,1,0,1773919313,"export SHELL_DIR=\"$DOTFILES_DIR/shell\""
+	unset -f _path_prepend
+|3,0,2,1,1,0,1773921583,"unset -f _path_prepend"
 "3	LINE	0
-	export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-|3,0,3,1,1,0,1773919313,"export DOTFILES_DIR=\"${DOTFILES_DIR:-$HOME/dotfiles}\""
+	unload_doppler_cache
+|3,0,3,1,1,0,1773921323,"unload_doppler_cache"
+"4	LINE	0
+	
+|3,0,4,1,1,0,1773921225,""
+"5	LINE	0
+	[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
+|3,0,5,1,1,0,1773921215,"[[ -f \"$SHELL_DIR/common.sh\" ]] && source \"$SHELL_DIR/common.sh\""
+"6	LINE	0
+	#source common shell file configs
+|3,0,6,1,1,0,1773921214,"#source common shell file configs"
+"7	LINE	0
+	
+|3,0,7,1,1,0,1773920846,""
+"8	LINE	0
+	[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && builtin source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
+|3,0,8,1,1,0,1773920845,"[[ -f \"$DOTFILES_DIR/shell/zsh/prompt.zsh\" ]] && builtin source \"$DOTFILES_DIR/shell/zsh/prompt.zsh\""
+"9	LINE	0
+	# Load custom prompt
+|3,0,9,1,1,0,1773920845,"# Load custom prompt"
 
 # File marks:
-'0  88  42  ~/dotfiles/install.sh
-|4,48,88,42,1773919878,"~/dotfiles/install.sh"
-'1  1  0  ~/NERD_tree_win_1
-|4,49,1,0,1773919844,"~/NERD_tree_win_1"
-'2  1  0  ~/dotfiles/shell/zsh/zsh_profile
-|4,50,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
-'3  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,51,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
-'4  1  0  ~/NERD_tree_win_1
-|4,52,1,0,1773919796,"~/NERD_tree_win_1"
-'5  1  0  ~/dotfiles/shell/bash/bash
-|4,53,1,0,1773919788,"~/dotfiles/shell/bash/bash"
-'6  84  56  ~/dotfiles/install.sh
-|4,54,84,56,1773919744,"~/dotfiles/install.sh"
-'7  84  56  ~/dotfiles/install.sh
-|4,55,84,56,1773919744,"~/dotfiles/install.sh"
-'8  1  0  ~/dotfiles/shell/bash/prompt.bash
-|4,56,1,0,1773919686,"~/dotfiles/shell/bash/prompt.bash"
-'9  1  0  ~/dotfiles/shell/bash/prompt.bash
-|4,57,1,0,1773919667,"~/dotfiles/shell/bash/prompt.bash"
+'0  86  0  ~/dotfiles/shell/common.sh
+|4,48,86,0,1773921825,"~/dotfiles/shell/common.sh"
+'1  28  14  ~/dotfiles/shell/common.sh
+|4,49,28,14,1773921724,"~/dotfiles/shell/common.sh"
+'2  28  14  ~/dotfiles/shell/common.sh
+|4,50,28,14,1773921724,"~/dotfiles/shell/common.sh"
+'3  83  5  ~/dotfiles/shell/common.sh
+|4,51,83,5,1773921546,"~/dotfiles/shell/common.sh"
+'4  84  5  ~/dotfiles/shell/common.sh
+|4,52,84,5,1773921546,"~/dotfiles/shell/common.sh"
+'5  84  5  ~/dotfiles/shell/common.sh
+|4,53,84,5,1773921546,"~/dotfiles/shell/common.sh"
+'6  85  5  ~/dotfiles/shell/common.sh
+|4,54,85,5,1773921546,"~/dotfiles/shell/common.sh"
+'7  125  0  ~/dotfiles/shell/common.sh
+|4,55,125,0,1773921334,"~/dotfiles/shell/common.sh"
+'8  125  0  ~/dotfiles/shell/common.sh
+|4,56,125,0,1773921334,"~/dotfiles/shell/common.sh"
+'9  124  0  ~/dotfiles/shell/common.sh
+|4,57,124,0,1773921334,"~/dotfiles/shell/common.sh"
 
 # Jumplist (newest first):
--'  88  42  ~/dotfiles/install.sh
-|4,39,88,42,1773919878,"~/dotfiles/install.sh"
--'  84  4  ~/dotfiles/install.sh
-|4,39,84,4,1773919858,"~/dotfiles/install.sh"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919844,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919844,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919841,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919841,"~/NERD_tree_win_1"
--'  1  0  ~/dotfiles/shell/zsh/zsh_profile
-|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
--'  1  0  ~/dotfiles/shell/zsh/zsh_profile
-|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
--'  1  0  ~/dotfiles/shell/zsh/zsh_profile
-|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
--'  1  0  ~/dotfiles/shell/zsh/zsh_profile
-|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/dotfiles/shell/bash/bash_profile
-|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773919796,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  7  2  ~/NERD_tree_win_1
-|4,39,7,2,1773919793,"~/NERD_tree_win_1"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  1  0  ~/dotfiles/shell/bash/bash
-|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
--'  84  56  ~/dotfiles/install.sh
-|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  86  0  ~/dotfiles/shell/common.sh
+|4,39,86,0,1773921825,"~/dotfiles/shell/common.sh"
+-'  28  4  ~/dotfiles/shell/common.sh
+|4,39,28,4,1773921725,"~/dotfiles/shell/common.sh"
+-'  28  14  ~/dotfiles/shell/common.sh
+|4,39,28,14,1773921724,"~/dotfiles/shell/common.sh"
+-'  83  0  ~/dotfiles/shell/common.sh
+|4,39,83,0,1773921547,"~/dotfiles/shell/common.sh"
+-'  84  0  ~/dotfiles/shell/common.sh
+|4,39,84,0,1773921547,"~/dotfiles/shell/common.sh"
+-'  84  5  ~/dotfiles/shell/common.sh
+|4,39,84,5,1773921546,"~/dotfiles/shell/common.sh"
+-'  85  5  ~/dotfiles/shell/common.sh
+|4,39,85,5,1773921546,"~/dotfiles/shell/common.sh"
+-'  131  0  ~/dotfiles/shell/common.sh
+|4,39,131,0,1773921465,"~/dotfiles/shell/common.sh"
+-'  130  0  ~/dotfiles/shell/common.sh
+|4,39,130,0,1773921465,"~/dotfiles/shell/common.sh"
+-'  130  0  ~/dotfiles/shell/common.sh
+|4,39,130,0,1773921465,"~/dotfiles/shell/common.sh"
+-'  129  0  ~/dotfiles/shell/common.sh
+|4,39,129,0,1773921465,"~/dotfiles/shell/common.sh"
+-'  125  0  ~/dotfiles/shell/common.sh
+|4,39,125,0,1773921460,"~/dotfiles/shell/common.sh"
+-'  124  0  ~/dotfiles/shell/common.sh
+|4,39,124,0,1773921460,"~/dotfiles/shell/common.sh"
+-'  124  0  ~/dotfiles/shell/common.sh
+|4,39,124,0,1773921460,"~/dotfiles/shell/common.sh"
+-'  123  0  ~/dotfiles/shell/common.sh
+|4,39,123,0,1773921460,"~/dotfiles/shell/common.sh"
+-'  123  0  ~/dotfiles/shell/common.sh
+|4,39,123,0,1773921334,"~/dotfiles/shell/common.sh"
+-'  20  0  ~/dotfiles/shell/common.sh
+|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
+-'  20  0  ~/dotfiles/shell/common.sh
+|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
+-'  20  0  ~/dotfiles/shell/common.sh
+|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
+-'  20  0  ~/dotfiles/shell/common.sh
+|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  4  0  ~/.zshrc
+|4,39,4,0,1773921263,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  23  0  ~/.zshrc
+|4,39,23,0,1773921220,"~/.zshrc"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  100  0  ~/dotfiles/install.sh
+|4,39,100,0,1773921218,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  101  0  ~/dotfiles/install.sh
+|4,39,101,0,1773921210,"~/dotfiles/install.sh"
 
 # History of marks within files (newest to oldest):
 
+> ~/dotfiles/shell/common.sh
+	*	1773921824	0
+	"	86	0
+	^	86	0
+	.	101	0
+	+	129	0
+	+	62	12
+	+	83	5
+	+	63	12
+	+	61	0
+	+	99	0
+	+	101	0
+	+	63	7
+	+	62	13
+	+	28	14
+	+	61	0
+	+	100	0
+	+	101	0
+
+> ~/.zshrc
+	*	1773921262	0
+	"	4	0
+	^	4	0
+	.	3	0
+	+	5	0
+	+	6	78
+	+	7	0
+	+	25	0
+	+	7	0
+	+	8	0
+	+	3	0
+
 > ~/dotfiles/install.sh
-	*	1773919876	0
-	"	88	42
-	^	80	43
-	.	80	31
-	+	82	0
-	+	81	58
-	+	80	4
-	+	81	53
+	*	1773921217	0
+	"	100	0
+	.	101	0
+	+	83	0
+	+	82	58
+	+	81	4
+	+	82	53
+	+	86	0
+	+	83	0
+	+	84	55
 	+	85	0
-	+	82	0
-	+	83	55
-	+	84	0
-	+	85	0
-	+	84	56
-	+	80	31
+	+	86	0
+	+	85	56
+	+	81	31
+	+	9	29
+	+	44	20
+	+	101	66
+	+	101	32
+	+	101	64
+	+	101	0
+
+> ~/dotfiles/common.sh
+	*	1773921052	0
+	"	1	0
 
 > ~/NERD_tree_win_1
-	*	1773919841	0
+	*	1773920463	0
 	"	1	0
 	.	1	0
 	+	1	0
+
+> ~/dotfiles/.zshrc
+	*	1773920410	0
+	"	1	0
 
 > ~/dotfiles/shell/zsh/zsh_profile
 	*	1773919832	0
@@ -306,9 +371,3 @@
 > ~/dotfiles/shell/zsh/zprofile
 	*	1773919559	0
 	"	1	0
-
-> ~/.zshrc
-	*	1773919325	0
-	"	4	0
-	.	4	0
-	+	4	0
