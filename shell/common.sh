@@ -35,7 +35,6 @@ export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 export OTEL_SERVICE_NAME="claude-code-hooks"
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
 
-
 # ---------- dev dependency sanity ----------
 
 # Prepend to PATH only if the entry is not already present
@@ -51,7 +50,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     _path_prepend "/opt/homebrew/sbin"
 fi
 
-#add local bin to PATH
+# add local bin to PATH
 _path_prepend "$HOME/.local/bin"
 
 # Dart/Flutter pub cache (Flutter installed via Homebrew)
@@ -119,20 +118,7 @@ SHELL_DIR="$DOTFILES_DIR/shell"
 if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
   load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
 fi
-# set secrets to process.env from cached values so they can be accessed via 'secret [key]'
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 
-# Sync obtool API key from Doppler to Coding agent settings (throttled to once/hour)
-_sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  _stamp_mtime=$(stat -f %m "$_sync_stamp" 2>/dev/null || echo 0)
-else
-  _stamp_mtime=$(stat -c %Y "$_sync_stamp" 2>/dev/null || echo 0)
-fi
-_stamp_age=$(( $(date +%s) - _stamp_mtime ))
-unset _stamp_mtime
-if [[ ! -f "$_sync_stamp" ]] || (( _stamp_age > 3600 )); then
-  touch "$_sync_stamp"
-  { ~/.claude/scripts/otel/sync-obtool-key.sh >> "$HOME/.claude/logs/sync-obtool-key.log" 2>&1; } & disown
-fi
-unset _sync_stamp _stamp_age
+# doppler cache is no longer needed after secrets have been loaded to process.env by doppler-secrets.sh
+unload_doppler_cache
