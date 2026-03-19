@@ -24,8 +24,9 @@ _path_prepend() {
 
 # Common exports
 export EDITOR=vim
-export HISTSIZE=1000
-export HISTFILESIZE=2000
+export HISTSIZE=50000
+export HISTFILESIZE=100000
+export SAVEHIST=50000
 
 # Add Homebrew to PATH (macOS)
 if [[ "$PLATFORM" == "macos" ]]; then
@@ -43,14 +44,9 @@ _path_prepend "$HOME/.pub-cache/bin"
 unset NPM_CONFIG_PREFIX
 unset npm_config_prefix
 export NVM_DIR="$HOME/.nvm"
-if command -v brew >/dev/null 2>&1; then
-  _nvm_prefix="$(brew --prefix nvm 2>/dev/null)"
-  if [[ -n "$_nvm_prefix" ]]; then
-    _nvm_sh="${_nvm_prefix}/nvm.sh"
-    [ -s "$_nvm_sh" ] && . "$_nvm_sh"
-  fi
-  unset _nvm_prefix _nvm_sh
-fi
+_nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "$_nvm_sh" ] && . "$_nvm_sh"
+unset _nvm_sh
 
 # custom GO setup
 export GOPATH="$HOME/code-env/go"
@@ -96,6 +92,15 @@ if [[ "$PLATFORM" == "macos" ]]; then
 else
     export colorflag="--color=auto"
     alias ls='ls --color=auto'
+fi
+
+# Load git prompt if available
+if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
+    source "$DOTFILES_DIR/git/git-prompt.sh"
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
 fi
 
 # Load additional modules

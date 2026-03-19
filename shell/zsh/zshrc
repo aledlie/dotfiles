@@ -11,6 +11,7 @@ export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # Initialize pyenv for zsh (kept shell-specific).
 if command -v pyenv >/dev/null 2>&1; then
+    export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
     _pyenv_init_cmd="$(pyenv init - zsh)"
     # Avoid startup warnings when shims are not writable.
     if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
@@ -29,25 +30,12 @@ setopt ALWAYS_TO_END        # move cursor to end if word had one match
 setopt HIST_VERIFY          # show command with history expansion to user before running it
 setopt SHARE_HISTORY        # share command history data
 setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
-# History settings
+# History file (size governed by common.sh)
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=10000
-SAVEHIST=10000
-
-# Load git prompt if available
-if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
-    builtin source "$DOTFILES_DIR/git/git-prompt.sh"
-    # Configure git prompt
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-fi
 
 # Load custom prompt
 [[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && builtin source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
@@ -63,19 +51,11 @@ fi
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
-eval "$(direnv hook zsh)"
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 # Claude Code Aliases
 [[ -f "$HOME/.claude/shell-aliases.sh" ]] && builtin source "$HOME/.claude/shell-aliases.sh"
-# OpenTelemetry (global for hooks in any directory)
-export CLAUDE_CONFIG_DIR="$HOME/.claude"
-export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
-export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$HOME}"
-export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
-export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
-export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
-export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
-export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
+# CLAUDE_* exports live in dotfiles/shell/aliases.sh (sourced via common.sh)
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
 [[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && . "$HOME/.dart-cli-completion/zsh-config.zsh" || true

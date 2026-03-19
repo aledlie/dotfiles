@@ -34,7 +34,6 @@ export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
 export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
 export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
 export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
-export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
 
 # ------------------ Doppler secrets (lazy-loaded) -------------- #
 # Secrets are NOT exported on startup. Use these patterns instead:

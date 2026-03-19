@@ -20,6 +20,7 @@ if command -v pyenv >/dev/null 2>&1; then
 fi
 
 # Bash-specific settings
+export HISTCONTROL=ignoredups:erasedups
 shopt -s histappend        # append to history file, don't overwrite
 shopt -s checkwinsize      # check window size after each command
 shopt -s cdspell           # autocorrect typos in path names when using cd
@@ -29,15 +30,7 @@ if [ -x ~/.local/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-# Load git prompt if available
-if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
-    source "$DOTFILES_DIR/git/git-prompt.sh"
-    # Configure git prompt
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-fi
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 
 # Load custom prompt
 [[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
