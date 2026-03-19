@@ -118,7 +118,7 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias map="xargs -n1"
 alias week='date +%V' 
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
-alias reload="exec $SHELL -l" # reload shell
+alias reload='exec /opt/homebrew/bin/zsh -l' # reload shell
 # URL-encode strings (python)
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
