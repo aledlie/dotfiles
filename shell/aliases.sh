@@ -9,6 +9,76 @@ alias la="$EZA_BASE -lha"
 alias lt="$EZA_BASE --tree"
 alias tree="tree -Csuh"
 
+# ---------- eza / ls fallbacks ----------
+
+if command -v eza >/dev/null 2>&1; then
+  EZA_BASE='eza --icons --group-directories-first'
+  alias ls="$EZA_BASE"
+  alias ll="$EZA_BASE -lh"
+  alias la="$EZA_BASE -lha"
+  alias lt="$EZA_BASE --tree"
+else
+  alias ls='_plain_ls'
+  alias ll='_plain_ls -lh'
+  alias la='_plain_ls -lha'
+  # tree fallback: prefer tree, otherwise use find
+  if command -v tree >/dev/null 2>&1; then
+    alias lt='tree -C'
+  else
+    alias lt='find . -print'
+  fi
+fi
+
+# ---------- bat / cat fallbacks ----------
+
+if command -v bat >/dev/null 2>&1; then
+  alias cat='bat --paging=never'
+elif command -v batcat >/dev/null 2>&1; then
+  alias cat='batcat --paging=never'
+  # Only alias bat if batcat exists to avoid undefined command
+  alias bat='batcat'
+fi
+
+# ---------- fzf ----------
+
+if command -v fzf >/dev/null 2>&1; then
+  # Load fzf shell integration if present
+  [ -f ~/.fzf.bash ] && . ~/.fzf.bash
+  [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
+
+  # Better previews if bat/batcat is available
+  if command -v bat >/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'bat --style=numbers --color=always --line-range=:200 {}'"
+  elif command -v batcat >/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'batcat --style=numbers --color=always --line-range=:200 {}'"
+  else
+    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'sed -n \"1,200p\" {}'"
+  fi
+
+  # Fuzzy cd into subdirectories
+  fcd() {
+    local dir
+    dir="$(find . -type d 2>/dev/null | fzf)" && cd "$dir"
+  }
+
+  # Fuzzy open file in editor
+  fe() {
+    local file
+    file="$(find . -type f 2>/dev/null | fzf)" && "$EDITOR" "$file"
+  }
+else
+  # Sensible non-fzf fallbacks
+  fcd() {
+    printf '%s\n' "fzf is not installed"
+    return 1
+  }
+
+  fe() {
+    printf '%s\n' "fzf is not installed"
+    return 1
+  }
+fi
+
 # Enable aliases to be sudo'ed
 alias sudo='sudo '
 
@@ -40,31 +110,16 @@ alias blog="cd ~/code/PersonalSite"
 alias reports="cd ~/reports"
 alias ast="cd ~/code/ast-grep-mcp"
 
-# Doppler shorthand
-alias dp="doppler secrets --project integrity-studio --config dev --"
-
-# MCP server quick toggle
-alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
-
-# IP addresses
+# handy extras
+alias dp="doppler secrets --project integrity-studio --config dev --" # get doppler value
+alias grep='grep --color=auto 2>/dev/null || grep' # pretty grpe
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
-
-# Cleanup
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
-# Intuitive map function
 alias map="xargs -n1"
-
-# Get week number
-alias week='date +%V'
-
-# Stopwatch
+alias week='date +%V' 
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
-
-# Reload shell
-alias reload="exec $SHELL -l"
-
-# URL-encode strings
+alias reload="exec $SHELL -l" # reload shell
+# URL-encode strings (python)
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
 # HTTP method aliases
@@ -124,7 +179,6 @@ if [[ "$ARCH" == "macos" ]]; then
     alias spoton="sudo mdutil -a -i on"
 fi
 
-# ---- bat fix & clipboard - Ubuntu & linux safe ----
-command -v batcat >/dev/null && alias bat='batcat'
+# ---- clipboard - Ubuntu & linux safe ----
 command -v xclip >/dev/null && alias c="tr -d '\n' | xclip -selection clipboard"
 command -v xsel >/dev/null && alias c="tr -d '\n' | xsel --clipboard"
