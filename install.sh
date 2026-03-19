@@ -53,7 +53,10 @@ create_symlink() {
     if [ -e "$DOTFILES_DIR/$source" ] || [ -L "$DOTFILES_DIR/$source" ]; then
         backup_file "$target"
         [ -d "$HOME/$target" ] && rm -rf "$HOME/$target"
-        ln -sf "$DOTFILES_DIR/$source" "$HOME/$target"
+        ln -sf "$DOTFILES_DIR/$source" "$HOME/$target" || {
+            print_error "Failed to create symlink for $source"
+            exit 1
+        }
         print_status "Linked $source -> ~/$target"
     else
         print_warning "Source file $source not found, skipping"
@@ -74,9 +77,11 @@ main() {
 
     # Create symlinks for shell configurations
     create_symlink "shell/zsh/zshrc" ".zshrc"
-    create_symlink "shell/zsh/zsh_profile" ".zprofile"
+    create_symlink "shell/zsh/zprofile" ".zprofile"
+    create_symlink "shell/zsh/prompt.zsh" ".prompt.zsh"
     create_symlink "shell/bash/bashrc" ".bashrc"
     create_symlink "shell/bash/bash_profile" ".bash_profile"
+    create_symlink "shell/bash/prompt.bash" ".prompt.bash"
     create_symlink "shell/dircolors" ".dircolors"
 
     # Create symlinks for other configurations
@@ -85,7 +90,7 @@ main() {
     create_symlink "tmux/tmux.conf" ".tmux.conf"
 
     print_status "Installation complete!"
-    print_status "Restart your shell or run: source ~/.zshrc"
+    print_status "Restart your shell to load new configuration"
 
     if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR")" ]; then
         print_warning "Your original dotfiles have been backed up to: $BACKUP_DIR"

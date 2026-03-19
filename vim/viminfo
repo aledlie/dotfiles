@@ -11,12 +11,6 @@
 # hlsearch on (H) or off (h):
 ~h
 # Command Line History (newest to oldest):
-:w
-|2,0,1773909962,,"w"
-:q!
-|2,0,1773906048,,"q!"
-:1q
-|2,0,1773745684,,"1q"
 
 # Search String History (newest to oldest):
 
@@ -28,1504 +22,293 @@
 
 # Registers:
 "0	LINE	0
-	    alias c="tr -d '\n' | pbcopy"
-|3,0,0,1,1,0,1773914570,"    alias c=\"tr -d '\\n' | pbcopy\""
+	    create_symlink "shell/bash/bash_profile" ".bash_profile"
+|3,0,0,1,1,0,1773919711,"    create_symlink \"shell/bash/bash_profile\" \".bash_profile\""
 ""1	LINE	0
-	[[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
-|3,1,1,1,1,0,1773916182,"[[ -f \"$SHELL_DIR/aliases.sh\" ]] && source \"$SHELL_DIR/aliases.sh\""
+	
+|3,1,1,1,1,0,1773919712,""
 "2	LINE	0
-	# pass non-default values to load_doppler_cache to switch secrets management projects or configs
-|3,0,2,1,1,0,1773916094,"# pass non-default values to load_doppler_cache to switch secrets management projects or configs"
+	export SHELL_DIR="$DOTFILES_DIR/shell"
+|3,0,2,1,1,0,1773919313,"export SHELL_DIR=\"$DOTFILES_DIR/shell\""
 "3	LINE	0
-	SHELL_DIR="$DOTFILES_DIR/shell"
-|3,0,3,1,1,0,1773915983,"SHELL_DIR=\"$DOTFILES_DIR/shell\""
-"4	LINE	0
-	
-|3,0,4,1,1,0,1773915978,""
-"5	LINE	0
-	source "/Users/alyshialedlie/code-env/rust/cargo/env.tcsh"
-|3,0,5,1,1,0,1773915790,"source \"/Users/alyshialedlie/code-env/rust/cargo/env.tcsh\""
-"6	LINE	0
-	. "/Users/alyshialedlie/code-env/rust/cargo/env"
-|3,0,6,1,1,0,1773915744,". \"/Users/alyshialedlie/code-env/rust/cargo/env\""
-"7	LINE	0
-	. "/Users/alyshialedlie/code-env/rust/cargo/env"
-|3,0,7,1,1,0,1773915714,". \"/Users/alyshialedlie/code-env/rust/cargo/env\""
-"8	LINE	0
-	
-|3,0,8,1,1,0,1773915657,""
-"9	LINE	0
-	
-|3,0,9,1,1,0,1773915657,""
-"-	CHAR	0
-	"
-|3,0,36,0,1,0,1773873973,"\""
+	export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+|3,0,3,1,1,0,1773919313,"export DOTFILES_DIR=\"${DOTFILES_DIR:-$HOME/dotfiles}\""
 
 # File marks:
-'0  138  15  ~/dotfiles/shell/common.sh
-|4,48,138,15,1773916467,"~/dotfiles/shell/common.sh"
-'1  138  1  ~/dotfiles/shell/common.sh
-|4,49,138,1,1773916385,"~/dotfiles/shell/common.sh"
-'2  1  0  ~/NERD_tree_win_1
-|4,50,1,0,1773915965,"~/NERD_tree_win_1"
-'3  95  0  ~/dotfiles/install.sh
-|4,51,95,0,1773915958,"~/dotfiles/install.sh"
+'0  88  42  ~/dotfiles/install.sh
+|4,48,88,42,1773919878,"~/dotfiles/install.sh"
+'1  1  0  ~/NERD_tree_win_1
+|4,49,1,0,1773919844,"~/NERD_tree_win_1"
+'2  1  0  ~/dotfiles/shell/zsh/zsh_profile
+|4,50,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
+'3  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,51,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
 '4  1  0  ~/NERD_tree_win_1
-|4,52,1,0,1773915952,"~/NERD_tree_win_1"
-'5  1  0  ~/.tcshrc
-|4,53,1,0,1773915791,"~/.tcshrc"
-'6  2  0  ~/.bashrc
-|4,54,2,0,1773915779,"~/.bashrc"
-'7  4  0  ~/.bash_profile
-|4,55,4,0,1773915761,"~/.bash_profile"
-'8  6  0  ~/.profile
-|4,56,6,0,1773915726,"~/.profile"
-'9  30  0  ~/.bashrc
-|4,57,30,0,1773915659,"~/.bashrc"
+|4,52,1,0,1773919796,"~/NERD_tree_win_1"
+'5  1  0  ~/dotfiles/shell/bash/bash
+|4,53,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+'6  84  56  ~/dotfiles/install.sh
+|4,54,84,56,1773919744,"~/dotfiles/install.sh"
+'7  84  56  ~/dotfiles/install.sh
+|4,55,84,56,1773919744,"~/dotfiles/install.sh"
+'8  1  0  ~/dotfiles/shell/bash/prompt.bash
+|4,56,1,0,1773919686,"~/dotfiles/shell/bash/prompt.bash"
+'9  1  0  ~/dotfiles/shell/bash/prompt.bash
+|4,57,1,0,1773919667,"~/dotfiles/shell/bash/prompt.bash"
 
 # Jumplist (newest first):
--'  138  15  ~/dotfiles/shell/common.sh
-|4,39,138,15,1773916467,"~/dotfiles/shell/common.sh"
--'  138  1  ~/dotfiles/shell/common.sh
-|4,39,138,1,1773916385,"~/dotfiles/shell/common.sh"
+-'  88  42  ~/dotfiles/install.sh
+|4,39,88,42,1773919878,"~/dotfiles/install.sh"
+-'  84  4  ~/dotfiles/install.sh
+|4,39,84,4,1773919858,"~/dotfiles/install.sh"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915965,"~/NERD_tree_win_1"
+|4,39,1,0,1773919844,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915965,"~/NERD_tree_win_1"
+|4,39,1,0,1773919844,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919841,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919841,"~/NERD_tree_win_1"
+-'  1  0  ~/dotfiles/shell/zsh/zsh_profile
+|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
+-'  1  0  ~/dotfiles/shell/zsh/zsh_profile
+|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
+-'  1  0  ~/dotfiles/shell/zsh/zsh_profile
+|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
+-'  1  0  ~/dotfiles/shell/zsh/zsh_profile
+|4,39,1,0,1773919833,"~/dotfiles/shell/zsh/zsh_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
+-'  1  0  ~/dotfiles/shell/bash/bash_profile
+|4,39,1,0,1773919814,"~/dotfiles/shell/bash/bash_profile"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915965,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915965,"~/NERD_tree_win_1"
--'  11  2  ~/NERD_tree_win_1
-|4,39,11,2,1773915963,"~/NERD_tree_win_1"
--'  11  2  ~/NERD_tree_win_1
-|4,39,11,2,1773915963,"~/NERD_tree_win_1"
--'  11  2  ~/NERD_tree_win_1
-|4,39,11,2,1773915963,"~/NERD_tree_win_1"
--'  11  2  ~/NERD_tree_win_1
-|4,39,11,2,1773915963,"~/NERD_tree_win_1"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  95  0  ~/dotfiles/install.sh
-|4,39,95,0,1773915958,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
--'  9  0  ~/dotfiles/install.sh
-|4,39,9,0,1773915954,"~/dotfiles/install.sh"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
--'  1  0  ~/NERD_tree_win_1
-|4,39,1,0,1773915952,"~/NERD_tree_win_1"
--'  23  2  ~/NERD_tree_win_1
-|4,39,23,2,1773915950,"~/NERD_tree_win_1"
+|4,39,1,0,1773919796,"~/NERD_tree_win_1"
 -'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
+|4,39,13,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
 -'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  23  2  ~/NERD_tree_win_1
-|4,39,23,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  23  2  ~/NERD_tree_win_1
-|4,39,23,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  23  2  ~/NERD_tree_win_1
-|4,39,23,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  13  2  ~/NERD_tree_win_1
-|4,39,13,2,1773915950,"~/NERD_tree_win_1"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  1  0  ~/.tcshrc
-|4,39,1,0,1773915791,"~/.tcshrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
--'  2  0  ~/.bashrc
-|4,39,2,0,1773915779,"~/.bashrc"
+|4,39,13,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  7  2  ~/NERD_tree_win_1
+|4,39,7,2,1773919793,"~/NERD_tree_win_1"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  1  0  ~/dotfiles/shell/bash/bash
+|4,39,1,0,1773919788,"~/dotfiles/shell/bash/bash"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
+-'  84  56  ~/dotfiles/install.sh
+|4,39,84,56,1773919744,"~/dotfiles/install.sh"
 
 # History of marks within files (newest to oldest):
 
-> ~/dotfiles/shell/common.sh
-	*	1773916467	0
-	"	138	15
-	^	138	28
-	.	125	50
-	+	122	99
-	+	119	0
-	+	125	0
-	+	122	0
-	+	122	98
-	+	118	11
-	+	118	4
-	+	118	0
-	+	118	28
-	+	118	56
-	+	122	16
-	+	124	54
-	+	136	64
-	+	69	0
-	+	56	0
-	+	69	0
-	+	69	26
-	+	70	0
-	+	118	0
-	+	124	54
-	+	118	10
-	+	122	0
-	+	120	0
-	+	118	0
-	+	119	0
-	+	117	0
-	+	117	86
-	+	118	84
-	+	118	107
-	+	32	0
-	+	99	0
-	+	116	0
-	+	100	0
-	+	101	35
-	+	111	24
-	+	113	59
-	+	114	21
-	+	113	0
-	+	114	34
-	+	119	0
-	+	118	0
-	+	122	0
-	+	123	0
-	+	120	57
-	+	113	4
-	+	114	6
-	+	102	7
-	+	103	7
-	+	104	7
-	+	105	7
-	+	106	7
-	+	107	7
-	+	108	7
-	+	109	7
-	+	110	7
-	+	111	7
-	+	112	7
-	+	113	13
-	+	114	13
-	+	120	48
-	+	113	0
-	+	114	0
-	+	113	18
-	+	114	17
-	+	119	98
-	+	122	68
-	+	123	82
-	+	124	0
-	+	125	0
-	+	53	0
-	+	54	12
-	+	53	0
-	+	54	0
-	+	54	19
-	+	54	30
-	+	53	0
-	+	100	0
-	+	18	0
-	+	21	0
-	+	31	0
-	+	54	0
-	+	55	0
-	+	59	0
-	+	60	0
-	+	62	0
-	+	61	0
-	+	122	0
-	+	118	0
-	+	115	0
-	+	117	97
-	+	118	0
-	+	123	0
-	+	122	77
-	+	125	0
-	+	20	0
-	+	21	0
-	+	19	25
-	+	124	0
-	+	125	50
-
-> ~/NERD_tree_win_1
-	*	1773915963	0
-	"	1	0
-	.	1	0
-	+	1	0
-
 > ~/dotfiles/install.sh
-	*	1773915957	0
-	"	95	0
-	.	9	0
-	+	77	40
-	+	81	0
-	+	79	60
-	+	81	0
-	+	86	0
-	+	80	0
-	+	10	0
-	+	8	0
-	+	10	6
-	+	8	6
-	+	10	0
-	+	9	0
-	+	8	0
-	+	9	0
-
-> ~/.tcshrc
-	*	1773915790	0
-	"	1	0
-	.	1	0
-	+	1	0
-
-> ~/.bashrc
-	*	1773915779	0
-	"	2	0
-	^	29	0
-	.	31	0
-	+	31	0
-	+	28	0
-	+	29	0
-	+	31	0
-
-> ~/.bash_profile
-	*	1773915751	0
-	"	4	0
-	.	15	0
-	+	15	0
-
-> ~/.profile
-	*	1773915718	0
-	"	6	0
-	.	7	0
-	+	7	0
-
-> ~/.zshenv
-	*	1773915567	0
-	"	1	0
-
-> ~/dotfiles/shell/aliases.sh
-	*	1773914946	0
-	"	126	0
-	^	126	0
-	.	76	11
-	+	34	48
-	+	30	0
-	+	34	48
-	+	30	0
-	+	26	1
-	+	35	0
-	+	26	0
-	+	12	82
-	+	6	2
-	+	3	63
-	+	4	32
-	+	5	47
-	+	9	27
-	+	10	0
-	+	6	0
-	+	12	50
-	+	12	49
-	+	12	50
-	+	5	53
-	+	6	0
-	+	52	11
-	+	76	11
-	+	80	0
-	+	82	2
-	+	52	0
-	+	53	0
-	+	12	62
-	+	12	0
-	+	12	50
-	+	12	41
-	+	12	44
-	+	12	31
-	+	12	0
-	+	12	29
-	+	12	69
-	+	12	0
-	+	13	0
-	+	130	69
-	+	126	0
-	+	131	0
-	+	1	54
-	+	76	11
-
-> /NERD_tree_win_1
-	*	1773912879	0
-	"	1	0
-	.	1	0
-	+	1	0
-
-> /private/etc/profile
-	*	1773912858	0
-	"	1	0
-
-> /private/etc/shells
-	*	1773912779	0
-	"	1	0
-
-> /private/etc/zshrc
-	*	1773912761	0
-	"	1	0
-
-> /private/etc/zprofile
-	*	1773912747	0
-	"	1	0
-
-> /private/etc/aliases
-	*	1773912714	0
-	"	262	0
-
-> ~/.claude/scripts/otel/otel-config.test.sh
-	*	1773911724	0
-	"	1	0
-
-> ~/.claude/scripts/otel/sync-obtool-key.sh
-	*	1773911699	0
-	"	6	0
-	^	11	29
-	.	11	29
-	+	11	29
-
-> ~/.zshrc
-	*	1773910539	0
-	"	56	37
-	^	56	38
-	.	60	0
-	+	63	40
-	+	71	0
-	+	72	0
-	+	84	2
-	+	86	0
-	+	88	0
-	+	84	2
-	+	1	0
-	+	7	0
-	+	1	0
-	+	3	0
-	+	45	23
-	+	47	19
-	+	5	37
-	+	7	17
-	+	5	37
-	+	7	61
-	+	41	0
-	+	49	12
-	+	56	0
-	+	60	0
-
-> ~/dotfiles/common.sh
-	*	1773909205	0
-	"	1	0
-
-> ~/dotfiles/shell/dircolors
-	*	1773908712	0
-	"	211	0
-	.	217	0
-	+	214	0
-	+	215	19
-	+	215	0
-	+	216	0
-	+	188	0
-	+	196	0
-	+	216	0
-	+	161	10
-	+	161	17
-	+	147	0
-	+	150	0
-	+	161	10
-	+	157	7
-	+	161	10
-	+	156	0
-	+	157	0
-	+	161	10
-	+	161	9
-	+	161	10
-	+	162	0
-	+	190	0
-	+	214	0
-	+	274	12
-	+	282	0
-	+	273	0
-	+	274	0
-	+	306	0
-	+	215	10
-	+	214	0
-	+	215	0
-	+	216	0
-	+	252	6
-	+	270	0
-	+	268	0
-	+	267	0
-	+	265	0
-	+	264	0
-	+	262	0
-	+	261	0
-	+	263	3
-	+	264	4
-	+	261	0
-	+	254	0
-	+	264	0
-	+	256	0
-	+	270	0
-	+	253	0
-	+	270	0
-	+	255	0
-	+	270	0
-	+	260	0
-	+	270	0
-	+	265	0
-	+	226	0
-	+	235	0
-	+	256	0
-	+	257	0
-	+	256	9
-	+	257	10
-	+	229	0
-	+	258	0
-	+	257	0
-	+	268	0
-	+	257	0
-	+	269	0
-	+	268	0
-	+	259	0
-	+	225	0
-	+	235	0
-	+	228	0
-	+	266	9
-	+	217	0
-	+	215	23
-	+	211	6
-	+	205	15
-	+	213	4
-	+	218	0
-	+	256	0
-	+	217	0
-
-> ~/.dircolors
-	*	1773907750	0
-	"	159	31
-	^	159	32
-	.	38	32
-	+	38	32
-
-> ~/install.sh
-	*	1773907581	0
-	"	1	0
-
-> ~/.claude/skills/skill-rules.json
-	*	1773906892	0
-	"	1	0
-
-> ~/.claude/package.json
-	*	1773906844	0
-	"	28	2
-	^	20	12
-	.	20	12
-	+	20	12
-
-> ~/.claude/config/skill-rules.json
-	*	1773906807	0
-	"	67	0
-
-> ~/.claude/skills/git-commit-smart/SKILL.md
-	*	1773906695	0
-	"	1	0
-
-> ~/.claude/archive/NEW_MCP_AND_AGENT_SETUP-20251119.md
-	*	1773906468	0
-	"	1	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/skills/flutter-claude-code/resources/test-template.dart
-	*	1773906161	0
-	"	51	0
-	^	51	1
-	.	51	0
-	+	51	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/flutter-claude-code/SKILL.md
-	*	1773906096	0
-	"	94	124
-	^	94	125
-	.	94	124
-	+	187	124
-	+	94	124
-
-> ~/code/is-public-sites/IntegrityLandingPage/workers/otel/src/index.ts
-	*	1773903997	0
-	"	3	7
-	.	3	0
-	+	169	0
-	+	3	3
-	+	24	0
-	+	3	0
-	+	2	39
-	+	3	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/workers/contact-form/src/index.ts
-	*	1773903886	0
-	"	1	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/workers/NERD_tree_win_1
-	*	1773903823	0
-	"	1	0
-	.	1	0
-	+	1	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/package.json
-	*	1773902910	0
-	"	1	0
-
-> ~/code/is-public-sites/IntegrityLandingPage/pubspec.yaml
-	*	1773902896	0
-	"	49	13
-	^	49	14
-	.	27	13
-	+	28	0
-	+	27	13
-
-> ~/.claude/hooks/package.json
-	*	1773902583	0
-	"	1	0
-
-> ~/.claude/settings.json
-	*	1773902153	0
-	"	5	55
-	^	5	56
-	.	5	56
-	+	64	0
-	+	6	3
-	+	5	56
-
-> ~/.envrc
-	*	1773901378	0
-	"	1	0
-
-> ~/.claude/.envrc
-	*	1773901321	0
-	"	1	0
-	^	18	37
-	.	19	0
-	+	26	39
-	+	27	0
-	+	7	42
-	+	8	38
-	+	9	41
-	+	10	37
-	+	11	44
-	+	12	0
-	+	8	35
-	+	12	47
-	+	19	0
-
-> ~/.claude/scripts/backup/restore-config.sh
-	*	1773900700	0
-	"	143	0
-
-> ~/.claude/.gitignore
-	*	1773900593	0
-	"	22	0
-	^	22	0
-	.	21	10
-	+	62	8
-	+	23	0
-	+	24	0
-	+	23	0
-	+	24	26
-	+	45	0
-	+	58	14
-	+	59	16
-	+	21	10
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/roadmap/provision-api-key.md
-	*	1773899634	0
-	"	7	43
-	^	7	44
-	.	3	43
-	+	7	243
-	+	1	14
-	+	3	43
-
-> ~/.claude/mcp-servers/observability-toolkit/policy-limits.json
-	*	1773898877	0
-	"	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/mcp-needs-auth-cache.json
-	*	1773898862	0
-	"	1	0
-
-> ~/schema-org-file-system/README.md
-	*	1773898675	0
-	"	286	2
-
-> ~/schema-org-file-system/package.json
-	*	1773898658	0
-	"	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/roadmap/README.md
-	*	1773898440	0
-	"	7	0
-
-> ~/.claude/mcp-servers/observability-toolkit/NERD_tree_win_1
-	*	1773898372	0
-	"	1	0
-	.	1	0
-	+	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/api/provisioning-api.md
-	*	1773898339	0
-	"	23	32
-	^	23	33
-	.	23	32
-	+	151	118
-	+	148	0
-	+	146	0
-	+	143	54
-	+	136	0
-	+	134	0
-	+	132	20
-	+	103	0
-	+	102	0
-	+	1	0
-	+	88	70
-	+	85	13
-	+	77	12
-	+	75	0
-	+	74	0
-	+	36	0
-	+	35	13
-	+	31	0
-	+	30	11
-	+	1	0
-	+	24	0
-	+	23	32
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/CONDENSE-PLAN.md
-	*	1773898129	0
-	"	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/roadmap/flutter-provision-call.md
-	*	1773898045	0
-	"	38	17
-	^	38	18
-	.	38	17
-	+	38	17
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/CHANGELOG.md
-	*	1773897709	0
-	"	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/services/shared/provision-client.ts
-	*	1773897485	0
-	"	2	44
-
-> ~/claude-tools/skills/active/base-controller-pattern/SKILL.md
-	*	1773895922	0
-	"	1	0
-
-> ~/.config/git/ignore
-	*	1773889977	0
-	"	1	0
-
-> ~/.claude/.claude/settings.local.json
-	*	1773887141	0
-	"	112	6
-	.	107	0
-	+	8	16
-	+	7	16
-	+	6	22
-	+	5	19
-	+	9	19
-	+	10	15
-	+	11	15
-	+	12	15
-	+	13	15
-	+	14	15
-	+	15	19
-	+	16	14
-	+	17	14
-	+	18	15
-	+	19	15
-	+	22	16
-	+	24	14
-	+	26	16
-	+	28	0
-	+	29	25
-	+	30	0
-	+	31	0
-	+	33	0
-	+	34	0
-	+	35	0
-	+	37	15
-	+	38	18
-	+	39	19
-	+	40	25
-	+	41	0
-	+	42	0
-	+	44	0
-	+	47	0
-	+	50	0
-	+	52	16
-	+	53	0
-	+	54	0
-	+	59	0
-	+	57	0
-	+	59	0
-	+	58	0
-	+	61	18
-	+	62	15
-	+	65	16
-	+	71	0
-	+	69	0
-	+	69	30
-	+	71	0
-	+	73	0
-	+	76	0
-	+	77	0
-	+	79	0
-	+	80	0
+	*	1773919876	0
+	"	88	42
+	^	80	43
+	.	80	31
 	+	82	0
-	+	81	0
-	+	83	0
+	+	81	58
+	+	80	4
+	+	81	53
+	+	85	0
+	+	82	0
+	+	83	55
 	+	84	0
 	+	85	0
-	+	86	6
-	+	86	19
-	+	86	0
-	+	90	0
-	+	91	0
-	+	92	0
-	+	93	0
-	+	95	0
-	+	96	33
-	+	96	0
-	+	97	0
-	+	98	0
-	+	100	0
-	+	99	0
-	+	101	0
-	+	103	0
-	+	106	0
-	+	107	0
+	+	84	56
+	+	80	31
 
-> ~/.claude/NERD_tree_win_1
-	*	1773886657	0
+> ~/NERD_tree_win_1
+	*	1773919841	0
 	"	1	0
 	.	1	0
 	+	1	0
 
-> ~/dotfiles/shell/doppler-secrets.sh
-	*	1773880279	0
-	"	167	0
-
-> ~/.claude/mcp-servers/observability-toolkit/.mcp.json
-	*	1773879295	0
+> ~/dotfiles/shell/zsh/zsh_profile
+	*	1773919832	0
 	"	1	0
 
-> ~/.claude/mcp-servers/observability-toolkit/package.json
-	*	1773879268	0
-	"	82	4
-
-> ~/.claude/mcp-servers/observability-toolkit/.claude/settings.local.json
-	*	1773874129	0
-	"	64	20
-	^	64	21
-	.	59	48
-	+	4	11
-	+	6	0
-	+	5	5
-	+	8	5
-	+	9	0
-	+	8	5
-	+	10	0
-	+	15	0
-	+	16	0
-	+	17	0
-	+	16	5
-	+	18	0
-	+	17	7
-	+	19	0
-	+	18	5
-	+	22	0
-	+	21	5
-	+	22	0
-	+	24	0
-	+	25	0
-	+	26	0
-	+	29	0
-	+	28	0
-	+	29	6
-	+	30	0
-	+	29	6
-	+	35	0
-	+	36	0
-	+	37	0
-	+	38	0
-	+	39	0
-	+	43	0
-	+	44	0
-	+	45	0
-	+	51	0
-	+	52	0
-	+	53	0
-	+	56	0
-	+	58	0
-	+	59	0
-	+	60	0
-	+	59	48
-
-> ~/code/jobs/nginx/n0ai.app.conf
-	*	1773873863	0
-	"	138	0
-
-> ~/code/is-public-sites/tcad-scraper/package.json
-	*	1773871278	0
+> ~/dotfiles/shell/bash/bash_profile
+	*	1773919799	0
 	"	1	0
 
-> ~/code/jobs/nginx/conf.d/default.conf
-	*	1773866220	0
+> ~/dotfiles/shell/bash/bash
+	*	1773919787	0
 	"	1	0
 
-> ~/code/jobs/NERD_tree_win_1
-	*	1773866189	0
-	"	1	0
-	.	1	0
-	+	1	0
-
-> ~/code/PersonalSite/assets/css/main.scss
-	*	1773859659	0
-	"	343	0
-	^	1	69
-	.	189	0
-	+	1	69
-	+	2	0
-	+	205	0
-	+	189	0
-
-> ~/code/PersonalSite/README.md
-	*	1773859617	0
-	"	66	0
-	.	43	0
-	+	42	0
-	+	43	0
-
-> ~/code/PersonalSite/CLAUDE.md
-	*	1773859596	0
-	"	40	0
-	.	40	0
-	+	29	0
-	+	33	0
-	+	35	0
-	+	36	0
-	+	89	0
-	+	88	0
-	+	89	0
-	+	97	0
-	+	96	0
-	+	35	0
-	+	36	0
-	+	39	0
-	+	40	0
-
-> ~/code/jobs/sidequest/utils/time-helpers.ts
-	*	1773836670	0
-	"	1	2
-	^	1	3
-	.	1	3
-	+	60	0
-	+	48	0
-	+	47	0
-	+	49	48
-	+	60	32
-	+	46	64
-	+	49	7
-	+	50	0
-	+	51	0
-	+	49	15
-	+	51	31
-	+	52	4
-	+	53	17
-	+	46	55
-	+	61	1
-	+	63	0
-	+	60	0
-	+	63	34
-	+	64	0
-	+	75	31
-	+	75	28
-	+	76	31
-	+	1	3
-
-> ~/code/jobs/.claude/settings.local.json
-	*	1773797301	0
-	"	46	4
-	^	46	5
-	.	40	13
-	+	7	11
-	+	4	11
-	+	20	20
-	+	20	16
-	+	20	0
-	+	20	16
-	+	20	15
-	+	20	16
-	+	20	14
-	+	20	15
-	+	20	20
-	+	20	0
-	+	20	16
-	+	20	0
-	+	24	19
-	+	24	0
-	+	20	0
-	+	20	15
-	+	25	0
-	+	25	22
-	+	25	0
-	+	26	18
-	+	26	0
-	+	26	24
-	+	29	0
-	+	7	0
-	+	20	0
-	+	20	5
-	+	20	0
-	+	24	0
-	+	25	0
-	+	26	0
-	+	29	0
-	+	29	5
-	+	29	0
-	+	16	0
-	+	29	0
-	+	27	0
-	+	30	6
-	+	30	0
-	+	31	0
-	+	30	0
-	+	31	0
-	+	17	0
-	+	30	0
-	+	18	0
-	+	30	0
-	+	19	0
-	+	31	0
-	+	20	15
-	+	31	0
-	+	32	0
-	+	34	0
-	+	31	5
-	+	34	0
-	+	5	11
-	+	20	0
-	+	5	0
-	+	20	0
-	+	6	0
-	+	34	0
-	+	35	6
-	+	35	5
-	+	35	0
-	+	23	0
-	+	20	5
-	+	23	0
-	+	36	0
-	+	35	5
-	+	37	0
-	+	36	6
-	+	37	0
-	+	36	5
-	+	37	0
-	+	7	0
-	+	10	0
-	+	7	0
-	+	10	0
-	+	37	0
-	+	38	5
-	+	38	0
-	+	37	30
-	+	5	0
-	+	40	16
-	+	40	12
-	+	41	0
-	+	40	13
-
-> ~/code/jobs/.claude/skills.local.json
-	*	1773797276	0
+> ~/dotfiles/shell/bash/prompt.bash
+	*	1773919669	0
 	"	1	0
 
-> ~/code/jobs/.claude/settings.json
-	*	1773796629	0
+> ~/dotfiles/shell/zsh/prompt.zsh
+	*	1773919570	0
 	"	1	0
 
-> ~/.claude/mcp-servers/observability-toolkit/dashboard/package.json
-	*	1773795762	0
-	"	21	12
-	^	21	13
-	.	21	13
-	+	21	92
-	+	21	13
-
-> ~/code/jobs/package.json
-	*	1773795553	0
-	"	23	0
-	^	161	5
-	.	22	0
-	+	56	20
-	+	161	5
-	+	22	0
-
-> ~/.env
-	*	1773787518	0
+> ~/dotfiles/shell/zsh/zprofile
+	*	1773919559	0
 	"	1	0
 
-> ~/code/jobs/scripts/setup/fix-types.ts
-	*	1773748122	0
-	"	1	0
-
-> ~/code/PersonalSite/package.json
-	*	1773747673	0
-	"	12	54
-	^	12	55
-	.	11	54
-	+	12	0
-	+	11	54
-
-> ~/code/jobs/scripts/setup/configure-discord-alerts.js
-	*	1773747454	0
-	"	71	4
-	^	71	5
-	.	17	0
-	+	21	43
-	+	96	20
-	+	40	0
-	+	17	0
-	+	15	0
-	+	16	54
-	+	17	1
-	+	15	1
-	+	41	0
-	+	40	0
-	+	46	0
-	+	40	0
-	+	47	0
-	+	46	4
-	+	155	46
-	+	156	58
-	+	161	52
-	+	39	0
-	+	12	0
-	+	14	0
-	+	16	0
-	+	17	24
-	+	17	0
-
-> ~/code/jobs/tsconfig.json
-	*	1773747034	0
-	"	1	0
-
-> ~/code/jobs/tsconfig.base.json
-	*	1773747028	0
-	"	1	0
-
-> ~/code/jobs/pnpm-workspace.yaml
-	*	1773747013	0
-	"	1	0
-
-> ~/code/jobs/scripts/setup/setup-monitoring.js
-	*	1773746094	0
-	"	12	0
-	^	13	2
-	.	13	2
-	+	121	53
-	+	157	65
-	+	24	6
-	+	13	2
-
-> ~/code/jobs/scripts/setup/load-doppler-env.sh
-	*	1773745533	0
-	"	62	0
-	^	44	44
-	.	30	53
-	+	39	16
-	+	40	103
-	+	40	69
-	+	41	0
-	+	30	53
-
-> ~/code/jobs/scripts/setup/sentry-to-discord.js
-	*	1773742526	0
-	"	1	0
-
-> ~/code/jobs/scripts/sentty-to-discord.js
-	*	1773742514	0
-	"	1	0
-
-> ~/code/jobs/.env
-	*	1773741213	0
-	"	35	24
-	^	35	25
-	.	35	24
-	+	66	87
-	+	66	84
-	+	66	73
-	+	66	78
-	+	66	75
-	+	66	80
-	+	66	73
-	+	66	79
-	+	64	0
-	+	64	44
-	+	62	73
-	+	64	0
-	+	66	62
-	+	64	92
-	+	64	68
-	+	64	0
-	+	64	35
-	+	62	30
-	+	39	54
-	+	6	0
-	+	1	1
-	+	3	12
-	+	3	37
-	+	3	28
-	+	4	9
-	+	6	0
-	+	64	0
-	+	66	78
-	+	66	87
-	+	66	62
-	+	6	0
-	+	20	86
-	+	66	62
-	+	24	0
-	+	27	0
-	+	66	62
-	+	67	0
-	+	27	0
-	+	8	0
-	+	1	0
-	+	1	51
-	+	2	20
-	+	2	0
-	+	7	6
-	+	12	16
-	+	27	0
-	+	37	0
-	+	38	62
-	+	39	0
-	+	19	0
-	+	20	98
-	+	39	51
-	+	39	54
-	+	64	0
-	+	39	34
-	+	38	32
-	+	40	43
-	+	64	0
-	+	20	86
-	+	21	0
-	+	20	12
-	+	19	32
-	+	20	9
-	+	66	62
-	+	60	15
-	+	60	0
-	+	54	34
-	+	55	44
-	+	57	54
-	+	60	0
-	+	47	50
-	+	48	0
-	+	59	47
-	+	48	0
-	+	51	0
-	+	60	0
-	+	64	0
-	+	58	0
-	+	64	38
-	+	64	0
-	+	63	39
-	+	53	12
-	+	55	0
-	+	56	52
-	+	64	0
-	+	39	8
-	+	65	20
-	+	13	14
-	+	37	0
-	+	20	0
-	+	37	0
-	+	20	86
-	+	21	0
-	+	20	0
-	+	5	0
-	+	53	9
-	+	66	10
-	+	22	0
-	+	21	27
-	+	35	24
-
-> ~/code/jobs/scripts/setup/setup-sentry.js
-	*	1773741160	0
-	"	28	2
-
-> ~/code/jobs/scripts/setup/.env
-	*	1773741148	0
-	"	1	0
-
-> ~/code/jobs/scripts/setup/setup-doppler-sentry.js
-	*	1773740884	0
-	"	9	0
-
-> ~/code/jobs/scripts/setup/verify-setup.ts
-	*	1773739861	0
-	"	86	1
-
-> ~/code/PersonalSite/scripts/find-path.sh
-	*	1773739396	0
-	"	1	0
-
-> ~/code/PersonalSite/find-path.sh
-	*	1773739391	0
-	"	1	0
-
-> ~/code/jobs/scripts/repomix/repomix-regen.sh
-	*	1773738584	0
-	"	59	0
-
-> ~/code/jobs/config/populate.config.cjs
-	*	1773738230	0
-	"	36	2
-	^	22	27
-	.	21	38
-	+	1	2
-	+	1	1
-	+	1	0
-	+	14	0
-	+	34	38
-	+	33	34
-	+	35	54
-	+	36	29
-	+	37	59
-	+	19	34
-	+	21	37
-	+	22	26
-	+	8	12
-	+	21	38
-
-> ~/code/jobs/config/ecosystem.config.cjs
-	*	1773737816	0
-	"	164	6
-	^	155	36
-	.	155	35
-	+	42	38
-	+	43	48
-	+	44	42
-	+	45	42
-	+	46	42
-	+	47	58
-	+	28	28
-	+	29	31
-	+	31	37
-	+	32	34
-	+	31	39
-	+	18	0
-	+	33	41
-	+	34	29
-	+	33	41
-	+	35	55
-	+	32	37
-	+	106	42
-	+	105	42
-	+	104	42
-	+	103	48
-	+	102	38
-	+	107	58
-	+	113	63
-	+	112	37
-	+	111	30
-	+	110	27
-	+	109	27
-	+	108	23
-	+	167	23
-	+	154	37
-	+	155	27
-	+	158	35
-	+	154	35
-	+	155	35
-
-> ~/code/jobs/config/config.yml
-	*	1773734660	0
-	"	24	0
-	^	24	0
-	.	24	0
-	+	3	42
-	+	24	0
-
-> ~/.claude/mcp-servers/observability-toolkit/dashboard/tsconfig.json
-	*	1773734469	0
-	"	1	0
-
-> ~/code/jobs/config.yaml
-	*	1773734214	0
-	"	1	0
-
-> ~/code/jobs/scripts/deploy/deploy-traditional-server.sh
-	*	1773734014	0
-	"	584	0
-
-> ~/code/jobs/scripts/deploy/warm-doppler-cache.sh
-	*	1773733915	0
-	"	12	0
-
-> ~/dotfiles/shell/functions.sh
-	*	1773731446	0
-	"	1	0
+> ~/.zshrc
+	*	1773919325	0
+	"	4	0
+	.	4	0
+	+	4	0

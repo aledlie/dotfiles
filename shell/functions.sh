@@ -63,7 +63,7 @@ load_doppler_cache() {
 doppler_cache_info() {
   echo "Project: ${DOPPLER_CACHE_PROJECT:-none}"
   echo "Config:  ${DOPPLER_CACHE_CONFIG:-none}"
-  echo "Secrets: ${#DOPPLER_CACHE[@]}"
+  echo "Secrets: $((${#DOPPLER_CACHE[@]:-0}))"
 }
 
 # Read a doppler key from cache
@@ -73,8 +73,8 @@ doppler_get() {
   local default="${2-}"
 
   [[ -z "$key" ]] && {
-    printf '%s\n' "$default"
-    return
+    printf 'doppler_get: key required\n' >&2
+    return 1
   }
 
   [[ -n "${DOPPLER_CACHE[$key]+set}" ]] && {
@@ -116,9 +116,6 @@ doppler_cache_debug() {
 
 # Clear the in-memory Doppler cache (secrets remain in any already-exported env vars)
 unload_doppler_cache() {
-  if [[ -n "${ZSH_VERSION:-}" ]]; then
-    typeset -gA DOPPLER_CACHE
-  fi
   DOPPLER_CACHE=()
   unset DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
 }
@@ -167,7 +164,7 @@ extract() {
 
 # Find process by name
 findproc() {
-    ps aux | grep -i "$1" | grep -v grep
+    ps aux | grep -i "[${1:0:1}]${1:1}"
 }
 
 # Quick backup of a file
