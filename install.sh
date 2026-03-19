@@ -77,6 +77,7 @@ main() {
     create_symlink "shell/zsh/zsh_profile" ".zprofile"
     create_symlink "shell/bash/bashrc" ".bashrc"
     create_symlink "shell/bash/bash_profile" ".bash_profile"
+    create_symlink "shell/dircolors" ".dircolors"
 
     # Create symlinks for other configurations
     create_symlink "git/gitconfig" ".gitconfig"

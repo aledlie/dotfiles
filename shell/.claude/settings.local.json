@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source /Users/alyshialedlie/dotfiles/shell/functions.sh && load_doppler_cache && doppler_cache_has WIX_API_KEY && doppler_cache_info)",
+      "Bash(doppler secrets:*)",
+      "Bash(source /Users/alyshialedlie/dotfiles/shell/functions.sh && load_doppler_cache && doppler_get WIX_API_KEY)",
+      "Bash(source /Users/alyshialedlie/dotfiles/shell/functions.sh && load_doppler_cache && doppler_get GOOGLE_OAUTH_CLIENT_ID_CALENDAR | wc -c)",
+      "Bash(source /Users/alyshialedlie/dotfiles/shell/common.sh && echo \"GOOGLE_ANALYTICS_MEASUREMENT_ID: $GOOGLE_ANALYTICS_MEASUREMENT_ID\")",
+      "Bash(zsh -l -c 'echo \"zsh: DEV_WORKER_URL=${#DEV_WORKER_URL}c GITHUB_TOKEN=${#GITHUB_TOKEN}c STRIPE_API_KEY=${#STRIPE_API_KEY}c HUBSPOT_PAT=${#HUBSPOT_PAT}c\"')",
+      "Bash(bash -l -c 'echo \"bash: DEV_WORKER_URL=${#DEV_WORKER_URL}c GITHUB_TOKEN=${#GITHUB_TOKEN}c STRIPE_API_KEY=${#STRIPE_API_KEY}c HUBSPOT_PAT=${#HUBSPOT_PAT}c\"')",
+      "Bash(bash -l -c 'echo \"DOTFILES_DIR=$DOTFILES_DIR\"')",
+      "Bash(chmod +x /Users/alyshialedlie/dotfiles/tests/test-shell-startup.sh && /Users/alyshialedlie/dotfiles/tests/test-shell-startup.sh)",
+      "Bash(/Users/alyshialedlie/dotfiles/tests/test-shell-startup.sh)",
+      "Bash(wc -l /Users/alyshialedlie/dotfiles/tests/test-shell-startup.sh /Users/alyshialedlie/dotfiles/shell/*.sh)",
+      "Bash(bash tests/test-common-env.sh 2>&1)",
+      "Bash(bash tests/test-functions.sh 2>&1)",
+      "Bash(git push:*)",
+      "Bash(bash tests/test-aliases.sh 2>&1)",
+      "Bash(make test:*)",
+      "Bash(bash tests/test-common-env.sh 2>&1; echo \"EXIT: $?\")",
+      "Bash(git add:*)",
+      "Bash(cd /Users/alyshialedlie/dotfiles && bash -n tests/test-shell-startup.sh && echo \"OK\" || echo \"SYNTAX ERROR\")",
+      "Bash(grep -n 'ls -A.*BACKUP_DIR\\\\|create_symlink\\\\|main.*\\\\$@' /Users/alyshialedlie/dotfiles/install.sh 2>/dev/null | head -10)",
+      "Skill(git-commit-smart)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles log --oneline origin/main..HEAD)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles push)"
+    ]
+  }
+}

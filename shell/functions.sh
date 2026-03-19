@@ -25,7 +25,7 @@ load_doppler_cache() {
   local json doppler_err jq_err
   doppler_err=$(mktemp) || return 1
   jq_err=$(mktemp) || { rm -f "$doppler_err"; return 1; }
-  trap 'rm -f "$doppler_err" "$jq_err"' RETURN
+  _doppler_cleanup() { rm -f "$doppler_err" "$jq_err"; }
 
   if ! json=$(doppler secrets download \
       --no-file \
@@ -34,13 +34,13 @@ load_doppler_cache() {
       --config "$config" 2>"$doppler_err"); then
     printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
       "$project" "$config" "$(cat "$doppler_err")" >&2
-    return 1
+    _doppler_cleanup; return 1
   fi
 
   local parsed
   if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
     printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
-    return 1
+    _doppler_cleanup; return 1
   fi
 
   while IFS=$'\t' read -r k v; do
@@ -51,11 +51,12 @@ load_doppler_cache() {
   if [[ ${#DOPPLER_CACHE[@]} -eq 0 ]]; then
     printf 'load_doppler_cache: warning: 0 secrets loaded for %s/%s\n' \
       "$project" "$config" >&2
-    return 1
+    _doppler_cleanup; return 1
   fi
 
   DOPPLER_CACHE_PROJECT="$project"
   DOPPLER_CACHE_CONFIG="$config"
+  _doppler_cleanup
 }
 
 # Check current doppler cache status
@@ -126,15 +127,15 @@ unload_doppler_cache() {
 dirsize() {
     local tmpfile
     tmpfile=$(mktemp) || return 1
-    trap 'rm -f "$tmpfile"' RETURN
     du -shx ./* ./.[^.]* ./..?* 2>/dev/null | \
     grep -E '^ *[0-9.]*[MG]' | sort -n > "$tmpfile"
     if [[ ! -s "$tmpfile" ]]; then
         echo "No directories above 1M" >&2
-        return 0
+        rm -f "$tmpfile"; return 0
     fi
     grep -E '^ *[0-9.]*M' "$tmpfile"
     grep -E '^ *[0-9.]*G' "$tmpfile"
+    rm -f "$tmpfile"
 }
 
 # Create directory and cd into it

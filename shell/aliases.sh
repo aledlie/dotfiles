@@ -1,56 +1,12 @@
-## ----------------- Base values ----------------- ##
-# Leviathan (macOS) architecture
-export ARCH="$(uname -m)"
+# -------------------- Convenience Aliases - all archs --------------- #
 
-# Doppler project names
-export DOPPLER_PROJECT_INTEGRITY="integrity-studio"
-export DOPPLER_PROJECT_ANALYTICS="analyticsbot"
-export DOPPLER_PROJECT_PERSONAL="personal-info"
-export DOPPLER_PROJECT_ACCOUNTING="accounting"
-export DOPPLER_PROJECT_ATX="atx-movement"
-export DOPPLER_PROJECT_BOTTLENECK="bottleneck"
-export DOPPLER_PROJECT_FINANCIAL="financial-hub"
-export DOPPLER_PROJECT_LEGAL="legal"
-export DOPPLER_PROJECT_PROPERTY="property"
-export DOPPLER_CONFIG_DEFAULT="dev"
-export DOPPLER_CONFIG_PRODUCTION="production"
-# Sentry org-level values
-export SENTRY_DISPLAY_NAME="integrity"
-export SENTRY_ORG_SLUG="integrity-jq"
-export SENTRY_ORG="integrity-jq"
-export SENTRY_ORG_ID=4510317437124608
-# Global config values for OTEL-based obtool-ingest
-export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
-export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
-export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
-export OTEL_SERVICE_NAME="claude-code-hooks"
-export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
-# Claude Code directories (global for hooks in any directory)
-export CLAUDE_CONFIG_DIR="$HOME/.claude"
-export CLAUDE_LOGS_DIR="$CLAUDE_CONFIG_DIR/logs"
-export CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$HOME}"
-export CLAUDE_TELEMETRY_DIR="$CLAUDE_CONFIG_DIR/telemetry"
-export CLAUDE_HOOKS_DIR="$CLAUDE_CONFIG_DIR/hooks"
-export CLAUDE_SKILLS_DIR="$CLAUDE_CONFIG_DIR/skills"
-export CLAUDE_AGENTS_DIR="$CLAUDE_CONFIG_DIR/agents"
-export CLAUDE_SCRIPTS_DIR="$CLAUDE_CONFIG_DIR/scripts"
-
-# ------------------ Doppler secrets (lazy-loaded) -------------- #
-# Secrets are NOT exported on startup. Use these patterns instead:
-#   secret GITHUB_TOKEN                        # one-shot read (no export)
-#   GITHUB_TOKEN=$(secret GITHUB_TOKEN) git push  # inline for a single command
-#   doppler_export GITHUB_TOKEN STRIPE_API_KEY # export specific vars
-#   doppler_export_all                         # export everything (rare)
-# See _DOPPLER_ALL_SECRETS in doppler-secrets.sh for the full list of available names.
-
-# -------------------- Convenience Aliases ---------------- #
-
-# Listing variants (uses ls alias from common.sh; LS_COLORS loaded via gdircolors in common.sh)
-alias l="ls -lF $colorflag"
-alias ll="ls -lv --group-directories-first"
-alias lm="ll |more"
-alias lr="ll -r"
-alias la="ll -laf"
+# Listing variants (ls alias and LS_COLORS set in common.sh via dircolors)
+# ---- eza (ls replacement) ----
+EZA_BASE="eza --icons --group-directories-first --git"
+alias ls="$EZA_BASE"
+alias ll="$EZA_BASE -lh"
+alias la="$EZA_BASE -lha"
+alias lt="$EZA_BASE --tree"
 alias tree="tree -Csuh"
 
 # Enable aliases to be sudo'ed
@@ -75,23 +31,23 @@ alias code="cd ~/code"
 alias h="history"
 
 # Common project paths
-alias jobs="~/code/jobs"
-alias integrity-ai="~/code/is-public-sites/IntegrityStudioLandingPage"
-alias obtool="~/.claude/mcp-servers/observability-toolkit"
-alias obtool-ui="~/.claude/mcp-servers/observability-toolkit/dashboard"
-alias tcad="~/code/is-public-sites/tcad-scraper"
-alias blog="~/code/PersonalSite"
-alias reports="~/reports"
-alias ast="~/code/ast-grep-mcp"
+alias jobs="cd ~/code/jobs"
+alias integrity-ai="cd ~/code/is-public-sites/IntegrityStudioLandingPage"
+alias obtool="cd ~/.claude/mcp-servers/observability-toolkit"
+alias obtool-ui="cd ~/.claude/mcp-servers/observability-toolkit/dashboard"
+alias tcad="cd ~/code/is-public-sites/tcad-scraper"
+alias blog="cd ~/code/PersonalSite"
+alias reports="cd ~/reports"
+alias ast="cd ~/code/ast-grep-mcp"
 
 # Doppler shorthand
 alias dp="doppler secrets --project integrity-studio --config dev --"
 
+# MCP server quick toggle
+alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
+
 # IP addresses
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
-
-# Clipboard
-alias c="tr -d '\n' | pbcopy"
 
 # Cleanup
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
@@ -108,28 +64,8 @@ alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date
 # Reload shell
 alias reload="exec $SHELL -l"
 
-# Volume control
-alias stfu="osascript -e 'set volume output muted true'"
-alias pumpitup="osascript -e 'set volume 7'"
-
-# Kill Chrome renderer tabs
-alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
-
-# Lock screen
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
-
-# OS X fallbacks
-command -v md5sum > /dev/null || alias md5sum="md5"
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
-
 # URL-encode strings
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
-
-# Merge PDF files
-alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
-
-# PlistBuddy
-alias plistbuddy="/usr/libexec/PlistBuddy"
 
 # HTTP method aliases
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
@@ -137,7 +73,28 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 # macOS specific aliases
-if [[ "$PLATFORM" == "macos" ]]; then
+if [[ "$ARCH" == "macos" ]]; then
+    # Volume control
+    alias stfu="osascript -e 'set volume output muted true'"
+    alias pumpitup="osascript -e 'set volume 7'"
+    alias c="tr -d '\n' | pbcopy"
+
+   # Kill Chrome renderer tabs
+    alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
+
+    # Lock screen
+    alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+
+    # Hash fallbacks
+    command -v md5sum > /dev/null || alias md5sum="md5"
+    command -v sha1sum > /dev/null || alias sha1sum="shasum"
+
+    # Merge PDF files
+    alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
+
+    # PlistBuddy
+    alias plistbuddy="/usr/libexec/PlistBuddy"
+
     # System update
     alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
 
@@ -166,3 +123,8 @@ if [[ "$PLATFORM" == "macos" ]]; then
     # Spotlight
     alias spoton="sudo mdutil -a -i on"
 fi
+
+# ---- bat fix & clipboard - Ubuntu & linux safe ----
+command -v batcat >/dev/null && alias bat='batcat'
+command -v xclip >/dev/null && alias c="tr -d '\n' | xclip -selection clipboard"
+command -v xsel >/dev/null && alias c="tr -d '\n' | xsel --clipboard"

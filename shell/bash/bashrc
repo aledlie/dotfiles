@@ -6,18 +6,7 @@
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # Load common shell configuration
-[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && source "$DOTFILES_DIR/shell/common.sh"
-
-# Initialize pyenv for bash (kept shell-specific).
-if command -v pyenv >/dev/null 2>&1; then
-    _pyenv_init_cmd="$(pyenv init - bash)"
-    # Avoid startup warnings when shims are not writable.
-    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
-        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | sed '/^command pyenv rehash$/d')"
-    fi
-    eval "$_pyenv_init_cmd"
-    unset _pyenv_init_cmd
-fi
+[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && builtin source "$DOTFILES_DIR/shell/common.sh"
 
 # Bash-specific settings
 export HISTCONTROL=ignoredups:erasedups
@@ -34,6 +23,8 @@ command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 
 # Load custom prompt
 [[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"

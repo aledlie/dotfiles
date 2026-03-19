@@ -1,25 +1,10 @@
-# Skip kiro-cli-term PTY wrapper (suppresses MallocStackLogging noise)
-export SHOULD_QTERM_LAUNCH=1
-export PROCESS_LAUNCHED_BY_Q=1
-export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export SHELL_DIR="$DOTFILES_DIR/shell"
 # Load common shell configuration
-[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && builtin source "$DOTFILES_DIR/shell/common.sh"
-
-# Initialize pyenv for zsh (kept shell-specific).
-if command -v pyenv >/dev/null 2>&1; then
-    export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
-    _pyenv_init_cmd="$(pyenv init - zsh)"
-    # Avoid startup warnings when shims are not writable.
-    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
-        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | sed '/^command pyenv rehash$/d')"
-    fi
-    eval "$_pyenv_init_cmd"
-    unset _pyenv_init_cmd
-fi
+[[ -f "$SHELL_DIR/common.sh" ]] && builtin source "$SHELL_DIR/common.sh"
 
 # Zsh-specific settings
 setopt AUTO_CD              # cd by typing directory name if it's not a command
@@ -53,26 +38,22 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
-# Claude Code Aliases
-[[ -f "$HOME/.claude/shell-aliases.sh" ]] && builtin source "$HOME/.claude/shell-aliases.sh"
-# CLAUDE_* exports live in dotfiles/shell/aliases.sh (sourced via common.sh)
+# OTEL_* directory exports below; other shared exports in dotfiles/shell/common.sh
+export OTEL_CONFIG_DIR="$HOME/.claude"
+
+# Sync OBTOOL API key (throttled to once per hour)
+_STAMP="$OTEL_CONFIG_DIR/.sync-obtool-key.stamp"
+if [[ ! -f "$_STAMP" ]] || (( $(date +%s) - $(stat -f %m "$_STAMP" 2>/dev/null || echo 0) > 3600 )); then
+  "$OTEL_CONFIG_DIR/scripts/otel/sync-obtool-key.sh" 2>/dev/null && touch "$_STAMP"
+fi
+unset _STAMP
+
 ## [Completion]
 ## Completion scripts setup. Remove the following line to uninstall
-[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && . "$HOME/.dart-cli-completion/zsh-config.zsh" || true
+[[ -f "$HOME/.dart-cli-completion/zsh-config.zsh" ]] && builtin source "$HOME/.dart-cli-completion/zsh-config.zsh" || true
 ## [/Completion]
 
-# MCP server quick toggle
-alias mcp-webresearch='claude mcp add open-webresearch -s user -- docker run -i ghcr.io/rinaldowouterson/mcp-open-webresearch:latest'
-
-# Sync obtool API key from Doppler to Claude Code settings (throttled to once/hour)
-_sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
-_stamp_age=$(( $(date +%s) - $(stat -f %m "$_sync_stamp" 2>/dev/null || echo 0) ))
-if [[ ! -f "$_sync_stamp" ]] || (( _stamp_age > 3600 )); then
-  touch "$_sync_stamp"
-  { ~/.claude/scripts/otel/sync-obtool-key.sh >> "$HOME/.claude/logs/sync-obtool-key.log" 2>&1; } &!
-fi
-unset _sync_stamp _stamp_age
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
-

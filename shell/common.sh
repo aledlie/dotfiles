@@ -1,18 +1,42 @@
-# Common shell configuration
-# Shared between bash and zsh
+# Common shell configuration shared between bash and zsh
 
+# ---------- shell quality-of-life ----------
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="${VISUAL:-$EDITOR}"
+export HISTSIZE=50000
+export HISTFILESIZE=100000
+export SAVEHIST=50000
 # Platform detection
-case "$(uname -s)" in
-    Darwin*)
-        export PLATFORM="macos"
-        ;;
-    Linux*)
-        export PLATFORM="linux"
-        ;;
-    *)
-        export PLATFORM="unknown"
-        ;;
-esac
+export ARCH="${ARCH:-$(uname -m)}"
+
+# Enable color support for GNU ls if available
+if ls --color=auto >/dev/null 2>&1; then
+  alias _plain_ls='ls --color=auto'
+else
+  alias _plain_ls='ls -G'
+fi
+
+# helpful aliases & colors
+[[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
+
+# Load git prompt if available
+if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
+    source "$DOTFILES_DIR/git/git-prompt.sh"
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
+fi
+
+# ---------- otel config  ----------
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
+export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
+export OTEL_SERVICE_NAME="claude-code-hooks"
+export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=alyshia"
+
+
+# ---------- dev dependency sanity ----------
 
 # Prepend to PATH only if the entry is not already present
 _path_prepend() {
@@ -21,15 +45,8 @@ _path_prepend() {
     *) export PATH="$1:$PATH" ;;
   esac
 }
-
-# Common exports
-export EDITOR=vim
-export HISTSIZE=50000
-export HISTFILESIZE=100000
-export SAVEHIST=50000
-
 # Add Homebrew to PATH (macOS)
-if [[ "$PLATFORM" == "macos" ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
     _path_prepend "/opt/homebrew/bin"
     _path_prepend "/opt/homebrew/sbin"
 fi
@@ -40,27 +57,17 @@ _path_prepend "$HOME/.local/bin"
 # Dart/Flutter pub cache (Flutter installed via Homebrew)
 _path_prepend "$HOME/.pub-cache/bin"
 
+# add rustup to PATH
+_path_prepend "$HOME/.cargo/bin"
+
 # Use nvm instead of brew default for node and typescript
-unset NPM_CONFIG_PREFIX
-unset npm_config_prefix
 export NVM_DIR="$HOME/.nvm"
 _nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "$_nvm_sh" ] && . "$_nvm_sh"
 unset _nvm_sh
 
-# custom GO setup
-export GOPATH="$HOME/code-env/go"
-_path_prepend "$GOPATH/bin"
-
-# custom Rust configuration
-export RUSTUP_HOME="$HOME/code-env/rust/rustup"
-export CARGO_HOME="$HOME/code-env/rust/cargo"
-_path_prepend "$CARGO_HOME/bin"
-
-# custom Ruby configuration via chruby
-export BUNDLE_USER_CONFIG="$HOME/code-env/ruby/bundle/config"
 # chruby configuration - auto-switch Ruby versions
-if [[ "$PLATFORM" == "macos" ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
   _chruby_sh="/opt/homebrew/opt/chruby/share/chruby/chruby.sh"
   _chruby_auto="/opt/homebrew/opt/chruby/share/chruby/auto.sh"
   [[ -f "$_chruby_sh" ]] && source "$_chruby_sh"
@@ -72,49 +79,60 @@ if [[ "$PLATFORM" == "macos" ]]; then
   unset _chruby_sh _chruby_auto
 fi
 
-# python macOS support
-# macOS specific path config for python
+# Python via pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
 
-# Platform-specific color flags
-if [[ "$PLATFORM" == "macos" ]]; then
-    export colorflag="-G"
-    # Use GNU ls if available (installed via brew install coreutils)
-    if command -v gls >/dev/null 2>&1; then
-        alias ls='gls --color=auto'
-        if command -v dircolors >/dev/null 2>&1 && [[ -f "$DOTFILES_DIR/shell/dircolors" ]]; then
-            eval "$(dircolors "$DOTFILES_DIR/shell/dircolors")"
-        fi
-    else
-        alias ls='ls -G'
+# Initialize pyenv (shell name detected automatically)
+if command -v pyenv >/dev/null 2>&1; then
+    _pyenv_shell="${ZSH_VERSION:+zsh}"
+    _pyenv_shell="${_pyenv_shell:-bash}"
+    _pyenv_init_cmd="$(pyenv init - "$_pyenv_shell")"
+    # Avoid startup warnings when shims are not writable.
+    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | sed '/^command pyenv rehash$/d')"
     fi
-else
-    export colorflag="--color=auto"
-    alias ls='ls --color=auto'
+    eval "$_pyenv_init_cmd"
+    unset _pyenv_shell _pyenv_init_cmd
 fi
 
-# Load git prompt if available
-if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
-    source "$DOTFILES_DIR/git/git-prompt.sh"
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-fi
+# ---------- secret management quality-of-life ----------
 
-# Load additional modules
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-[[ -f "$DOTFILES_DIR/shell/functions.sh" ]] && source "$DOTFILES_DIR/shell/functions.sh"
+# list of available doppler projects
+export PROJECT_INTEGRITY="integrity-studio"
+export PROJECT_ANALYTICS="analyticsbot"
+export PROJECT_PERSONAL="personal-info"
+export PROJECT_ACCOUNTING="accounting"
+export PROJECT_ATX="atx-movement"
+export PROJECT_BOTTLENECK="bottleneck"
+export PROJECT_FINANCIAL="financial-hub"
+export PROJECT_LEGAL="legal"
+export PROJECT_PROPERTY="property"
+export CONFIG_DEV="dev"
+export CONFIG_PRODUCTION="production"
+DEFAULT_PROJECT="$PROJECT_INTEGRITY"
+DEFAULT_CONFIG="$CONFIG_DEV"
+SHELL_DIR="$DOTFILES_DIR/shell"
 
-# Secrets are managed via Doppler (https://doppler.com) and can be accessed via doppler_get [key_name]
-# to avoid reads every time, load the default values (--project integrity-studio --config dev) into cache
+# pull secrets from doppler with default project and dev configuration into cache for faster reads
+[[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
 if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
-  load_doppler_cache 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
+  load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
 fi
-# To change doppler projects or configs: load_doppler_cache [project] [config]
-# For a list of doppler projects, see ~/dotfiles/shell/aliases.sh
-# to check current doppler cache loaded, run doppler_cache_info
-[[ -f "$DOTFILES_DIR/shell/doppler-secrets.sh" ]] && source "$DOTFILES_DIR/shell/doppler-secrets.sh"
+# set secrets to process.env from cached values so they can be accessed via 'secret [key]'
+[[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 
-[[ -f "$DOTFILES_DIR/shell/aliases.sh" ]] && source "$DOTFILES_DIR/shell/aliases.sh"
+# Sync obtool API key from Doppler to Coding agent settings (throttled to once/hour)
+_sync_stamp="$HOME/.claude/.sync-obtool-key.stamp"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  _stamp_mtime=$(stat -f %m "$_sync_stamp" 2>/dev/null || echo 0)
+else
+  _stamp_mtime=$(stat -c %Y "$_sync_stamp" 2>/dev/null || echo 0)
+fi
+_stamp_age=$(( $(date +%s) - _stamp_mtime ))
+unset _stamp_mtime
+if [[ ! -f "$_sync_stamp" ]] || (( _stamp_age > 3600 )); then
+  touch "$_sync_stamp"
+  { ~/.claude/scripts/otel/sync-obtool-key.sh >> "$HOME/.claude/logs/sync-obtool-key.log" 2>&1; } & disown
+fi
+unset _sync_stamp _stamp_age

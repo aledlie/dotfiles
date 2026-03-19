@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Skill(git-commit-smart)",
+      "Skill(session-backlog)",
+      "Skill(backlog-migrate)"
+    ]
+  }
+}

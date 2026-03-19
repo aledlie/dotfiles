@@ -4,9 +4,9 @@
 
 ## Medium (P3)
 
-#### M6: Rename CLAUDE_* env vars to OBTOOL_* across dotfiles and hooks
+#### M6: Migrate CLAUDE_* consumers to OTEL_* env vars
 **Priority**: P3 | **Source**: manual
-`CLAUDE_CONFIG_DIR`, `CLAUDE_LOGS_DIR`, `CLAUDE_PROJECT_DIR`, `CLAUDE_TELEMETRY_DIR` should be renamed to `OBTOOL_CONFIG_DIR`, `OBTOOL_LOGS_DIR`, `OBTOOL_PROJECT_DIR`, `OBTOOL_TELEMETRY_DIR` to decouple from upstream Claude Code naming. Update `shell/aliases.sh`, `~/.claude/hooks/lib/constants.ts`, and all hook consumers. Keep `CLAUDE_*` as fallback aliases during migration.
+Primary exports renamed to `OTEL_CONFIG_DIR`, `OTEL_LOGS_DIR`, etc. in `shell/common.sh`. Backward-compat `CLAUDE_*` aliases still exported. Remaining: update `~/.claude/hooks/lib/constants.ts`, `~/.claude/scripts/lib/colors.{js,sh}`, `~/.claude/scripts/env/`, and `~/code/jobs/` consumers to read `OTEL_*` instead of `CLAUDE_*`, then remove the compat aliases.
 
 ## Low (P4)
 
