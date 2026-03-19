@@ -6,9 +6,18 @@
 #   GITHUB_TOKEN=$(secret GITHUB_TOKEN) git push # inline for a single command
 #   doppler_export GITHUB_TOKEN STRIPE_API_KEY   # export specific vars
 #   doppler_export_all                           # export everything (rare)
+#
+# Note: secrets with raw embedded newlines (e.g. PEM keys) are truncated by
+# command substitution. Escaped \n literals in JSON values are unaffected.
 
 # zsh-only: associative arrays and typeset -gA are not available in bash
 [[ -n "${ZSH_VERSION:-}" ]] || return 0
+
+# Guard: cache must be loaded before this file is useful
+if [[ -z "${DOPPLER_CACHE_PROJECT:-}" ]]; then
+  printf 'doppler-secrets.sh: cache not loaded; run load_doppler_cache first\n' >&2
+  return 1
+fi
 
 # Env var name -> doppler key name (only non-identity mappings needed)
 typeset -gA _DOPPLER_SECRET_NAMES
@@ -19,128 +28,35 @@ _DOPPLER_SECRET_NAMES=(
   [OTEL_API_KEY]=OBTOOL_API_KEY
 )
 
-# All available secret names (for doppler_export_all and discoverability)
+# Reverse mapping: doppler key name -> env var alias (built from _DOPPLER_SECRET_NAMES)
+typeset -gA _DOPPLER_REVERSE_NAMES
+_DOPPLER_REVERSE_NAMES=()
+local _env _dop
+for _env _dop in "${(@kv)_DOPPLER_SECRET_NAMES}"; do
+  _DOPPLER_REVERSE_NAMES[$_dop]="$_env"
+done
+unset _env _dop
+
+# All available secret names — derived from DOPPLER_CACHE keys at source time.
+# Filters out Doppler metadata keys (DOPPLER_PROJECT, DOPPLER_CONFIG, DOPPLER_ENVIRONMENT).
 typeset -ga _DOPPLER_ALL_SECRETS
-_DOPPLER_ALL_SECRETS=(
-  ANTHROPIC_API_KEY
-  CLAUDE_API_KEY_ADMIN
-  CLAUDE_API_KEY_SUDO
-  META_ACCESS_TOKEN
-  GOOGLE_ANALYTICS_MEASUREMENT_ID
-  GTM_CONTAINER_ID
-  GOOGLE_CLIENT_EMAIL
-  GOOGLE_PRIVATE_KEY
-  GOOGLE_OAUTH_CLIENT_ID_CALENDAR
-  GOOGLE_OAUTH_CLIENT_SECRET_CALENDAR
-  GOOGLE_TAG_MANAGER_CONTAINER_ID
-  RESEND_API_KEY
-  LANGTRACE_ACCESS_TOKEN
-  LANGTRACE_API_KEY
-  OTEL_INGEST_ROUTE
-  OTEL_INGEST_URL
-  OTEL_INGEST_PREVIEW_URL
-  OTEL_API_KEY
-  SENTRY_DSN
-  SENTRY_AUTH_TOKEN
-  SENTRY_API_TOKEN
-  SENTRY_TOKEN
-  SENTRY_TOKEN_HEADER
-  FILE_SYSTEM_SENTRY_DSN
-  VITE_SENTRY_DSN
-  DOPPLER_DSN
-  FB_ANALYTICS_APP_ID
-  FB_APP_ID
-  FB_APP_SECRET
-  FB_PIXEL_ID
-  FB_REDIRECT_URI
-  GCLOUD_RW_API_KEY
-  GEMINI_API_KEY
-  GOOGLE_ANALYTICS_API_SECRET
-  GMAIL_APP_CLIENT_ID
-  GMAIL_APP_SECRET
-  GOOGLE_AUTH_CLIENT_SECRET_JSON_2
-  GOOGLE_CALENDAR_ACCESS_TOKEN
-  GOOGLE_CALENDAR_REFRESH_TOKEN
-  GOOGLE_MAPS_API_KEY
-  GOOGLE_OAUTH_AUTH_PROVIDER_X509_CERT_URL
-  GOOGLE_OAUTH_CLIENT_ID_PERSONAL
-  GOOGLE_OAUTH_CLIENT_ID_SCHEDULER
-  GOOGLE_OAUTH_CLIENT_SECRET
-  GOOGLE_OAUTH_CLIENT_SECRET_PERSONAL
-  GOOGLE_OAUTH_CLIENT_SECRET_SCHEDULER
-  GOOGLE_OAUTH_PROJECT_ID
-  GOOGLE_OAUTH_REDIRECT_URIS
-  GOOGLE_OAUTH_TOKEN_URI
-  GOOGLE_PUBLIC_KEY
-  HUBSPOT_ACCOUNT_ID
-  HUBSPOT_DEV_KEY
-  HUBSPOT_PAT
-  JWT_SECRET
-  LINKEDIN_API_KEY
-  LINKEDIN_CLIENT_ID
-  LINKEDIN_CLIENT_SECRET
-  NEXT_PUBLIC_SUPABASE_ANON_KEY
-  NEXT_PUBLIC_SUPABASE_URL
-  NPM_TOKEN
-  CODEX_API_KEY
-  OPEN_AI_ADMIN_KEY
-  OPEN_AI_KEY
-  OPENAI_ACCESS_TOKEN
-  OPENAI_API_KEY
-  OPENAI_REFRESH_TOKEN
-  PLAYWRIGHT_BROWSERS_PATH
-  PORKBUN_API_KEY
-  PORKBUN_SECRET_API_KEY
-  REACT_APP_SUPABASE_ANON_KEY
-  REACT_APP_SUPABASE_URL
-  REDIS_HOST
-  REDIS_PORT
-  REDIS_URL
-  RENDER_API_KEY
-  RENDER_JOBS_API_KEY
-  SSH_PUBLIC_KEY_ED25519
-  STRIPE_API_KEY
-  SUPABASE_ACCESS_TOKEN
-  SUPABASE_DB_PASSWORD
-  SUPABASE_JWT_SECRET
-  SUPABASE_SERVICE_KEY
-  SUPABASE_SERVICE_ROLE_KEY
-  SUPABASE_URL
-  VITE_ANALYTICSBOT_API_URL
-  VITE_ANALYTICSBOT_PROJECT_ID
-  VITE_AUTH0_AUDIENCE
-  VITE_AUTH0_CLIENT_ID
-  VITE_AUTH0_CLIENT_SECRET
-  VITE_AUTH0_DOMAIN
-  VITE_SUPABASE_ANON_KEY
-  VITE_SUPABASE_URL
-  TCAD_WORKER_URL
-  CLOUDFLARE_ACCOUNT_ID
-  CLOUDFLARE_API_TOKEN
-  CLOUDFLARE_GLOBAL_API_KEY
-  CLOUDFLARE_KV_NAMESPACE_ID
-  CLOUDFLARE_OAUTH_TOKEN
-  CLOUDFLARE_PAGES_DEPLOY_TOKEN
-  CLOUDFLARE_PAGES_GITHUB_TOKEN
-  CLOUDFLARE_PAGES_TOKEN
-  CLOUDFLARE_REFRESH_TOKEN
-  CLOUDFLARE_WORKER_TOKEN
-  CLOUDFLARE_ZONE_ID
-  DEV_WORKER_URL
-  DISCORD_BOT_TOKEN
-  DISCORD_CLIENT_ID
-  DISCORD_CLIENT_TOKEN
-  DISCORD_TOKEN
-  COOKIE_SECRET
-  GITHUB_TOKEN
-)
+_DOPPLER_ALL_SECRETS=()
+local _k
+for _k in "${(k)DOPPLER_CACHE}"; do
+  [[ "$_k" == DOPPLER_* ]] && continue
+  _DOPPLER_ALL_SECRETS+=("$_k")
+done
+unset _k
 
 # Get a secret value without exporting (reads from cache)
 # Returns exit code 1 if the secret is empty or missing.
 secret() {
+  if [[ ! "$1" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+    printf 'secret: invalid identifier: %s\n' "$1" >&2
+    return 1
+  fi
   local key="${_DOPPLER_SECRET_NAMES[$1]:-$1}"
-  local val
-  val="$(doppler_get "$key")"
+  local val="${DOPPLER_CACHE[$key]}"
   if [[ -z "$val" ]]; then
     printf 'secret: %s not found\n' "$1" >&2
     return 1
@@ -150,23 +66,44 @@ secret() {
 
 # Export specific secrets into the environment
 doppler_export() {
-  local var key val
+  local var key val failed=0
   for var in "$@"; do
     if [[ ! "$var" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
       printf 'doppler_export: invalid identifier: %s\n' "$var" >&2
       return 1
     fi
     key="${_DOPPLER_SECRET_NAMES[$var]:-$var}"
-    val="$(doppler_get "$key")"
+    val="${DOPPLER_CACHE[$key]}"
     if [[ -z "$val" ]]; then
       printf 'doppler_export: %s not found in cache\n' "$var" >&2
-      return 1
+      (( failed++ ))
+      continue
     fi
     export "$var"="$val"
   done
+  if (( failed > 0 )); then
+    printf 'doppler_export: %d secrets not found\n' "$failed" >&2
+    return 1
+  fi
 }
 
-# Export all registered secrets (backward-compat escape hatch)
+# Export all cached secrets (backward-compat escape hatch)
+# Exports each Doppler key under its env alias if one exists, otherwise under its own name.
 doppler_export_all() {
-  doppler_export "${_DOPPLER_ALL_SECRETS[@]}"
+  printf 'doppler_export_all: exporting %d secrets into environment\n' "${#_DOPPLER_ALL_SECRETS[@]}" >&2
+  local failed=0
+  local doppler_key env_name val
+  for doppler_key in "${_DOPPLER_ALL_SECRETS[@]}"; do
+    env_name="${_DOPPLER_REVERSE_NAMES[$doppler_key]:-$doppler_key}"
+    val="${DOPPLER_CACHE[$doppler_key]}"
+    if [[ -z "$val" ]]; then
+      printf 'doppler_export_all: %s not found in cache (skipped)\n' "$doppler_key" >&2
+      (( failed++ ))
+      continue
+    fi
+    export "$env_name"="$val"
+  done
+  if (( failed > 0 )); then
+    printf 'doppler_export_all: %d secrets skipped\n' "$failed" >&2
+  fi
 }
