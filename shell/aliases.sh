@@ -113,18 +113,23 @@ alias ast="cd ~/code/ast-grep-mcp"
 # handy extras
 alias dp="doppler secrets --project integrity-studio --config dev --" # get doppler value
 alias grep='grep --color=auto 2>/dev/null || grep' # pretty grpe
-alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# ips function - extract IPv4/IPv6 addresses (must be function, not alias with pipes)
+ips() {
+  ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, ""); print }'
+}
+
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias map="xargs -n1"
-alias week='date +%V' 
+alias week='date +%V'
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
 alias reload='exec /opt/homebrew/bin/zsh -l' # reload shell
 # URL-encode strings (python)
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
-# HTTP method aliases
+# HTTP method functions - must be functions, not aliases (aliases can't contain pipes safely)
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	alias "$method"="lwp-request -m '$method'"
+	eval "${method}() { lwp-request -m '${method}' \"\$@\"; }"
 done
 
 # macOS specific aliases
