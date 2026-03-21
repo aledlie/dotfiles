@@ -3,13 +3,13 @@
 # Validate required environment
 [[ -n "$DOTFILES_DIR" ]] || { printf '[dotfiles] DOTFILES_DIR is unset\n' >&2; return 1; }
 
-# Prepend to PATH only if the entry is not already present
-_path_prepend() {
-  case ":$PATH:" in
-    *":$1:"*) ;;
-    *) export PATH="$1:$PATH" ;;
-  esac
-}
+# ---------- otel config  ----------
+export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
+export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
+export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
+export OTEL_SERVICE_NAME="claude-code-hooks"
+export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
+
 
 # ---------- shell quality-of-life ----------
 export EDITOR="${EDITOR:-vim}"
@@ -27,6 +27,11 @@ else
   alias _plain_ls='ls -G'
 fi
 
+# Load dircolors if available (GNU coreutils, not on macOS by default)
+if [[ -f "$SHELL_DIR/dircolors" ]] && command -v dircolors >/dev/null 2>&1; then
+  eval "$(dircolors "$SHELL_DIR/dircolors")"
+fi
+
 # helpful aliases & colors
 [[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
 
@@ -39,14 +44,15 @@ if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
     export GIT_PS1_SHOWUPSTREAM="auto"
 fi
 
-# ---------- otel config  ----------
-export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
-export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
-export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
-export OTEL_SERVICE_NAME="claude-code-hooks"
-export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
-
 # ---------- dev dependency sanity ----------
+
+# Prepend to PATH only if the entry is not already present
+_path_prepend() {
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
+}
 
 # Add Homebrew to PATH (macOS)
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -117,4 +123,3 @@ if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/nul
   load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
 fi
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
-
