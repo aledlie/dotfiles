@@ -67,7 +67,13 @@ _path_prepend "$HOME/.local/bin"
 _path_prepend "$HOME/.pub-cache/bin"
 
 # add rustup to PATH
+export RUSTUP_HOME="$HOME/.rustup"
+export CARGO_HOME="$HOME/.cargo"
 _path_prepend "$HOME/.cargo/bin"
+
+# add go to PATH
+export GOPATH="$HOME/code/go"
+_path_prepend "$GOPATH/bin"
 
 # Use nvm instead of brew default for node and typescript
 export NVM_DIR="$HOME/.nvm"
@@ -89,6 +95,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   fi
   unset _chruby_sh _chruby_auto
 fi
+
 
 # Python via pyenv
 export PYENV_ROOT="$HOME/.pyenv"

@@ -2,12 +2,6 @@
 
 # Listing variants (ls alias and LS_COLORS set in common.sh via dircolors)
 # ---- eza (ls replacement) ----
-EZA_BASE="eza --icons --group-directories-first --git"
-alias ls="$EZA_BASE"
-alias ll="$EZA_BASE -lh"
-alias la="$EZA_BASE -lha"
-alias lt="$EZA_BASE --tree"
-alias tree="tree -Csuh"
 
 # ---------- eza / ls fallbacks ----------
 
@@ -48,11 +42,11 @@ if command -v fzf >/dev/null 2>&1; then
 
   # Better previews if bat/batcat is available
   if command -v bat >/dev/null 2>&1; then
-    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'bat --style=numbers --color=always --line-range=:200 {}'"
+    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range=:200 {}"'
   elif command -v batcat >/dev/null 2>&1; then
-    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'batcat --style=numbers --color=always --line-range=:200 {}'"
+    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --preview "batcat --style=numbers --color=always --line-range=:200 {}"'
   else
-    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview 'sed -n \"1,200p\" {}'"
+    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border'
   fi
 
   # Fuzzy cd into subdirectories
@@ -112,7 +106,7 @@ alias ast="cd ~/code/ast-grep-mcp"
 
 # handy extras
 alias dp="doppler secrets --project integrity-studio --config dev --" # get doppler value
-alias grep='grep --color=auto 2>/dev/null || grep' # pretty grpe
+# grep --color alias removed: aliases cannot safely contain pipes (||)
 
 # ips function - extract IPv4/IPv6 addresses (must be function, not alias with pipes)
 ips() {
@@ -137,10 +131,10 @@ if [[ "$ARCH" == "macos" ]]; then
     # Volume control
     alias stfu="osascript -e 'set volume output muted true'"
     alias pumpitup="osascript -e 'set volume 7'"
-    alias c="tr -d '\n' | pbcopy"
+    c() { tr -d '\n' | pbcopy; }
 
    # Kill Chrome renderer tabs
-    alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
+    chromekill() { ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill; }
 
     # Lock screen
     alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
@@ -167,7 +161,8 @@ if [[ "$ARCH" == "macos" ]]; then
 
     # Network monitoring
     alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-    alias httpdump="sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\""
+    # httpdump alias removed - aliases cannot safely contain pipes
+    httpdump() { sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E 'Host\: .*|GET /.*'; }
 
     # Trash and system logs
     alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
@@ -185,5 +180,8 @@ if [[ "$ARCH" == "macos" ]]; then
 fi
 
 # ---- clipboard - Ubuntu & linux safe ----
-command -v xclip >/dev/null && alias c="tr -d '\n' | xclip -selection clipboard"
-command -v xsel >/dev/null && alias c="tr -d '\n' | xsel --clipboard"
+if command -v xclip >/dev/null; then
+  c() { tr -d '\n' | xclip -selection clipboard; }
+elif command -v xsel >/dev/null; then
+  c() { tr -d '\n' | xsel --clipboard; }
+fi
