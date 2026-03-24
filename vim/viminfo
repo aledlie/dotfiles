@@ -12,9 +12,13 @@
 ~h
 # Command Line History (newest to oldest):
 :q!
-|2,0,1773921724,,"q!"
+|2,0,1774040621,,"q!"
+:w
+|2,0,1773990971,,"w"
 
 # Search String History (newest to oldest):
+?/no
+|2,1,1773991404,47,"no"
 
 # Expression History (newest to oldest):
 
@@ -24,325 +28,656 @@
 
 # Registers:
 "0	LINE	0
-	[[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
-|3,0,0,1,1,0,1773921073,"[[ -f \"$SHELL_DIR/aliases.sh\" ]] && source \"$SHELL_DIR/aliases.sh\""
+	    "e2e:headed": "playwright test --headed",
+|3,0,0,1,1,0,1774291338,"    \"e2e:headed\": \"playwright test --headed\","
 ""1	LINE	0
-	unset -f _path_prepend
-|3,1,1,1,1,0,1773921736,"unset -f _path_prepend"
+	  }
+|3,1,1,1,1,0,1774312252,"  }"
 "2	LINE	0
-	unset -f _path_prepend
-|3,0,2,1,1,0,1773921583,"unset -f _path_prepend"
-"3	LINE	0
-	unload_doppler_cache
-|3,0,3,1,1,0,1773921323,"unload_doppler_cache"
+	   }
+|3,0,2,1,1,0,1774312251,"   }"
+"3	CHAR	0
+	  "pnpm": {
+	    "overrides": {
+	      "glob": "^11.0.0"
+	 
+|3,0,3,0,4,0,1774312250,"  \"pnpm\": {","    \"overrides\": {","      \"glob\": \"^11.0.0\""," "
 "4	LINE	0
-	
-|3,0,4,1,1,0,1773921225,""
+	    "test:ui": "playwright test --ui",
+|3,0,4,1,1,0,1774291378,"    \"test:ui\": \"playwright test --ui\","
 "5	LINE	0
-	[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
-|3,0,5,1,1,0,1773921215,"[[ -f \"$SHELL_DIR/common.sh\" ]] && source \"$SHELL_DIR/common.sh\""
+	    "test:provisioning": "bash test-provisioning-e2e.sh",
+|3,0,5,1,1,0,1774291372,"    \"test:provisioning\": \"bash test-provisioning-e2e.sh\","
 "6	LINE	0
-	#source common shell file configs
-|3,0,6,1,1,0,1773921214,"#source common shell file configs"
+	  }
+|3,0,6,1,1,0,1774291324,"  }"
 "7	LINE	0
-	
-|3,0,7,1,1,0,1773920846,""
+	    "test:provisioning": "bash test-provisioning-e2e.sh",
+	  }
+|3,0,7,1,2,0,1774291318,"    \"test:provisioning\": \"bash test-provisioning-e2e.sh\",","  }"
 "8	LINE	0
-	[[ -f "$DOTFILES_DIR/shell/zsh/prompt.zsh" ]] && builtin source "$DOTFILES_DIR/shell/zsh/prompt.zsh"
-|3,0,8,1,1,0,1773920845,"[[ -f \"$DOTFILES_DIR/shell/zsh/prompt.zsh\" ]] && builtin source \"$DOTFILES_DIR/shell/zsh/prompt.zsh\""
+	    "e2e:ui": "playwright test --ui"
+|3,0,8,1,1,0,1774291316,"    \"e2e:ui\": \"playwright test --ui\""
 "9	LINE	0
-	# Load custom prompt
-|3,0,9,1,1,0,1773920845,"# Load custom prompt"
+	    "e2e:headed": "playwright test --headed",
+|3,0,9,1,1,0,1774291312,"    \"e2e:headed\": \"playwright test --headed\","
 
 # File marks:
-'0  86  0  ~/dotfiles/shell/common.sh
-|4,48,86,0,1773921825,"~/dotfiles/shell/common.sh"
-'1  28  14  ~/dotfiles/shell/common.sh
-|4,49,28,14,1773921724,"~/dotfiles/shell/common.sh"
-'2  28  14  ~/dotfiles/shell/common.sh
-|4,50,28,14,1773921724,"~/dotfiles/shell/common.sh"
-'3  83  5  ~/dotfiles/shell/common.sh
-|4,51,83,5,1773921546,"~/dotfiles/shell/common.sh"
-'4  84  5  ~/dotfiles/shell/common.sh
-|4,52,84,5,1773921546,"~/dotfiles/shell/common.sh"
-'5  84  5  ~/dotfiles/shell/common.sh
-|4,53,84,5,1773921546,"~/dotfiles/shell/common.sh"
-'6  85  5  ~/dotfiles/shell/common.sh
-|4,54,85,5,1773921546,"~/dotfiles/shell/common.sh"
-'7  125  0  ~/dotfiles/shell/common.sh
-|4,55,125,0,1773921334,"~/dotfiles/shell/common.sh"
-'8  125  0  ~/dotfiles/shell/common.sh
-|4,56,125,0,1773921334,"~/dotfiles/shell/common.sh"
-'9  124  0  ~/dotfiles/shell/common.sh
-|4,57,124,0,1773921334,"~/dotfiles/shell/common.sh"
+'0  51  0  ~/.claude/package.json
+|4,48,51,0,1774312489,"~/.claude/package.json"
+'1  1  0  ~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md
+|4,49,1,0,1774312369,"~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md"
+'2  60  0  ~/.claude/package.json
+|4,50,60,0,1774312253,"~/.claude/package.json"
+'3  60  0  ~/.claude/package.json
+|4,51,60,0,1774312253,"~/.claude/package.json"
+'4  65  0  ~/.claude/package.json
+|4,52,65,0,1774312044,"~/.claude/package.json"
+'5  65  0  ~/.claude/package.json
+|4,53,65,0,1774312044,"~/.claude/package.json"
+'6  10  71  ~/.zshenv
+|4,54,10,71,1774310486,"~/.zshenv"
+'7  75  0  ~/.zshrc
+|4,55,75,0,1774310460,"~/.zshrc"
+'8  1  0  ~/.env
+|4,56,1,0,1774310445,"~/.env"
+'9  1  0  ~/code/is-internal/bot-army-google-calendar-mcp/instructions/file_structure.md
+|4,57,1,0,1774310224,"~/code/is-internal/bot-army-google-calendar-mcp/instructions/file_structure.md"
 
 # Jumplist (newest first):
--'  86  0  ~/dotfiles/shell/common.sh
-|4,39,86,0,1773921825,"~/dotfiles/shell/common.sh"
--'  28  4  ~/dotfiles/shell/common.sh
-|4,39,28,4,1773921725,"~/dotfiles/shell/common.sh"
--'  28  14  ~/dotfiles/shell/common.sh
-|4,39,28,14,1773921724,"~/dotfiles/shell/common.sh"
--'  83  0  ~/dotfiles/shell/common.sh
-|4,39,83,0,1773921547,"~/dotfiles/shell/common.sh"
--'  84  0  ~/dotfiles/shell/common.sh
-|4,39,84,0,1773921547,"~/dotfiles/shell/common.sh"
--'  84  5  ~/dotfiles/shell/common.sh
-|4,39,84,5,1773921546,"~/dotfiles/shell/common.sh"
--'  85  5  ~/dotfiles/shell/common.sh
-|4,39,85,5,1773921546,"~/dotfiles/shell/common.sh"
--'  131  0  ~/dotfiles/shell/common.sh
-|4,39,131,0,1773921465,"~/dotfiles/shell/common.sh"
--'  130  0  ~/dotfiles/shell/common.sh
-|4,39,130,0,1773921465,"~/dotfiles/shell/common.sh"
--'  130  0  ~/dotfiles/shell/common.sh
-|4,39,130,0,1773921465,"~/dotfiles/shell/common.sh"
--'  129  0  ~/dotfiles/shell/common.sh
-|4,39,129,0,1773921465,"~/dotfiles/shell/common.sh"
--'  125  0  ~/dotfiles/shell/common.sh
-|4,39,125,0,1773921460,"~/dotfiles/shell/common.sh"
--'  124  0  ~/dotfiles/shell/common.sh
-|4,39,124,0,1773921460,"~/dotfiles/shell/common.sh"
--'  124  0  ~/dotfiles/shell/common.sh
-|4,39,124,0,1773921460,"~/dotfiles/shell/common.sh"
--'  123  0  ~/dotfiles/shell/common.sh
-|4,39,123,0,1773921460,"~/dotfiles/shell/common.sh"
--'  123  0  ~/dotfiles/shell/common.sh
-|4,39,123,0,1773921334,"~/dotfiles/shell/common.sh"
--'  20  0  ~/dotfiles/shell/common.sh
-|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
--'  20  0  ~/dotfiles/shell/common.sh
-|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
--'  20  0  ~/dotfiles/shell/common.sh
-|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
--'  20  0  ~/dotfiles/shell/common.sh
-|4,39,20,0,1773921320,"~/dotfiles/shell/common.sh"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  4  0  ~/.zshrc
-|4,39,4,0,1773921263,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  23  0  ~/.zshrc
-|4,39,23,0,1773921220,"~/.zshrc"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  100  0  ~/dotfiles/install.sh
-|4,39,100,0,1773921218,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
--'  101  0  ~/dotfiles/install.sh
-|4,39,101,0,1773921210,"~/dotfiles/install.sh"
+-'  51  0  ~/.claude/package.json
+|4,39,51,0,1774312489,"~/.claude/package.json"
+-'  60  0  ~/.claude/package.json
+|4,39,60,0,1774312462,"~/.claude/package.json"
+-'  1  0  ~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md
+|4,39,1,0,1774312369,"~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md"
+-'  1  0  ~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md
+|4,39,1,0,1774312369,"~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md"
+-'  60  0  ~/.claude/package.json
+|4,39,60,0,1774312253,"~/.claude/package.json"
+-'  60  0  ~/.claude/package.json
+|4,39,60,0,1774312253,"~/.claude/package.json"
+-'  65  0  ~/.claude/package.json
+|4,39,65,0,1774312044,"~/.claude/package.json"
+-'  65  0  ~/.claude/package.json
+|4,39,65,0,1774312044,"~/.claude/package.json"
+-'  65  0  ~/.claude/package.json
+|4,39,65,0,1774312044,"~/.claude/package.json"
+-'  1  0  ~/.claude/package.json
+|4,39,1,0,1774311950,"~/.claude/package.json"
+-'  1  0  ~/.claude/package.json
+|4,39,1,0,1774311950,"~/.claude/package.json"
+-'  1  0  ~/.claude/package.json
+|4,39,1,0,1774311950,"~/.claude/package.json"
+-'  1  0  ~/.claude/package.json
+|4,39,1,0,1774311950,"~/.claude/package.json"
+-'  1  0  ~/.claude/package.json
+|4,39,1,0,1774311950,"~/.claude/package.json"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  10  71  ~/.zshenv
+|4,39,10,71,1774310486,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  5  0  ~/.zshenv
+|4,39,5,0,1774310465,"~/.zshenv"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  75  0  ~/.zshrc
+|4,39,75,0,1774310460,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
+-'  5  0  ~/.zshrc
+|4,39,5,0,1774310456,"~/.zshrc"
 
 # History of marks within files (newest to oldest):
 
-> ~/dotfiles/shell/common.sh
-	*	1773921824	0
-	"	86	0
-	^	86	0
-	.	101	0
-	+	129	0
-	+	62	12
-	+	83	5
-	+	63	12
-	+	61	0
-	+	99	0
-	+	101	0
-	+	63	7
-	+	62	13
-	+	28	14
-	+	61	0
-	+	100	0
-	+	101	0
+> ~/.claude/package.json
+	*	1774312470	0
+	"	51	0
+	^	60	1
+	.	60	0
+	+	60	4
+	+	60	1
+	+	59	3
+	+	60	3
+	+	60	5
+	+	60	4
+	+	60	1
+	+	60	0
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/scripts/README.md
+	*	1774312354	0
+	"	1	0
+
+> ~/.zshenv
+	*	1774310484	0
+	"	10	71
+	^	5	61
+	.	5	0
+	+	1	33
+	+	6	0
+	+	5	0
+	+	5	19
+	+	3	0
+	+	1	0
+	+	3	0
+	+	1	6
+	+	2	6
+	+	5	0
 
 > ~/.zshrc
-	*	1773921262	0
-	"	4	0
+	*	1774310458	0
+	"	75	0
 	^	4	0
-	.	3	0
+	.	6	0
 	+	5	0
-	+	6	78
-	+	7	0
-	+	25	0
-	+	7	0
-	+	8	0
+	+	5	78
+	+	5	0
+	+	21	0
+	+	5	0
 	+	3	0
+	+	6	0
+
+> ~/.env
+	*	1774310441	0
+	"	1	0
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/instructions/file_structure.md
+	*	1774310219	0
+	"	1	0
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/modelcontextprotocol/README.md
+	*	1774310144	0
+	"	1	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/package.json
+	*	1774291420	0
+	"	18	38
+	^	18	39
+	.	18	38
+	+	22	0
+	+	22	50
+	+	22	56
+	+	23	0
+	+	24	0
+	+	22	0
+	+	14	52
+	+	24	0
+	+	22	0
+	+	24	0
+	+	22	0
+	+	24	0
+	+	22	0
+	+	24	0
+	+	22	0
+	+	18	38
+	+	22	37
+	+	22	5
+	+	22	7
+	+	22	0
+	+	15	0
+	+	22	0
+	+	16	0
+	+	22	0
+	+	17	0
+	+	21	0
+	+	18	38
+	+	17	35
+	+	17	0
+	+	19	0
+	+	17	0
+	+	20	37
+	+	18	38
+
+> ~/code/is-public-sites/IntegrityLandingPage/e2e/package.json
+	*	1774291173	0
+	"	6	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/test-provisioning-e2e.sh
+	*	1774290973	0
+	"	102	0
+
+> ~/code/is-internal/bots-google-calendar-mcp/gcp-oauth.keys.json
+	*	1774290615	0
+	"	1	0
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/credentials.json
+	*	1774290521	0
+	"	1	395
+	^	1	396
+	.	1	395
+	+	1	395
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/gcp-oauth.keys.json
+	*	1774290495	0
+	"	1	0
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/package.json
+	*	1774285918	0
+	"	1	0
+
+> ~/code/is-internal/calendarmanager-google-calendar-mcp/package.json
+	*	1774283471	0
+	"	1	0
+
+> ~/code/integrity-demo-generator/package.json
+	*	1774282962	0
+	"	1	0
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/package.json
+	*	1774282872	0
+	"	1	0
+
+> ~/reports/index.html
+	*	1774268862	0
+	"	1	0
+
+> ~/.claude/mcp-servers/observability-toolkit/docs/BACKLOG.md
+	*	1774160612	0
+	"	1	0
+
+> ~/.claude/settings.local.json
+	*	1774059852	0
+	"	5	16
+	^	5	17
+	.	5	16
+	+	5	16
+	+	6	10
+	+	5	16
+
+> ~/.claude/mcp-servers/observability-toolkit/package.json
+	*	1774040616	0
+	"	53	12
+	.	52	0
+	+	60	0
+	+	59	29
+	+	52	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/agents/QUICKSTART.md
+	*	1774039195	0
+	"	23	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/pubspec.yaml
+	*	1774038887	0
+	"	63	1
+	^	44	12
+	.	44	11
+	+	27	14
+	+	47	0
+	+	46	13
+	+	45	24
+	+	46	0
+	+	28	0
+	+	44	11
+
+> ~/code/is-/SKILL.md
+	*	1774038130	0
+	"	1	0
+
+> ~/.claude/settings.json
+	*	1774005564	0
+	"	1	0
+
+> ~/.claude/s
+	*	1774005528	0
+	"	1	0
+
+> ~/.claude/CLAUDE.md
+	*	1773991510	0
+	"	8	21
+	^	8	22
+	.	8	21
+	+	8	58
+	+	9	36
+	+	8	21
+
+> ~/code/is-public-sites/IntegrityLandingPage/workers/cors-utils.ts
+	*	1773990995	0
+	"	1	15
+	^	59	16
+	.	57	69
+	+	18	2
+	+	13	8
+	+	14	9
+	+	15	9
+	+	17	13
+	+	14	36
+	+	15	19
+	+	14	21
+	+	15	21
+	+	14	1
+	+	15	1
+	+	57	1
+	+	57	0
+	+	57	31
+	+	20	65
+	+	27	13
+	+	40	1
+	+	42	83
+	+	55	0
+	+	57	93
+	+	66	0
+	+	68	0
+	+	66	1
+	+	17	0
+	+	25	0
+	+	68	46
+	+	35	27
+	+	20	36
+	+	35	29
+	+	16	0
+	+	15	1
+	+	16	13
+	+	26	4
+	+	25	23
+	+	28	0
+	+	38	0
+	+	39	1
+	+	42	65
+	+	57	69
+
+> ~/code/is-public-sites/IntegrityLandingPage/workers/http-requests.ts
+	*	1773990051	0
+	"	99	0
+	^	99	1
+	.	99	0
+	+	99	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/workers/http-errors.ts
+	*	1773990017	0
+	"	103	0
+	^	103	1
+	.	103	0
+	+	103	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/workers/http-repsonses.ts
+	*	1773989998	0
+	"	77	0
+	^	77	1
+	.	77	0
+	+	77	0
+
+> ~/schema-org-file-system/.claude/settings.local.json
+	*	1773989371	0
+	"	15	6
+	^	4	6
+	.	15	0
+	+	5	0
+	+	4	5
+	+	14	0
+	+	17	0
+	+	15	0
+
+> ~/schema-org-file-system/package.json
+	*	1773986549	0
+	"	16	27
+	^	16	28
+	.	12	34
+	+	14	0
+	+	13	52
+	+	12	34
+
+> ~/dotfiles/shell/functions.sh
+	*	1773924510	0
+	"	122	0
+	^	169	0
+	.	188	0
+	+	188	0
+
+> ~/dotfiles/shell/aliases.sh
+	*	1773924456	0
+	"	201	28
+	^	201	29
+	.	138	28
+	+	12	42
+	+	97	0
+	+	118	0
+	+	97	0
+	+	118	0
+	+	131	0
+	+	129	13
+	+	132	0
+	+	133	0
+	+	134	0
+	+	135	0
+	+	136	0
+	+	137	29
+	+	137	43
+	+	135	21
+	+	131	63
+	+	130	88
+	+	138	28
+
+> ~/dotfiles/shell/common.sh
+	*	1773924143	0
+	"	32	0
+	.	42	0
+	+	129	0
+	+	63	12
+	+	84	5
+	+	64	12
+	+	62	0
+	+	100	0
+	+	102	0
+	+	64	7
+	+	63	13
+	+	28	14
+	+	62	0
+	+	101	0
+	+	102	0
+	+	121	0
+	+	5	0
+	+	43	0
+	+	51	0
+	+	43	0
+	+	5	0
+	+	43	0
+	+	5	0
+	+	42	0
+	+	42	42
+	+	42	0
 
 > ~/dotfiles/install.sh
-	*	1773921217	0
-	"	100	0
-	.	101	0
+	*	1773923665	0
+	"	8	0
+	.	9	0
+	+	81	0
+	+	80	58
+	+	79	4
+	+	80	53
+	+	84	0
+	+	81	0
+	+	82	55
 	+	83	0
-	+	82	58
-	+	81	4
-	+	82	53
-	+	86	0
-	+	83	0
-	+	84	55
-	+	85	0
-	+	86	0
-	+	85	56
-	+	81	31
-	+	9	29
-	+	44	20
-	+	101	66
-	+	101	32
-	+	101	64
-	+	101	0
+	+	84	0
+	+	83	56
+	+	79	31
+	+	8	29
+	+	42	20
+	+	99	66
+	+	99	32
+	+	99	64
+	+	99	0
+	+	9	0
+
+> ~/code/integrity-demo-generator/dotfiles/install.sh
+	*	1773923657	0
+	"	1	0
+
+> ~/code/integrity-demo-generator/.zshenv
+	*	1773923441	0
+	"	1	0
+
+> ~/code/integrity-demo-generator/.zshrc
+	*	1773923430	0
+	"	1	0
+
+> ~/NERD_tree_win_1
+	*	1773923091	0
+	"	1	0
+	.	1	0
+	+	1	0
 
 > ~/dotfiles/common.sh
 	*	1773921052	0
 	"	1	0
-
-> ~/NERD_tree_win_1
-	*	1773920463	0
-	"	1	0
-	.	1	0
-	+	1	0
 
 > ~/dotfiles/.zshrc
 	*	1773920410	0

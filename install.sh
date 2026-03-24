@@ -5,8 +5,6 @@
 
 set -e
 
-DOTFILES_DIR="$HOME/dotfiles"
-SHELL_DIR="$DOTFILES_DIR/shell"
 BACKUP_DIR="$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)"
 
 # Colors for output
