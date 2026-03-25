@@ -6,18 +6,22 @@ load_doppler_cache() {
   local project="${1:-integrity-studio}"
   local config="${2:-dev}"
 
-  if [[ "${DOPPLER_CACHE_PROJECT:-}" == "$project" && "${DOPPLER_CACHE_CONFIG:-}" == "$config" ]]; then
+  if [ "${DOPPLER_CACHE_PROJECT:-}" = "$project" ] && [ "${DOPPLER_CACHE_CONFIG:-}" = "$config" ]; then
     return
   fi
 
-  if [[ -n "${ZSH_VERSION:-}" ]]; then
+  # Use typeset for zsh, declare for bash
+  if command -v typeset > /dev/null 2>&1 && [ -n "${ZSH_VERSION:-}" ]; then
     typeset -gA DOPPLER_CACHE
     typeset -g DOPPLER_CACHE_PROJECT
     typeset -g DOPPLER_CACHE_CONFIG
-  else
-    declare -gA DOPPLER_CACHE
-    declare -g DOPPLER_CACHE_PROJECT
-    declare -g DOPPLER_CACHE_CONFIG
+  elif command -v declare > /dev/null 2>&1; then
+    # Only use declare -g if bash (not sh/dash)
+    if [ -n "${BASH_VERSION:-}" ]; then
+      declare -gA DOPPLER_CACHE
+      declare -g DOPPLER_CACHE_PROJECT
+      declare -g DOPPLER_CACHE_CONFIG
+    fi
   fi
 
   DOPPLER_CACHE=()
