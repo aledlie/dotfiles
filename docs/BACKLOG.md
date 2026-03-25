@@ -8,6 +8,10 @@
 
 ## Done
 
+#### Fix langtrace.ts import extension
+**Priority**: P3 | **Commit**: b55b6657
+`import './load-envrc'` → `import './load-envrc.js'` for TypeScript moduleResolution=node16/nodenext ES module compatibility.
+
 #### M8: Fix OTEL SDK API incompatibilities in lib/otel.ts
 **Priority**: P3 | **Source**: investigation | **Commit**: 41ad06f1, b15dd13c
 Fixed 4 API breaks from SDK version drift (resources v2.x, sdk-trace-base v2.x, sdk-logs v0.213.0):
