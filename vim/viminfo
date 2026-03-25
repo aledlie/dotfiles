@@ -76,30 +76,34 @@
 |3,0,9,0,13,0,1774321446,"  \"include\": [","    \"src/**/*.py\",","    \"scripts/**/*.py\",","    \"tests/**/*.py\",","    \"examples/**/*.py\",","\"docs/**/*.md\",","    \"pyproject.toml\",","    \"requirements.txt\",","    \"CLAUDE.md\",","    \"README.md\",","    \"playwright.config.ts\",","    \"tests/e2e/**/*.ts\"","  ],"
 
 # File marks:
-'0  4  60  ~/.claude/.auth0
-|4,48,4,60,1774439855,"~/.claude/.auth0"
-'1  8  0  ~/.claude/.auth0
-|4,49,8,0,1774438921,"~/.claude/.auth0"
+'0  4  0  ~/.claude/.auth0
+|4,48,4,0,1774442864,"~/.claude/.auth0"
+'1  4  60  ~/.claude/.auth0
+|4,49,4,60,1774439855,"~/.claude/.auth0"
 '2  8  0  ~/.claude/.auth0
 |4,50,8,0,1774438921,"~/.claude/.auth0"
 '3  8  0  ~/.claude/.auth0
-|4,51,8,0,1774437497,"~/.claude/.auth0"
+|4,51,8,0,1774438921,"~/.claude/.auth0"
 '4  8  0  ~/.claude/.auth0
-|4,52,8,0,1774437497,"~/.claude/.auth0"
-'5  11  0  ~/.claude/.envrc
-|4,53,11,0,1774437480,"~/.claude/.envrc"
-'6  11  6  ~/.claude/.envrc
-|4,54,11,6,1774437451,"~/.claude/.envrc"
-'7  11  18  ~/.claude/.envrc
-|4,55,11,18,1774437427,"~/.claude/.envrc"
-'8  11  18  ~/.claude/.envrc
-|4,56,11,18,1774437427,"~/.claude/.envrc"
-'9  4  17  ~/.claude/.mcp.json
-|4,57,4,17,1774437302,"~/.claude/.mcp.json"
+|4,52,8,0,1774438921,"~/.claude/.auth0"
+'5  8  0  ~/.claude/.auth0
+|4,53,8,0,1774438921,"~/.claude/.auth0"
+'6  8  0  ~/.claude/.auth0
+|4,54,8,0,1774437497,"~/.claude/.auth0"
+'7  8  0  ~/.claude/.auth0
+|4,55,8,0,1774437497,"~/.claude/.auth0"
+'8  8  0  ~/.claude/.auth0
+|4,56,8,0,1774437497,"~/.claude/.auth0"
+'9  8  0  ~/.claude/.auth0
+|4,57,8,0,1774437497,"~/.claude/.auth0"
 
 # Jumplist (newest first):
+-'  4  0  ~/.claude/.auth0
+|4,39,4,0,1774442864,"~/.claude/.auth0"
 -'  4  60  ~/.claude/.auth0
 |4,39,4,60,1774439855,"~/.claude/.auth0"
+-'  8  0  ~/.claude/.auth0
+|4,39,8,0,1774439790,"~/.claude/.auth0"
 -'  8  0  ~/.claude/.auth0
 |4,39,8,0,1774439790,"~/.claude/.auth0"
 -'  8  0  ~/.claude/.auth0
@@ -122,6 +126,22 @@
 |4,39,11,0,1774437480,"~/.claude/.envrc"
 -'  11  0  ~/.claude/.envrc
 |4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
+-'  11  0  ~/.claude/.envrc
+|4,39,11,0,1774437480,"~/.claude/.envrc"
 -'  11  6  ~/.claude/.envrc
 |4,39,11,6,1774437451,"~/.claude/.envrc"
 -'  11  6  ~/.claude/.envrc
@@ -138,6 +158,38 @@
 |4,39,11,6,1774437451,"~/.claude/.envrc"
 -'  11  6  ~/.claude/.envrc
 |4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  6  ~/.claude/.envrc
+|4,39,11,6,1774437451,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
+-'  11  18  ~/.claude/.envrc
+|4,39,11,18,1774437427,"~/.claude/.envrc"
 -'  11  18  ~/.claude/.envrc
 |4,39,11,18,1774437427,"~/.claude/.envrc"
 -'  11  18  ~/.claude/.envrc
@@ -202,108 +254,56 @@
 |4,39,1,0,1774437313,"~/.claude/.envrc"
 -'  1  0  ~/.claude/.envrc
 |4,39,1,0,1774437313,"~/.claude/.envrc"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
--'  4  17  ~/.claude/.mcp.json
-|4,39,4,17,1774437302,"~/.claude/.mcp.json"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  1  0  ~/.claude/.envrc
+|4,39,1,0,1774437313,"~/.claude/.envrc"
 
 # History of marks within files (newest to oldest):
 
 > ~/.claude/.auth0
-	*	1774439854	0
-	"	4	60
+	*	1774442860	0
+	"	4	0
 	^	4	61
 	.	4	60
 	+	6	50

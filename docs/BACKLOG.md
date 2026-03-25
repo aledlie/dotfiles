@@ -8,6 +8,10 @@
 
 ## Done
 
+#### Upgrade observability-toolkit OTEL SDK to v0.213 + v2.x trace-base
+**Priority**: P3 | **Commit**: bfddc25
+Updated SDK dependencies (sdk-node 0.52→0.213, trace-otlp-http 0.52→0.213, resources 1.25→2.6, semantic-conventions 1.25→1.40) and fixed 3 API breaking changes: `new Resource()` → `resourceFromAttributes()` (2 callsites), `BasicTracerProvider.addSpanProcessor()` → constructor `spanProcessors` config. All 1567 tests pass.
+
 #### Fix langtrace.ts import extension
 **Priority**: P3 | **Commit**: b55b6657
 `import './load-envrc'` → `import './load-envrc.js'` for TypeScript moduleResolution=node16/nodenext ES module compatibility.

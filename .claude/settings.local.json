@@ -4,7 +4,9 @@
       "Bash",
       "Skill(git-commit-smart)",
       "Skill(session-backlog)",
-      "Skill(backlog-migrate)"
+      "Skill(backlog-migrate)",
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)"
     ]
   }
 }
