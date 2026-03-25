@@ -81,8 +81,8 @@ _nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "$_nvm_sh" ] && . "$_nvm_sh" --no-use
 unset _nvm_sh
 
-# chruby configuration - auto-switch Ruby versions
-if [[ "$OSTYPE" == "darwin"* ]]; then
+# chruby configuration - auto-switch Ruby versions (skip in non-interactive shells)
+if [[ "$OSTYPE" == "darwin"* ]] && [[ -t 0 ]]; then
   _chruby_sh="/opt/homebrew/opt/chruby/share/chruby/chruby.sh"
   _chruby_auto="/opt/homebrew/opt/chruby/share/chruby/auto.sh"
   [[ -f "$_chruby_sh" ]] && source "$_chruby_sh"
