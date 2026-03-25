@@ -16,6 +16,10 @@ Primary exports renamed to `OTEL_CONFIG_DIR`, `OTEL_LOGS_DIR`, etc. in `shell/co
 
 ## Done
 
+#### M6: Migrate CLAUDE_* consumers to OTEL_* env vars
+**Priority**: P3 | **Source**: manual | **Commit**: 42d8ba61, 13e3c583, 9d43e47, 99b6f59
+Consumers in `hooks/lib/constants.ts`, `hooks/lib/otel-monitor.ts`, `scripts/lib/colors.{js,sh}`, `scripts/env/health.sh`, `scripts/env/check-environment.js`, and `jobs/sidequest/workers/claude-health-worker.ts` updated to prefer `OTEL_*` vars with backward-compat fallback to `CLAUDE_*`.
+
 #### M3: Fix test-shell-startup.sh hanging + bash 3.2 compat
 **Priority**: P3 | **Source**: manual
 Replaced bash 4.2+ `-v` operator in `functions.sh` (`doppler_get`, `doppler_cache_debug`) with bash 3.2-compatible `${var+set}` parameter expansion. Test harness already batches checks into single shell invocation per shell type.
