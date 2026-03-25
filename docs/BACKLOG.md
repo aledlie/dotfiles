@@ -4,19 +4,14 @@
 
 ## Medium (P3)
 
-#### M8: Fix OTEL SDK API incompatibilities in lib/otel.ts
-**Priority**: P3 | **Source**: investigation
-5 API breaks discovered from SDK version drift (v0.39.x → v0.40.x+):
-1. `detectResourcesSync()` + `*DetectorSync` removed → use async `detectResources()`
-2. `Resource` constructor → factory API (line 261)
-3. `ReadableSpan.parentSpanId` property removed (line 136)
-4. `LoggerProvider.addLogRecordProcessor()` renamed/removed (lines 313, 322)
-
-Impact: 127 test failures, 3 test files fail at init. Requires either SDK downgrade to v0.39.x or refactor to async resource detection pattern. Recommend async refactor to align with modern OTEL best practices; affects `initTelemetry()` caller pattern.
-
 ## Low (P4)
 
 ## Done
+
+#### M8: Fix OTEL SDK API incompatibilities in lib/otel.ts
+**Priority**: P3 | **Source**: investigation | **Commit**: 41ad06f1, b15dd13c
+Fixed 4 API breaks from SDK version drift (resources v2.x, sdk-trace-base v2.x, sdk-logs v0.213.0):
+`detectResourcesSync+*DetectorSync` → `detectResources+*Detector`; `new Resource()` → `resourceFromAttributes()`; `parentSpanId` → dual-path shim for v1/v2 pnpm mismatch; `addLogRecordProcessor()` → `processors[]` constructor param.
 
 #### M7: Fix chruby auto.sh unset variable warning
 **Priority**: P3 | **Source**: manual | **Commit**: 08b96f8
