@@ -14,13 +14,13 @@
 
 Impact: 127 test failures, 3 test files fail at init. Requires either SDK downgrade to v0.39.x or refactor to async resource detection pattern. Recommend async refactor to align with modern OTEL best practices; affects `initTelemetry()` caller pattern.
 
-#### M7: Fix chruby auto.sh unset variable warning
-**Priority**: P3 | **Source**: manual | **Commit**: 08b96f8
-`chruby/auto.sh` throws `RUBY_AUTO_VERSION: parameter not set` warnings in non-interactive shells because it references an unset variable without quoting. Workaround applied: skip chruby loading in non-interactive shells via `[[ -t 0 ]]` check in `shell/common.sh`. Permanent fix: modify installed chruby package's `auto.sh` line 19 to quote `$RUBY_AUTO_VERSION` as `"$RUBY_AUTO_VERSION"`.
-
 ## Low (P4)
 
 ## Done
+
+#### M7: Fix chruby auto.sh unset variable warning
+**Priority**: P3 | **Source**: manual | **Commit**: 08b96f8
+`chruby/auto.sh` referenced unset `$RUBY_AUTO_VERSION` in non-interactive shells. Workaround: skip chruby loading in non-interactive shells via `[[ -t 0 ]]` check in `shell/common.sh`. Permanent fix already in installed chruby package — all `$RUBY_AUTO_VERSION` references are quoted.
 
 #### M6: Migrate CLAUDE_* consumers to OTEL_* env vars
 **Priority**: P3 | **Source**: manual | **Commit**: 42d8ba61, 13e3c583, 9d43e47, 99b6f59
