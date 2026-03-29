@@ -10,7 +10,6 @@ export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 export OTEL_SERVICE_NAME="claude-code-hooks"
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
 
-
 # ---------- shell quality-of-life ----------
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-$EDITOR}"
@@ -100,6 +99,8 @@ fi
 # Python via pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
+[[ -d $PYENV_ROOT/shims ]] && _path_prepend "$PYENV_ROOT/shims"
+
 
 # Shell-specific pyenv initialization is in bash/bashrc and zsh/zshrc
 
