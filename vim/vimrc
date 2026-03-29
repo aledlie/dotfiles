@@ -17,7 +17,7 @@ Plug 'dense-analysis/ale'
 
 " TSX Syntax and basic features
 Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
+Plug 'leafgarland/typescript-vim' " required by vim-jsx-pretty for TSX indent/syntax
 Plug 'MaxMEllon/vim-jsx-pretty'
 
 " Ruby
@@ -27,25 +27,21 @@ Plug 'vim-ruby/vim-ruby'
 " Other useful plugins
 Plug 'jparise/vim-graphql' " Optional, for GraphQL highlighting
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' } " Optional, for styled components
-Plug 'vim-scripts/greplace.vim'
 Plug 'augmentcode/augment.vim'
 
 " Colors
 Plug 'altercation/vim-colors-solarized'
 
 " Vimawesome Plugins
-Plug 'austintaylor/vim-indentobject'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'juvenn/mustache.vim'
+Plug 'mustache/vim-mustache-handlebars'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
-Plug 'rking/ag.vim'
 Plug 'garbas/vim-snipmate'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'nono/vim-handlebars'
 Plug 'scrooloose/nerdtree'
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-bundler'
@@ -54,7 +50,6 @@ Plug 'tpope/vim-cucumber'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-ragtag'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'

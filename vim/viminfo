@@ -11,15 +11,21 @@
 # hlsearch on (H) or off (h):
 ~h
 # Last Search Pattern:
-~MSle0~/CARGO_HOME
+~MSle0~/mus
 
 # Command Line History (newest to oldest):
+:PlugInstall
+|2,0,1774762318,,"PlugInstall"
+:PluginInstall
+|2,0,1774762298,,"PluginInstall"
+:q!
+|2,0,1774762286,,"q!"
 :w
 |2,0,1774326443,,"w"
-:q!
-|2,0,1774040621,,"q!"
 
 # Search String History (newest to oldest):
+??mus
+|2,1,1774762273,63,"mus"
 ??CARGO_HOME
 |2,1,1774319524,63,"CARGO_HOME"
 ?/no
@@ -32,278 +38,553 @@
 # Debug Line History (newest to oldest):
 
 # Registers:
-"0	LINE	0
-	AUTH0_DOMAIN="$(doppler secrets get AUTH0_DOMAIN --plain --config "$cfg_env")"
-|3,0,0,1,1,0,1774437162,"AUTH0_DOMAIN=\"$(doppler secrets get AUTH0_DOMAIN --plain --config \"$cfg_env\")\""
+"0	CHAR	0
+	#!/usr/bin/env zsh
+	set -euo pipefail
+	
+	# Load Doppler cache (function no-ops if cache already loaded)
+	export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+	source "$DOTFILES_DIR/shell/functions.sh"
+	source "$DOTFILES_DIR/shell/doppler-secrets.sh"
+	
+	load_doppler_cache integrity-studio dev
+	
+	AUTH0_CLIENT_SECRET="$(secret AUTH0_CLIENT_SECRET)"
+	AUTH0_CLIENT_ID="$(secret AUTH0_CLIENT_ID)"
+	AUTH0_DOMAIN="$(secret AUTH0_DOMAIN)"
+	
+	# Export for MCP server
+	export AUTH0_CLIENT_SECRET AUTH0_CLIENT_ID AUTH0_DOMAIN
+|3,0,0,0,16,0,1774501633,"#!/usr/bin/env zsh","set -euo pipefail","","# Load Doppler cache (function no-ops if cache already loaded)","export DOTFILES_DIR=\"${DOTFILES_DIR:-$HOME/dotfiles}\"","source \"$DOTFILES_DIR/shell/functions.sh\"","source \"$DOTFILES_DIR/shell/doppler-secrets.sh\"","","load_doppler_cache integrity-studio dev","","AUTH0_CLIENT_SECRET=\"$(secret AUTH0_CLIENT_SECRET)\"","AUTH0_CLIENT_ID=\"$(secret AUTH0_CLIENT_ID)\"",>41
+|<"AUTH0_DOMAIN=\"$(secret AUTH0_DOMAIN)\"","","# Export for MCP server","export AUTH0_CLIENT_SECRET AUTH0_CLIENT_ID AUTH0_DOMAIN"
 ""1	LINE	0
-	AUTH0_CLIENT_ID="$(doppler secrets get AUTH0_CLIENT_ID --plain --config "$cfg_env")"
-|3,1,1,1,1,0,1774437191,"AUTH0_CLIENT_ID=\"$(doppler secrets get AUTH0_CLIENT_ID --plain --config \"$cfg_env\")\""
+	
+|3,1,1,1,1,0,1774699788,""
 "2	LINE	0
-	AUTH0_DOMAIN="$(doppler secrets get AUTH0_DOMAIN --plain --config "$cfg_env")"
-|3,0,2,1,1,0,1774437190,"AUTH0_DOMAIN=\"$(doppler secrets get AUTH0_DOMAIN --plain --config \"$cfg_env\")\""
+	# ---------- context management ------------- 
+|3,0,2,1,1,0,1774699788,"# ---------- context management ------------- "
 "3	LINE	0
-	
-|3,0,3,1,1,0,1774326468,""
+	export ENABLE_EXPERIMENTAL_MCP_CLI=true
+|3,0,3,1,1,0,1774699787,"export ENABLE_EXPERIMENTAL_MCP_CLI=true"
 "4	LINE	0
-	      "!*.md"
-|3,0,4,1,1,0,1774326374,"      \"!*.md\""
+	AUTH0_CLIENT_ID="$(doppler secrets get AUTH0_CLIENT_ID --plain --config "$cfg_env")"
+|3,0,4,1,1,0,1774437191,"AUTH0_CLIENT_ID=\"$(doppler secrets get AUTH0_CLIENT_ID --plain --config \"$cfg_env\")\""
 "5	LINE	0
-	    "pyproject.toml",
-|3,0,5,1,1,0,1774326199,"    \"pyproject.toml\","
+	AUTH0_DOMAIN="$(doppler secrets get AUTH0_DOMAIN --plain --config "$cfg_env")"
+|3,0,5,1,1,0,1774437190,"AUTH0_DOMAIN=\"$(doppler secrets get AUTH0_DOMAIN --plain --config \"$cfg_env\")\""
 "6	LINE	0
-	    "requirements.txt"
-|3,0,6,1,1,0,1774326199,"    \"requirements.txt\""
-"7	LINE	0
-	      "schema_org_file_system.egg-info/**",
-|3,0,7,1,1,0,1774321505,"      \"schema_org_file_system.egg-info/**\","
-"8	LINE	0
 	
-|3,0,8,1,1,0,1774321446,""
-"9	CHAR	0
-	  "include": [
-	    "src/**/*.py",
-	    "scripts/**/*.py",
-	    "tests/**/*.py",
-	    "examples/**/*.py",
-	"docs/**/*.md",
+|3,0,6,1,1,0,1774326468,""
+"7	LINE	0
+	      "!*.md"
+|3,0,7,1,1,0,1774326374,"      \"!*.md\""
+"8	LINE	0
 	    "pyproject.toml",
-	    "requirements.txt",
-	    "CLAUDE.md",
-	    "README.md",
-	    "playwright.config.ts",
-	    "tests/e2e/**/*.ts"
-	  ],
-|3,0,9,0,13,0,1774321446,"  \"include\": [","    \"src/**/*.py\",","    \"scripts/**/*.py\",","    \"tests/**/*.py\",","    \"examples/**/*.py\",","\"docs/**/*.md\",","    \"pyproject.toml\",","    \"requirements.txt\",","    \"CLAUDE.md\",","    \"README.md\",","    \"playwright.config.ts\",","    \"tests/e2e/**/*.ts\"","  ],"
+|3,0,8,1,1,0,1774326199,"    \"pyproject.toml\","
+"9	LINE	0
+	    "requirements.txt"
+|3,0,9,1,1,0,1774326199,"    \"requirements.txt\""
 
 # File marks:
-'0  4  0  ~/.claude/.auth0
-|4,48,4,0,1774442864,"~/.claude/.auth0"
-'1  4  60  ~/.claude/.auth0
-|4,49,4,60,1774439855,"~/.claude/.auth0"
-'2  8  0  ~/.claude/.auth0
-|4,50,8,0,1774438921,"~/.claude/.auth0"
-'3  8  0  ~/.claude/.auth0
-|4,51,8,0,1774438921,"~/.claude/.auth0"
-'4  8  0  ~/.claude/.auth0
-|4,52,8,0,1774438921,"~/.claude/.auth0"
-'5  8  0  ~/.claude/.auth0
-|4,53,8,0,1774438921,"~/.claude/.auth0"
-'6  8  0  ~/.claude/.auth0
-|4,54,8,0,1774437497,"~/.claude/.auth0"
-'7  8  0  ~/.claude/.auth0
-|4,55,8,0,1774437497,"~/.claude/.auth0"
-'8  8  0  ~/.claude/.auth0
-|4,56,8,0,1774437497,"~/.claude/.auth0"
-'9  8  0  ~/.claude/.auth0
-|4,57,8,0,1774437497,"~/.claude/.auth0"
+'0  37  0  ~/dotfiles/vim/vimrc
+|4,48,37,0,1774762334,"~/dotfiles/vim/vimrc"
+'1  37  0  ~/dotfiles/vim/vimrc
+|4,49,37,0,1774762328,"~/dotfiles/vim/vimrc"
+'2  37  19  ~/dotfiles/vim/vimrc
+|4,50,37,19,1774762286,"~/dotfiles/vim/vimrc"
+'3  37  19  ~/dotfiles/vim/vimrc
+|4,51,37,19,1774762286,"~/dotfiles/vim/vimrc"
+'4  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,52,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+'5  1  0  ~/.claude/NERD_tree_win_1
+|4,53,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+'6  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,54,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+'7  54  2  ~/.claude/mcp-servers/observability-toolkit/package.json
+|4,55,54,2,1774754718,"~/.claude/mcp-servers/observability-toolkit/package.json"
+'8  54  2  ~/.claude/mcp-servers/observability-toolkit/package.json
+|4,56,54,2,1774754682,"~/.claude/mcp-servers/observability-toolkit/package.json"
+'9  1  0  ~/code/personal-site/package.json
+|4,57,1,0,1774753504,"~/code/personal-site/package.json"
 
 # Jumplist (newest first):
--'  4  0  ~/.claude/.auth0
-|4,39,4,0,1774442864,"~/.claude/.auth0"
--'  4  60  ~/.claude/.auth0
-|4,39,4,60,1774439855,"~/.claude/.auth0"
--'  8  0  ~/.claude/.auth0
-|4,39,8,0,1774439790,"~/.claude/.auth0"
--'  8  0  ~/.claude/.auth0
-|4,39,8,0,1774439790,"~/.claude/.auth0"
--'  8  0  ~/.claude/.auth0
-|4,39,8,0,1774438921,"~/.claude/.auth0"
--'  8  0  ~/.claude/.auth0
-|4,39,8,0,1774437497,"~/.claude/.auth0"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  0  ~/.claude/.envrc
-|4,39,11,0,1774437480,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  6  ~/.claude/.envrc
-|4,39,11,6,1774437451,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  11  18  ~/.claude/.envrc
-|4,39,11,18,1774437427,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
--'  1  0  ~/.claude/.envrc
-|4,39,1,0,1774437313,"~/.claude/.envrc"
+-'  37  0  ~/dotfiles/vim/vimrc
+|4,39,37,0,1774762334,"~/dotfiles/vim/vimrc"
+-'  37  0  ~/dotfiles/vim/vimrc
+|4,39,37,0,1774762328,"~/dotfiles/vim/vimrc"
+-'  37  19  ~/dotfiles/vim/vimrc
+|4,39,37,19,1774762286,"~/dotfiles/vim/vimrc"
+-'  1  0  ~/dotfiles/vim/vimrc
+|4,39,1,0,1774762273,"~/dotfiles/vim/vimrc"
+-'  1  0  ~/dotfiles/vim/vimrc
+|4,39,1,0,1774762273,"~/dotfiles/vim/vimrc"
+-'  1  0  ~/dotfiles/vim/vimrc
+|4,39,1,0,1774762273,"~/dotfiles/vim/vimrc"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  50  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,50,0,1774760368,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/code/is-internal/file-system-indexer/README.md
+|4,39,1,0,1774760349,"~/code/is-internal/file-system-indexer/README.md"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  1  0  ~/.claude/NERD_tree_win_1
+|4,39,1,0,1774759482,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  5  2  ~/.claude/NERD_tree_win_1
+|4,39,5,2,1774759480,"~/.claude/NERD_tree_win_1"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  208  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,208,0,1774759035,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
+-'  1  0  ~/schema-org-file-system/docs/DEPENDENCIES.md
+|4,39,1,0,1774759011,"~/schema-org-file-system/docs/DEPENDENCIES.md"
 
 # History of marks within files (newest to oldest):
 
+> ~/dotfiles/vim/vimrc
+	*	1774762331	0
+	"	37	0
+	^	37	20
+	.	37	20
+	+	37	20
+
+> ~/code/is-internal/file-system-indexer/README.md
+	*	1774760364	0
+	"	50	0
+
+> ~/.claude/NERD_tree_win_1
+	*	1774759480	0
+	"	1	0
+	.	1	0
+	+	1	0
+
+> ~/schema-org-file-system/docs/DEPENDENCIES.md
+	*	1774759034	0
+	"	208	0
+
+> ~/.claude/mcp-servers/observability-toolkit/package.json
+	*	1774754715	0
+	"	54	2
+	.	52	0
+	+	60	0
+	+	59	29
+	+	52	0
+
+> ~/code/personal-site/package.json
+	*	1774753493	0
+	"	1	0
+
+> ~/schema-org-file-system/REFACTORING_SUMMARY.md
+	*	1774747510	0
+	"	1	0
+
+> ~/schema-org-file-system/RECOMMENDATIONS_APPLIED.md
+	*	1774743845	0
+	"	1	0
+
+> ~/reports/.claude/settings.json
+	*	1774742658	0
+	"	1	0
+
+> ~/code/is-internal/observability/README.md
+	*	1774741443	0
+	"	194	0
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/docs/repomix/token-tree.txt
+	*	1774702081	0
+	"	1	0
+
+> ~/dotfiles/shell/common.sh
+	*	1774699789	0
+	"	12	0
+	.	13	0
+	+	133	0
+	+	62	12
+	+	87	5
+	+	63	12
+	+	61	0
+	+	104	0
+	+	106	0
+	+	63	7
+	+	62	13
+	+	27	14
+	+	61	0
+	+	105	0
+	+	106	0
+	+	125	0
+	+	5	0
+	+	42	0
+	+	50	0
+	+	42	0
+	+	5	0
+	+	42	0
+	+	5	0
+	+	41	0
+	+	41	42
+	+	41	0
+	+	96	33
+	+	96	0
+	+	70	0
+	+	96	0
+	+	70	0
+	+	96	0
+	+	71	0
+	+	70	0
+	+	73	0
+	+	74	0
+	+	71	13
+	+	70	13
+	+	69	25
+	+	71	0
+	+	72	15
+	+	73	12
+	+	74	0
+	+	73	0
+	+	13	0
+
+> ~/dotfiles/install.sh
+	*	1774699660	0
+	"	100	0
+	^	100	1
+	.	9	0
+	+	81	0
+	+	80	58
+	+	79	4
+	+	80	53
+	+	84	0
+	+	81	0
+	+	82	55
+	+	83	0
+	+	84	0
+	+	83	56
+	+	79	31
+	+	8	29
+	+	42	20
+	+	99	66
+	+	99	32
+	+	99	64
+	+	99	0
+	+	9	0
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/token-tree.txt
+	*	1774689741	0
+	"	1	0
+
+> ~/.claude/plugins/installed_plugins.json
+	*	1774682405	0
+	"	97	0
+
+> ~/.claude/prompt.txt
+	*	1774682308	0
+	"	15	16
+	^	15	17
+	.	15	16
+	+	69	75
+	+	67	20
+	+	68	1
+	+	46	24
+	+	44	14
+	+	15	16
+
+> ~/code/is-internal/one-page-app/prompt.txt
+	*	1774674037	0
+	"	1	276
+	^	1	277
+	.	1	276
+	+	1	276
+
+> ~/reports/package.json
+	*	1774669507	0
+	"	1	0
+
+> ~/reports/prompts/README.md
+	*	1774669037	0
+	"	108	0
+
+> ~/reports/scripts/import_prompts.py
+	*	1774667821	0
+	"	6	4
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/package.json
+	*	1774580795	0
+	"	41	4
+	^	71	1
+	.	49	90
+	+	51	0
+	+	50	52
+	+	49	90
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/docs/BACKLOG.md
+	*	1774573292	0
+	"	1	0
+
+> ~/.claude/mcp-servers/observability-toolkit/docs/BACKLOG.md
+	*	1774568593	0
+	"	1	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/scripts/replace-magic.sh
+	*	1774567901	0
+	"	1	0
+
+> ~/code/is-public-sites/IntegrityLandingPage/package.json
+	*	1774567890	0
+	"	14	45
+	^	14	46
+	.	14	45
+	+	23	0
+	+	23	50
+	+	23	56
+	+	24	0
+	+	25	0
+	+	23	0
+	+	14	52
+	+	25	0
+	+	23	0
+	+	25	0
+	+	23	0
+	+	25	0
+	+	23	0
+	+	25	0
+	+	23	0
+	+	19	38
+	+	23	37
+	+	23	5
+	+	23	7
+	+	23	0
+	+	16	0
+	+	23	0
+	+	17	0
+	+	23	0
+	+	18	0
+	+	22	0
+	+	19	38
+	+	18	35
+	+	18	0
+	+	20	0
+	+	18	0
+	+	21	37
+	+	19	38
+	+	15	4
+	+	14	45
+
+> ~/code/is-internal/bot-army-google-calendar-mcp/docs/repomix/token-tree.txt
+	*	1774521847	0
+	"	1	0
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/package.json
+	*	1774521451	0
+	"	26	4
+	^	26	19
+	.	24	52
+	+	24	52
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/docs/repomix/repo-compressed.xml
+	*	1774515089	0
+	"	1	0
+
+> ~/.claude/mcp-servers/observability-toolkit/dashboard/.auth0_cli
+	*	1774509974	0
+	"	18	4
+	^	18	5
+	.	18	4
+	+	1	0
+	+	11	15
+	+	12	15
+	+	13	34
+	+	12	42
+	+	11	42
+	+	17	53
+	+	18	4
+
+> ~/.claude/mcp-servers/observability-toolkit/.supabase
+	*	1774501952	0
+	"	16	59
+	^	16	60
+	.	16	59
+	+	1	0
+	+	11	34
+	+	12	19
+	+	13	20
+	+	17	61
+	+	16	59
+
+> ~/.claude/mcp-servers/observability-toolkit/.mcp.json
+	*	1774501675	0
+	"	1	0
+
 > ~/.claude/.auth0
-	*	1774442860	0
-	"	4	0
+	*	1774501633	0
+	"	1	0
 	^	4	61
 	.	4	60
 	+	6	50
@@ -313,6 +594,10 @@
 	+	4	34
 	+	9	0
 	+	4	60
+
+> ~/reports/.claude/package.json
+	*	1774486787	0
+	"	1	0
 
 > ~/.claude/.envrc
 	*	1774437478	0
@@ -335,22 +620,9 @@
 	.	1	0
 	+	1	0
 
-> ~/reports/.claude/settings.json
-	*	1774418297	0
-	"	1	0
-
 > ~/reports/.claude/settings.local.json
 	*	1774418261	0
 	"	1	0
-
-> ~/code/is-internal/bot-army-google-calendar-mcp/package.json
-	*	1774337869	0
-	"	41	4
-	^	71	1
-	.	49	90
-	+	51	0
-	+	50	52
-	+	49	90
 
 > ~/code/is-internal/schema-org-mcp/scripts/repomix/repomix.config.json
 	*	1774327484	0
@@ -409,54 +681,6 @@
 	.	5	0
 	+	2	0
 	+	5	0
-
-> ~/dotfiles/shell/common.sh
-	*	1774320732	0
-	"	74	0
-	^	74	1
-	.	74	0
-	+	134	0
-	+	63	12
-	+	88	5
-	+	64	12
-	+	62	0
-	+	105	0
-	+	107	0
-	+	64	7
-	+	63	13
-	+	28	14
-	+	62	0
-	+	106	0
-	+	107	0
-	+	126	0
-	+	5	0
-	+	43	0
-	+	51	0
-	+	43	0
-	+	5	0
-	+	43	0
-	+	5	0
-	+	42	0
-	+	42	42
-	+	42	0
-	+	97	33
-	+	97	0
-	+	71	0
-	+	97	0
-	+	71	0
-	+	97	0
-	+	72	0
-	+	71	0
-	+	74	0
-	+	75	0
-	+	72	13
-	+	71	13
-	+	70	25
-	+	72	0
-	+	73	15
-	+	74	12
-	+	75	0
-	+	74	0
 
 > ~/code/is-internal/arc-fix/dev-env-analyzer.sh
 	*	1774319591	0
@@ -574,45 +798,6 @@
 	*	1774310144	0
 	"	1	0
 
-> ~/code/is-public-sites/IntegrityLandingPage/package.json
-	*	1774291420	0
-	"	18	38
-	^	18	39
-	.	18	38
-	+	22	0
-	+	22	50
-	+	22	56
-	+	23	0
-	+	24	0
-	+	22	0
-	+	14	52
-	+	24	0
-	+	22	0
-	+	24	0
-	+	22	0
-	+	24	0
-	+	22	0
-	+	24	0
-	+	22	0
-	+	18	38
-	+	22	37
-	+	22	5
-	+	22	7
-	+	22	0
-	+	15	0
-	+	22	0
-	+	16	0
-	+	22	0
-	+	17	0
-	+	21	0
-	+	18	38
-	+	17	35
-	+	17	0
-	+	19	0
-	+	17	0
-	+	20	37
-	+	18	38
-
 > ~/code/is-public-sites/IntegrityLandingPage/e2e/package.json
 	*	1774291173	0
 	"	6	0
@@ -644,16 +829,8 @@
 	*	1774282962	0
 	"	1	0
 
-> ~/.claude/mcp-servers/observability-toolkit/dashboard/package.json
-	*	1774282872	0
-	"	1	0
-
 > ~/reports/index.html
 	*	1774268862	0
-	"	1	0
-
-> ~/.claude/mcp-servers/observability-toolkit/docs/BACKLOG.md
-	*	1774160612	0
 	"	1	0
 
 > ~/.claude/settings.local.json
@@ -664,14 +841,6 @@
 	+	5	16
 	+	6	10
 	+	5	16
-
-> ~/.claude/mcp-servers/observability-toolkit/package.json
-	*	1774040616	0
-	"	53	12
-	.	52	0
-	+	60	0
-	+	59	29
-	+	52	0
 
 > ~/code/is-public-sites/IntegrityLandingPage/agents/QUICKSTART.md
 	*	1774039195	0
@@ -827,29 +996,6 @@
 	+	131	63
 	+	130	88
 	+	138	28
-
-> ~/dotfiles/install.sh
-	*	1773923665	0
-	"	8	0
-	.	9	0
-	+	81	0
-	+	80	58
-	+	79	4
-	+	80	53
-	+	84	0
-	+	81	0
-	+	82	55
-	+	83	0
-	+	84	0
-	+	83	56
-	+	79	31
-	+	8	29
-	+	42	20
-	+	99	66
-	+	99	32
-	+	99	64
-	+	99	0
-	+	9	0
 
 > ~/code/integrity-demo-generator/dotfiles/install.sh
 	*	1773923657	0
