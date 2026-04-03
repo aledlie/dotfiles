@@ -16,6 +16,7 @@ export CONFIG_STAGING="staging"
 export CONFIG_PRODUCTION="production"
 
 # Validate identifier is a valid shell variable name
+# Pattern: starts with letter or underscore, followed by alphanumeric or underscore
 _is_valid_identifier() {
   [[ $1 =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]
 }
@@ -38,16 +39,26 @@ if command -v doppler >/dev/null 2>&1; then
     fi
 
     # Refresh cache in background (only if >1h old or missing)
-    if [ ! -f "$_doppler_cache" ] || [ "$(( $(date +%s) - $(stat -f%m "$_doppler_cache" 2>/dev/null || echo 0) ))" -gt 3600 ]; then
-      (
-        _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
-        if [ -n "$_new_cache" ]; then
-          printf '%s\n' "$_new_cache" > "$_doppler_cache"
-        fi
-      ) &
+    # Skip if already checked this session to avoid repeated time/stat calls
+    if [ -z "${_DOPPLER_CACHE_CHECKED:-}" ]; then
+      _DOPPLER_CACHE_CHECKED=1
+      if [ ! -f "$_doppler_cache" ]; then
+        _cache_age=3601
+      else
+        _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null) || _cache_mtime=$(($(date +%s) + 1))
+        _cache_age=$(( $(date +%s) - _cache_mtime ))
+      fi
+      if [ "$_cache_age" -gt 3600 ]; then
+        (
+          _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
+          if [ -n "$_new_cache" ]; then
+            printf '%s\n' "$_new_cache" > "$_doppler_cache"
+          fi
+        ) &
+      fi
     fi
 
-    unset _assignment _doppler_cache
+    unset _assignment _doppler_cache _cache_age _cache_mtime _new_cache
   fi
 fi
 
