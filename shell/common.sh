@@ -100,35 +100,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 # All _path_prepend calls must precede this line
 unset -f _path_prepend
 
-# ---------- secret management quality-of-life ----------
-
-# Dynamically populate project variables from doppler projects (with background refresh)
-if command -v doppler >/dev/null 2>&1; then
-  if ! command -v jq >/dev/null 2>&1; then
-    printf '[dotfiles] warning: doppler found but jq missing; project variables unavailable\n' >&2
-  else
-    _doppler_cache="$HOME/.cache/doppler-projects.txt"
-    mkdir -p "$(dirname "$_doppler_cache")" 2>/dev/null
-
-    # Load from cache (if exists), export immediately
-    if [[ -f "$_doppler_cache" ]]; then
-      while IFS= read -r _assignment; do
-        [[ -z "$_assignment" ]] && continue
-        export "$_assignment"
-      done < "$_doppler_cache"
-    fi
-
-    # Refresh cache in background (non-blocking)
-    (
-      _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
-      if [[ -n "$_new_cache" ]]; then
-        printf '%s\n' "$_new_cache" > "$_doppler_cache"
-      fi
-    ) &
-
-    unset _assignment _doppler_cache
-  fi
-fi
+# ---------- doppler configuration ----------
 
 # Config variants
 export CONFIG_DEV="dev"
@@ -136,7 +108,7 @@ export CONFIG_PRODUCTION="production"
 DEFAULT_PROJECT="${DOPPLER_PROJECT_INTEGRITY_STUDIO:-integrity-studio}"
 DEFAULT_CONFIG="$CONFIG_DEV"
 
-# pull secrets from doppler with default project and dev configuration into cache for faster reads
+# Load Doppler cache and secrets (doppler-secrets.sh populates DOPPLER_PROJECT_* variables)
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
 if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
   load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
