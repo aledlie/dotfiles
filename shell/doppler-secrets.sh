@@ -12,7 +12,13 @@
 
 # ---------- Doppler constants ----------
 export CONFIG_DEV="dev"
+export CONFIG_STAGING="staging"
 export CONFIG_PRODUCTION="production"
+
+# Validate identifier is a valid shell variable name
+_is_valid_identifier() {
+  [[ $1 =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]
+}
 
 # Dynamically populate DOPPLER_PROJECT_* variables from doppler projects (with background refresh)
 # This runs in both zsh and bash
@@ -31,13 +37,15 @@ if command -v doppler >/dev/null 2>&1; then
       done < "$_doppler_cache"
     fi
 
-    # Refresh cache in background (non-blocking)
-    (
-      _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
-      if [ -n "$_new_cache" ]; then
-        printf '%s\n' "$_new_cache" > "$_doppler_cache"
-      fi
-    ) &
+    # Refresh cache in background (only if >1h old or missing)
+    if [ ! -f "$_doppler_cache" ] || [ "$(( $(date +%s) - $(stat -f%m "$_doppler_cache" 2>/dev/null || echo 0) ))" -gt 3600 ]; then
+      (
+        _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
+        if [ -n "$_new_cache" ]; then
+          printf '%s\n' "$_new_cache" > "$_doppler_cache"
+        fi
+      ) &
+    fi
 
     unset _assignment _doppler_cache
   fi
@@ -220,12 +228,12 @@ unset _k
 
 # Standard configs for multi-config operations
 typeset -ga _DOPPLER_CONFIGS
-_DOPPLER_CONFIGS=("dev" "staging" "production")
+_DOPPLER_CONFIGS=("$CONFIG_DEV" "$CONFIG_STAGING" "$CONFIG_PRODUCTION")
 
 # Get a secret value without exporting (reads from cache)
 # Returns exit code 1 if the secret is empty or missing.
 secret() {
-  if [[ ! "$1" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+  if ! _is_valid_identifier "$1"; then
     printf 'secret: invalid identifier: %s\n' "$1" >&2
     return 1
   fi
@@ -245,7 +253,7 @@ secret() {
 doppler_export() {
   local var key val failed=0
   for var in "$@"; do
-    if [[ ! "$var" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+    if ! _is_valid_identifier "$var"; then
       printf 'doppler_export: invalid identifier: %s\n' "$var" >&2
       return 1
     fi
@@ -291,7 +299,7 @@ doppler_copy_secret() {
   local config value failed=0
 
   # Validate parameters
-  if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || [[ -z "$source_project" || -z "$target_project" ]]; then
+  if ! _is_valid_identifier "$key" || [[ -z "$source_project" || -z "$target_project" ]]; then
     printf 'doppler_copy_secret: invalid key, source-project, or target-project\n' >&2
     return 1
   fi
