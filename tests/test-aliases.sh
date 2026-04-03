@@ -41,9 +41,9 @@ _check "alias .. defined" "$ALIAS_CHECK .."
 _check "alias ... defined" "$ALIAS_CHECK ..."
 _check "alias .... defined" "$ALIAS_CHECK ...."
 
-# --- Static Doppler project exports ---
-_check "DOPPLER_PROJECT_INTEGRITY set" '[ "$DOPPLER_PROJECT_INTEGRITY" = "integrity-studio" ]'
-_check "DOPPLER_PROJECT_ANALYTICS set" '[ "$DOPPLER_PROJECT_ANALYTICS" = "analyticsbot" ]'
+# --- Dynamic Doppler project exports ---
+_check "DOPPLER_PROJECT_INTEGRITY_STUDIO set" '[ "$DOPPLER_PROJECT_INTEGRITY_STUDIO" = "integrity-studio" ]'
+_check "DOPPLER_PROJECT_ANALYTICSBOT set" '[ "$DOPPLER_PROJECT_ANALYTICSBOT" = "analyticsbot" ]'
 _check "DOPPLER_CONFIG_DEFAULT is dev" '[ "$DOPPLER_CONFIG_DEFAULT" = "dev" ]'
 _check "DOPPLER_CONFIG_PRODUCTION is production" '[ "$DOPPLER_CONFIG_PRODUCTION" = "production" ]'
 
