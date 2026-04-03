@@ -100,11 +100,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 # All _path_prepend calls must precede this line
 unset -f _path_prepend
 
-# Source Doppler and utility functions (doppler-secrets.sh defines CONFIG_* and DEFAULT_* constants)
+# Source Doppler and utility functions
+# doppler-secrets.sh defines CONFIG_* and DEFAULT_* constants, and auto-loads secrets
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
-
-# Load Doppler secrets for default project/config
-if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
-  load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
-fi

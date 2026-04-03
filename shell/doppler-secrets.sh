@@ -175,10 +175,15 @@ unload_doppler_cache() {
   unset DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
 }
 
+# Auto-load secrets for default project/config on startup (works in bash and zsh)
+if command -v doppler >/dev/null 2>&1; then
+  load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
+fi
+
 # zsh-only: associative arrays and typeset -gA are not available in bash
 [[ -n "${ZSH_VERSION:-}" ]] || return 0
 
-# Guard: cache must be loaded before secret functions are useful
+# Guard: cache must be loaded before secret functions are useful (or generate warning)
 if [[ -z "${DOPPLER_CACHE_PROJECT:-}" ]]; then
   printf 'doppler-secrets.sh: cache not loaded; run load_doppler_cache first\n' >&2
   return 1
