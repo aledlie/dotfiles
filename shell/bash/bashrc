@@ -5,8 +5,6 @@
 # Set dotfiles directory
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
-# Load common shell configuration
-[[ -f "$DOTFILES_DIR/shell/common.sh" ]] && builtin source "$DOTFILES_DIR/shell/common.sh"
 
 # Bash-specific settings
 export HISTCONTROL=ignoredups:erasedups

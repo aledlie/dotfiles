@@ -185,3 +185,6 @@ if command -v xclip >/dev/null; then
 elif command -v xsel >/dev/null; then
   c() { tr -d '\n' | xsel --clipboard; }
 fi
+
+# Explicit Wireshark tshark alias (removed from PATH for security)
+alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'

@@ -79,12 +79,6 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -t 0 ]]; then
   _chruby_auto="/opt/homebrew/opt/chruby/share/chruby/auto.sh"
   [[ -f "$_chruby_sh" ]] && source "$_chruby_sh"
   [[ -f "$_chruby_auto" ]] && source "$_chruby_auto"
-  # Set default Ruby version (chruby manages GEM_HOME/GEM_PATH)
-  if command -v chruby >/dev/null 2>&1; then
-    if ! chruby ruby-3.4.4 >/dev/null 2>&1; then
-      echo "[dotfiles] warning: ruby-3.4.4 not found, skipping chruby" >&2
-    fi
-  fi
   unset _chruby_sh _chruby_auto
 fi
 

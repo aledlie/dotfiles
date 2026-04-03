@@ -75,3 +75,9 @@ unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 # Kiro CLI post block. Keep at the bottom of this file.
 # DISABLED: kiro-cli 1.28.1 has parse error bug. Re-enable after update.
 # [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+# Explicit Wireshark tshark alias (removed from PATH for security)
+alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'
+
+# Remove stale /opt/pmk path entry
+export PATH=$(echo $PATH | tr ':' '\n' | grep -v '^/opt/pmk' | tr '\n' ':' | sed 's/:$//')
