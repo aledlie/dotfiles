@@ -42,7 +42,7 @@ unset _env _dop
 typeset -ga _DOPPLER_ALL_SECRETS
 _DOPPLER_ALL_SECRETS=()
 local _k
-for _k in "${(k)DOPPLER_CACHE}"; do
+for _k in "${(@k)DOPPLER_CACHE}"; do
   [[ "$_k" == DOPPLER_* ]] && continue
   _DOPPLER_ALL_SECRETS+=("$_k")
 done
