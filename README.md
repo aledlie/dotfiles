@@ -88,7 +88,7 @@ dotfiles/
 - Network utilities (`localip`, `flush`, `ips`)
 
 ### Environment Setup
-- Homebrew integration
+- Homebrew integration (macOS)
 - Python build configuration (Tcl/Tk support)
 - Ruby version management with chruby
 - Custom editor (vim) configuration
@@ -104,6 +104,134 @@ dotfiles/
 
 ### Tmux Configuration
 - Custom tmux settings
+
+## Installation Data Flow
+
+```
+install.sh execution:
+  │
+  ├─ Detect shell type ($SHELL)
+  │  ├─ zsh? → Use ~/.zshenv
+  │  └─ bash? → Use ~/.bash_profile
+  │
+  ├─ Detect machine architecture (uname -m)
+  │  └─ Returns: arm64, x86_64, aarch64, etc.
+  │
+  ├─ Detect operating system type (uname -s)
+  │  └─ Normalizes to: darwin, linux, etc.
+  │
+  ├─ Create backup directory (~/.dotfiles.backup/<timestamp>/)
+  │
+  ├─ Create symlinks:
+  │  ├─ shell/zsh/zshrc → ~/.zshrc
+  │  ├─ shell/zsh/zprofile → ~/.zprofile
+  │  ├─ shell/zsh/prompt.zsh → ~/.prompt.zsh
+  │  ├─ shell/bash/bashrc → ~/.bashrc
+  │  ├─ shell/bash/bash_profile → ~/.bash_profile
+  │  ├─ shell/bash/prompt.bash → ~/.prompt.bash
+  │  ├─ shell/dircolors → ~/.dircolors
+  │  ├─ git/gitconfig → ~/.gitconfig
+  │  ├─ vim/vimrc → ~/.vimrc
+  │  └─ tmux/tmux.conf → ~/.tmux.conf
+  │
+  ├─ Backup existing files to BACKUP_DIR (if they exist)
+  │
+  └─ Write shell initialization to .zshenv or .bash_profile:
+     └─ export DOTFILES_DIR="$HOME/dotfiles"
+        export SHELL_DIR="$DOTFILES_DIR/shell"
+        export ARCH="arm64"              # (detected at install time)
+        export OSTYPE="darwin"           # (detected at install time)
+        
+        # Platform-specific PATH setup (macOS)
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          _path_prepend "/opt/homebrew/bin"
+          _path_prepend "/opt/homebrew/sbin"
+        fi
+        
+        [[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
+```
+
+## Shell Startup Data Flow
+
+### Zsh (All Invocations)
+```
+Terminal starts → exec zsh
+  │
+  ├─ .zshenv (ALWAYS, every invocation)
+  │  │
+  │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
+  │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
+  │  ├─ export ARCH="arm64"          # (set at install time)
+  │  ├─ export OSTYPE="darwin"       # (set at install time)
+  │  │
+  │  ├─ Platform-specific PATH setup (if macOS)
+  │  │
+  │  └─ source shell/common.sh
+  │     │
+  │     ├─ Export OTEL vars (PROTOCOL, COMPRESSION, TIMEOUT, SERVICE_NAME, RESOURCE_ATTRIBUTES)
+  │     ├─ Export shell quality-of-life (EDITOR, VISUAL, HISTSIZE, SAVEHIST)
+  │     ├─ Setup ls colors (with file existence guard)
+  │     ├─ Load dircolors (with file existence guard)
+  │     ├─ Source aliases.sh (with file existence guard)
+  │     ├─ Source git-prompt.sh with git settings (with file existence guard)
+  │     ├─ Add to PATH: local, cargo, pub-cache, GOPATH, etc.
+  │     ├─ Configure NVM (Node Version Manager)
+  │     ├─ Configure chruby (Ruby 3.4.4 auto-switch, interactive only)
+  │     ├─ Configure pyenv (Python version management)
+  │     ├─ Export Doppler project names (PROJECT_INTEGRITY, etc.)
+  │     ├─ Source functions.sh (with file existence guard)
+  │     └─ Load Doppler cache (load_doppler_cache)
+  │
+  ├─ .zprofile (login shells only)
+  │
+  ├─ .zshrc (interactive shells only)
+  │  │
+  │  ├─ Zsh options (AUTO_CD, CORRECT_ALL, AUTO_LIST, HIST_*, etc.)
+  │  ├─ Setup completions (compinit)
+  │  ├─ Configure pyenv (shell-specific init)
+  │  ├─ Setup direnv
+  │  ├─ Load .prompt.zsh (custom prompt with git info)
+  │  ├─ Load fzf.zsh (fuzzy finder)
+  │  └─ Source dart-cli-completion
+  │
+  └─ Shell ready
+```
+
+### Bash (Login Shells Only)
+```
+Terminal starts → exec bash -l
+  │
+  ├─ .bash_profile (login shells only)
+  │  │
+  │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
+  │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
+  │  ├─ export ARCH="x86_64"         # (set at install time)
+  │  ├─ export OSTYPE="linux"        # (set at install time)
+  │  │
+  │  ├─ Platform-specific PATH setup (if macOS)
+  │  │
+  │  └─ source shell/common.sh
+  │     │ (same as Zsh common.sh setup above)
+  │
+  ├─ .bashrc (interactive shells only)
+  │  │
+  │  ├─ Bash options (histappend, checkwinsize, cdspell, etc.)
+  │  ├─ Setup completions
+  │  ├─ Configure pyenv (shell-specific init)
+  │  ├─ Setup direnv
+  │  ├─ Load prompt.bash (custom prompt with git info)
+  │  ├─ Load fzf.bash (fuzzy finder)
+  │  └─ Source cargo env
+  │
+  └─ Shell ready
+```
+
+**Key insights:**
+- **Zsh:** All exports available everywhere (scripts, cron, login, interactive) via `.zshenv`
+- **Bash:** Exports only available in login shells (`.bash_profile`); scripts and non-login shells need separate sourcing
+- **Install-time values:** ARCH, OSTYPE, and platform-specific PATH setup are baked into shell init files
+- **Runtime values:** Everything using `$HOME`, `$USER`, or environment variable expansion stays in `common.sh`
+- **File guards:** All sourcing operations check file existence before loading, preventing errors during fresh installs
 
 ## Make Targets
 
