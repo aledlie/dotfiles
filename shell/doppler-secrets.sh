@@ -48,6 +48,10 @@ for _k in "${(k)DOPPLER_CACHE}"; do
 done
 unset _k
 
+# Standard configs for multi-config operations
+typeset -ga _DOPPLER_CONFIGS
+_DOPPLER_CONFIGS=("dev" "staging" "production")
+
 # Get a secret value without exporting (reads from cache)
 # Returns exit code 1 if the secret is empty or missing.
 secret() {
@@ -107,5 +111,42 @@ doppler_export_all() {
   done
   if (( failed > 0 )); then
     printf 'doppler_export_all: %d secrets skipped\n' "$failed" >&2
+  fi
+}
+
+# Copy a secret key-value pair from one project to another across all three configs
+# Usage: doppler_copy_secret <key> <source-project> <target-project>
+doppler_copy_secret() {
+  local key="$1" source_project="$2" target_project="$3"
+  local config value failed=0
+
+  # Validate parameters
+  if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || [[ -z "$source_project" || -z "$target_project" ]]; then
+    printf 'doppler_copy_secret: invalid key, source-project, or target-project\n' >&2
+    return 1
+  fi
+
+  # Fetch values from source for all configs, then parallelize sets to target
+  local -a values=() pids=()
+  local i
+  for config in "${_DOPPLER_CONFIGS[@]}"; do
+    if value=$(doppler secrets get "$key" --project "$source_project" --config "$config" --plain 2>/dev/null); then
+      values+=("$value")
+      # Spawn set in background
+      doppler secrets set "$key" "$value" --project "$target_project" --config "$config" &
+      pids+=($!)
+    else
+      printf 'doppler_copy_secret: %s not found in %s/%s\n' "$key" "$source_project" "$config" >&2
+      (( failed++ ))
+      values+=("")
+    fi
+  done
+
+  # Wait for all background jobs
+  for i in "${pids[@]}"; do wait "$i" || (( failed++ )); done
+
+  if (( failed > 0 )); then
+    printf 'doppler_copy_secret: %d operation(s) failed\n' "$failed" >&2
+    return 1
   fi
 }
