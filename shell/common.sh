@@ -2,6 +2,7 @@
 
 # Validate required environment
 [[ -n "$DOTFILES_DIR" ]] || { printf '[dotfiles] DOTFILES_DIR is unset\n' >&2; return 1; }
+[[ -n "$SHELL_DIR" ]] || { printf '[dotfiles] SHELL_DIR is unset\n' >&2; return 1; }
 
 # ---------- otel config  ----------
 export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
@@ -16,8 +17,6 @@ export VISUAL="${VISUAL:-$EDITOR}"
 export HISTSIZE=50000
 export HISTFILESIZE=100000
 export SAVEHIST=50000
-# Platform detection
-export ARCH="${ARCH:-$(uname -m)}"
 
 # Enable color support for GNU ls if available
 if ls --color=auto >/dev/null 2>&1; then
@@ -35,13 +34,13 @@ fi
 [[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
 
 # Load git prompt if available
-if [[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]]; then
-    source "$DOTFILES_DIR/git/git-prompt.sh"
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
-fi
+[[ -f "$DOTFILES_DIR/git/git-prompt.sh" ]] && {
+  source "$DOTFILES_DIR/git/git-prompt.sh"
+  export GIT_PS1_SHOWDIRTYSTATE=1
+  export GIT_PS1_SHOWSTASHSTATE=1
+  export GIT_PS1_SHOWUNTRACKEDFILES=1
+  export GIT_PS1_SHOWUPSTREAM="auto"
+}
 
 # ---------- dev dependency sanity ----------
 
@@ -52,12 +51,6 @@ _path_prepend() {
     *) export PATH="$1:$PATH" ;;
   esac
 }
-
-# Add Homebrew to PATH (macOS)
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    _path_prepend "/opt/homebrew/bin"
-    _path_prepend "/opt/homebrew/sbin"
-fi
 
 # add local bin to PATH
 _path_prepend "$HOME/.local/bin"
@@ -98,8 +91,8 @@ fi
 
 # Python via pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && _path_prepend "$PYENV_ROOT/bin"
-[[ -d $PYENV_ROOT/shims ]] && _path_prepend "$PYENV_ROOT/shims"
+[[ -d "$PYENV_ROOT/bin" ]] && _path_prepend "$PYENV_ROOT/bin"
+[[ -d "$PYENV_ROOT/shims" ]] && _path_prepend "$PYENV_ROOT/shims"
 
 
 # Shell-specific pyenv initialization is in bash/bashrc and zsh/zshrc
@@ -109,21 +102,24 @@ unset -f _path_prepend
 
 # ---------- secret management quality-of-life ----------
 
-# list of available doppler projects
-export PROJECT_INTEGRITY="integrity-studio"
-export PROJECT_ANALYTICS="analyticsbot"
-export PROJECT_PERSONAL="personal-info"
-export PROJECT_ACCOUNTING="accounting"
-export PROJECT_ATX="atx-movement"
-export PROJECT_BOTTLENECK="bottleneck"
-export PROJECT_FINANCIAL="financial-hub"
-export PROJECT_LEGAL="legal"
-export PROJECT_PROPERTY="property"
+# Dynamically populate project variables from doppler projects
+if command -v doppler >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+  while IFS= read -r _proj_name; do
+    [[ -z "$_proj_name" ]] && continue
+
+    # Convert project name to variable name: replace - with _, then uppercase
+    _var_name=$(printf '%s\n' "PROJECT_$_proj_name" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
+
+    export "${_var_name}=${_proj_name}"
+  done < <(doppler projects --json 2>/dev/null | jq -r '.[].name')
+  unset _proj_name _var_name
+fi
+
+# Config variants
 export CONFIG_DEV="dev"
 export CONFIG_PRODUCTION="production"
-DEFAULT_PROJECT="$PROJECT_INTEGRITY"
+DEFAULT_PROJECT="${PROJECT_INTEGRITY_STUDIO:-integrity-studio}"
 DEFAULT_CONFIG="$CONFIG_DEV"
-SHELL_DIR="$DOTFILES_DIR/shell"
 
 # pull secrets from doppler with default project and dev configuration into cache for faster reads
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
