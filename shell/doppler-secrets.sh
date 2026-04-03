@@ -10,6 +10,10 @@
 # Note: secrets with raw embedded newlines (e.g. PEM keys) are truncated by
 # command substitution. Escaped \n literals in JSON values are unaffected.
 
+# ---------- Doppler constants ----------
+export CONFIG_DEV="dev"
+export CONFIG_PRODUCTION="production"
+
 # Dynamically populate DOPPLER_PROJECT_* variables from doppler projects (with background refresh)
 # This runs in both zsh and bash
 if command -v doppler >/dev/null 2>&1; then
@@ -38,6 +42,10 @@ if command -v doppler >/dev/null 2>&1; then
     unset _assignment _doppler_cache
   fi
 fi
+
+# Set defaults (these reference dynamically populated DOPPLER_PROJECT_* variables)
+DEFAULT_PROJECT="${DOPPLER_PROJECT_INTEGRITY_STUDIO:-integrity-studio}"
+DEFAULT_CONFIG="$CONFIG_DEV"
 
 # Load Doppler secrets into cache (both bash/zsh compatible)
 load_doppler_cache() {

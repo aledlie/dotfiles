@@ -100,15 +100,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 # All _path_prepend calls must precede this line
 unset -f _path_prepend
 
-# ---------- doppler configuration ----------
-
-# Config variants
-export CONFIG_DEV="dev"
-export CONFIG_PRODUCTION="production"
-DEFAULT_PROJECT="${DOPPLER_PROJECT_INTEGRITY_STUDIO:-integrity-studio}"
-DEFAULT_CONFIG="$CONFIG_DEV"
-
-# Source Doppler and utility functions
+# Source Doppler and utility functions (doppler-secrets.sh defines CONFIG_* and DEFAULT_* constants)
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
 
