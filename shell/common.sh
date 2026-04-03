@@ -107,13 +107,11 @@ if command -v doppler >/dev/null 2>&1; then
   if ! command -v jq >/dev/null 2>&1; then
     printf '[dotfiles] warning: doppler found but jq missing; project variables unavailable\n' >&2
   else
-    while IFS= read -r _proj_name; do
-      [[ -z "$_proj_name" ]] && continue
-      # Convert project name to variable name: replace - with _, then uppercase
-      _var_name=$(printf '%s\n' "DOPPLER_PROJECT_$_proj_name" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
-      export "${_var_name}=${_proj_name}"
-    done < <(doppler projects --json 2>/dev/null | jq -r '.[].name')
-    unset _proj_name _var_name
+    while IFS= read -r _assignment; do
+      [[ -z "$_assignment" ]] && continue
+      export "$_assignment"
+    done < <(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
+    unset _assignment
   fi
 fi
 
