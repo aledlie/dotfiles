@@ -102,16 +102,31 @@ unset -f _path_prepend
 
 # ---------- secret management quality-of-life ----------
 
-# Dynamically populate project variables from doppler projects
+# Dynamically populate project variables from doppler projects (with background refresh)
 if command -v doppler >/dev/null 2>&1; then
   if ! command -v jq >/dev/null 2>&1; then
     printf '[dotfiles] warning: doppler found but jq missing; project variables unavailable\n' >&2
   else
-    while IFS= read -r _assignment; do
-      [[ -z "$_assignment" ]] && continue
-      export "$_assignment"
-    done < <(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
-    unset _assignment
+    _doppler_cache="$HOME/.cache/doppler-projects.txt"
+    mkdir -p "$(dirname "$_doppler_cache")" 2>/dev/null
+
+    # Load from cache (if exists), export immediately
+    if [[ -f "$_doppler_cache" ]]; then
+      while IFS= read -r _assignment; do
+        [[ -z "$_assignment" ]] && continue
+        export "$_assignment"
+      done < "$_doppler_cache"
+    fi
+
+    # Refresh cache in background (non-blocking)
+    (
+      _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
+      if [[ -n "$_new_cache" ]]; then
+        printf '%s\n' "$_new_cache" > "$_doppler_cache"
+      fi
+    ) &
+
+    unset _assignment _doppler_cache
   fi
 fi
 
