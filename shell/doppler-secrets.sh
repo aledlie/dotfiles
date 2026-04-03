@@ -1,11 +1,11 @@
-# Doppler secret registry — lazy-loaded, never exported on startup.
-# Requires: doppler_get (from functions.sh), load_doppler_cache (already called)
+# Doppler secret registry — provides project variables, cache loading, and secret access.
 #
 # Usage:
-#   secret GITHUB_TOKEN                          # one-shot read (no export)
+#   load_doppler_cache PROJECT CONFIG           # load secrets into DOPPLER_CACHE
+#   secret GITHUB_TOKEN                         # one-shot read (no export)
 #   GITHUB_TOKEN=$(secret GITHUB_TOKEN) git push # inline for a single command
-#   doppler_export GITHUB_TOKEN STRIPE_API_KEY   # export specific vars
-#   doppler_export_all                           # export everything (rare)
+#   doppler_export GITHUB_TOKEN STRIPE_API_KEY  # export specific vars
+#   doppler_export_all                          # export everything (rare)
 #
 # Note: secrets with raw embedded newlines (e.g. PEM keys) are truncated by
 # command substitution. Escaped \n literals in JSON values are unaffected.
@@ -39,10 +39,138 @@ if command -v doppler >/dev/null 2>&1; then
   fi
 fi
 
+# Load Doppler secrets into cache (both bash/zsh compatible)
+load_doppler_cache() {
+  local project="${1:-integrity-studio}"
+  local config="${2:-dev}"
+
+  if [ "${DOPPLER_CACHE_PROJECT:-}" = "$project" ] && [ "${DOPPLER_CACHE_CONFIG:-}" = "$config" ]; then
+    return
+  fi
+
+  # Use typeset for zsh, declare for bash
+  if command -v typeset > /dev/null 2>&1 && [ -n "${ZSH_VERSION:-}" ]; then
+    typeset -gA DOPPLER_CACHE
+    typeset -g DOPPLER_CACHE_PROJECT
+    typeset -g DOPPLER_CACHE_CONFIG
+  elif command -v declare > /dev/null 2>&1; then
+    # Only use declare -g if bash (not sh/dash)
+    if [ -n "${BASH_VERSION:-}" ]; then
+      declare -gA DOPPLER_CACHE
+      declare -g DOPPLER_CACHE_PROJECT
+      declare -g DOPPLER_CACHE_CONFIG
+    fi
+  fi
+
+  DOPPLER_CACHE=()
+
+  local json doppler_err jq_err
+  doppler_err=$(mktemp) || return 1
+  jq_err=$(mktemp) || { rm -f "$doppler_err"; return 1; }
+  trap 'rm -f "$doppler_err" "$jq_err"' RETURN
+
+  if ! json=$(doppler secrets download \
+      --no-file \
+      --format json \
+      --project "$project" \
+      --config "$config" 2>"$doppler_err"); then
+    printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
+      "$project" "$config" "$(cat "$doppler_err")" >&2
+    return 1
+  fi
+
+  local parsed
+  if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
+    printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
+    return 1
+  fi
+
+  while IFS=$'\t' read -r k v; do
+    [[ -n "$k" ]] || continue
+    DOPPLER_CACHE[$k]="$v"
+  done <<< "$parsed"
+
+  if [[ ${#DOPPLER_CACHE[@]} -eq 0 ]]; then
+    printf 'load_doppler_cache: warning: 0 secrets loaded for %s/%s\n' \
+      "$project" "$config" >&2
+    return 1
+  fi
+
+  DOPPLER_CACHE_PROJECT="$project"
+  DOPPLER_CACHE_CONFIG="$config"
+}
+
+# Check current doppler cache status
+doppler_cache_info() {
+  echo "Project: ${DOPPLER_CACHE_PROJECT:-none}"
+  echo "Config:  ${DOPPLER_CACHE_CONFIG:-none}"
+  echo "Secrets: $((${#DOPPLER_CACHE[@]:-0}))"
+}
+
+# Read a doppler key from cache
+# Returns exit 1 when key is missing and no default is provided.
+doppler_get() {
+  local key="$1"
+  local default="${2-}"
+
+  [[ -z "$key" ]] && {
+    printf 'doppler_get: key required\n' >&2
+    return 1
+  }
+
+  [[ -n "${DOPPLER_CACHE[$key]+set}" ]] && {
+    printf '%s\n' "${DOPPLER_CACHE[$key]}"
+    return
+  }
+
+  # Key missing — return default if provided, otherwise signal failure
+  if [[ $# -ge 2 ]]; then
+    printf '%s\n' "$default"
+    return 0
+  fi
+  return 1
+}
+
+# debug
+doppler_cache_has() {
+  local key="$1"
+
+  if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
+    echo "found: $key"
+  else
+    echo "missing: $key"
+  fi
+}
+
+# UNSAFE: prints raw secret value — only use interactively for debugging
+doppler_cache_debug() {
+  local key="$1"
+
+  # Guard: only allow on interactive terminal to prevent accidental secret leakage
+  if [[ ! -t 1 ]]; then
+    printf '[doppler_cache_debug] stdout is not a terminal; refusing to print secrets\n' >&2
+    return 1
+  fi
+
+  if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
+    echo "found key: $key"
+    echo "value length: ${#DOPPLER_CACHE[$key]}"
+    printf 'value: [%s]\n' "${DOPPLER_CACHE[$key]}"
+  else
+    echo "missing key: $key"
+  fi
+}
+
+# Clear the in-memory Doppler cache (secrets remain in any already-exported env vars)
+unload_doppler_cache() {
+  DOPPLER_CACHE=()
+  unset DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
+}
+
 # zsh-only: associative arrays and typeset -gA are not available in bash
 [[ -n "${ZSH_VERSION:-}" ]] || return 0
 
-# Guard: cache must be loaded before this file is useful
+# Guard: cache must be loaded before secret functions are useful
 if [[ -z "${DOPPLER_CACHE_PROJECT:-}" ]]; then
   printf 'doppler-secrets.sh: cache not loaded; run load_doppler_cache first\n' >&2
   return 1

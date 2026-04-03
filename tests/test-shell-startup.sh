@@ -43,9 +43,9 @@ SCRIPT
   # Append shell-specific checks (these need variable interpolation)
   cat >> "$tmpfile" <<CHECKS
 _check "common.sh sets PLATFORM"                    '[ -n "\$PLATFORM" ]'
-_check "functions.sh defines load_doppler_cache"    '$fn_check_cmd load_doppler_cache'
-_check "functions.sh defines doppler_get"           '$fn_check_cmd doppler_get'
-_check "functions.sh defines doppler_cache_info"    '$fn_check_cmd doppler_cache_info'
+_check "doppler-secrets.sh defines load_doppler_cache" '$fn_check_cmd load_doppler_cache'
+_check "doppler-secrets.sh defines doppler_get"     '$fn_check_cmd doppler_get'
+_check "doppler-secrets.sh defines doppler_cache_info" '$fn_check_cmd doppler_cache_info'
 if doppler secrets >/dev/null 2>&1; then
 _check "secret returns GITHUB_TOKEN"                '[ "\$(secret GITHUB_TOKEN)" != "" ]'
 _check "secret returns OTEL_API_KEY"                '[ "\$(secret OTEL_API_KEY)" != "" ]'

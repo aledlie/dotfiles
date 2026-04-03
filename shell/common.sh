@@ -108,9 +108,11 @@ export CONFIG_PRODUCTION="production"
 DEFAULT_PROJECT="${DOPPLER_PROJECT_INTEGRITY_STUDIO:-integrity-studio}"
 DEFAULT_CONFIG="$CONFIG_DEV"
 
-# Load Doppler cache and secrets (doppler-secrets.sh populates DOPPLER_PROJECT_* variables)
+# Source Doppler and utility functions
+[[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
+
+# Load Doppler secrets for default project/config
 if command -v doppler >/dev/null 2>&1 && typeset -f load_doppler_cache >/dev/null 2>&1; then
   load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" 2>/dev/null || printf '[dotfiles] warning: doppler cache load failed\n' >&2
 fi
-[[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
