@@ -18,6 +18,9 @@
 ehthumbs.db
 Thumbs.db
 
+# Ignore vim runtime state
+vim/viminfo
+
 # Ignore temporary files
 *.tmp
 *.temp
