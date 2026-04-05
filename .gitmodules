@@ -1,3 +1,11 @@
 [submodule "vim/vim/plugin/vim-mustache-handlebars"]
 	path = vim/vim/plugin/vim-mustache-handlebars
 	url = https://github.com/mustache/vim-mustache-handlebars
+
+[submodule "vim/plugin/Align"]
+	path = vim/plugin/Align
+	url = https://github.com/vim-scripts/Align.git
+
+[submodule "vim/plugin/augment.vim"]
+	path = vim/plugin/augment.vim
+	url = https://github.com/augmentcode/augment.vim.git
