@@ -45,7 +45,7 @@ if command -v doppler >/dev/null 2>&1; then
       if [ ! -f "$_doppler_cache" ]; then
         _cache_age=3601
       else
-        _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null) || _cache_mtime=$(($(date +%s) + 1))
+        _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
         _cache_age=$(( $(date +%s) - _cache_mtime ))
       fi
       if [ "$_cache_age" -gt 3600 ]; then
@@ -131,7 +131,7 @@ load_doppler_cache() {
 doppler_cache_info() {
   echo "Project: ${DOPPLER_CACHE_PROJECT:-none}"
   echo "Config:  ${DOPPLER_CACHE_CONFIG:-none}"
-  echo "Secrets: $((${#DOPPLER_CACHE[@]:-0}))"
+  echo "Secrets: ${#DOPPLER_CACHE[@]}"
 }
 
 # Read a doppler key from cache
