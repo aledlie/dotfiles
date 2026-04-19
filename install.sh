@@ -29,19 +29,11 @@ print_error() {
 
 # Detect which shell to configure
 detect_shell() {
-    local shell_name=$(basename "$SHELL")
-    if [[ "$shell_name" == "zsh" ]]; then
-        echo "zsh"
-    elif [[ "$shell_name" == "bash" ]]; then
-        echo "bash"
-    else
-        # Default to zsh for macOS
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            echo "zsh"
-        else
-            echo "bash"
-        fi
-    fi
+    case "$(basename "$SHELL")" in
+        zsh)  echo "zsh" ;;
+        bash) echo "bash" ;;
+        *)    [[ "$OSTYPE" == "darwin"* ]] && echo "zsh" || echo "bash" ;;
+    esac
 }
 
 # Detect machine architecture
@@ -63,14 +55,6 @@ detect_ostype() {
             echo "$kernel" | tr '[:upper:]' '[:lower:]'
             ;;
     esac
-}
-
-# Create backup directory
-create_backup_dir() {
-    if [ ! -d "$BACKUP_DIR" ]; then
-        mkdir -p "$BACKUP_DIR"
-        print_status "Created backup directory: $BACKUP_DIR"
-    fi
 }
 
 # Backup existing file if it exists
@@ -98,20 +82,6 @@ create_symlink() {
         print_status "Linked $source -> ~/$target"
     else
         print_warning "Source file $source not found, skipping"
-    fi
-}
-
-# Generate platform-specific PATH setup
-generate_path_setup() {
-    local ostype="$1"
-    
-    if [[ "$ostype" == "darwin" ]]; then
-        cat << 'PATH_CONFIG'
-
-# Add Homebrew to PATH (macOS)
-_path_prepend "/opt/homebrew/bin"
-_path_prepend "/opt/homebrew/sbin"
-PATH_CONFIG
     fi
 }
 
@@ -183,8 +153,6 @@ main() {
     ARCH=$(detect_arch)
     OSTYPE=$(detect_ostype)
     print_status "Detected shell: $SHELL_TYPE, architecture: $ARCH, OS: $OSTYPE"
-    
-    create_backup_dir
 
     # Create symlinks for shell configurations
     create_symlink "shell/zsh/zshrc" ".zshrc"
