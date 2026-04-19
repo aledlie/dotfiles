@@ -44,14 +44,8 @@ if command -v doppler >/dev/null 2>&1; then
     # Skip if already checked this session to avoid repeated time/stat calls
     if [ -z "${_DOPPLER_CACHE_CHECKED:-}" ]; then
       _DOPPLER_CACHE_CHECKED=1
-      if [ ! -f "$_doppler_cache" ]; then
-        _cache_stale=1
-      else
-        _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
-        _cache_age=$(( $(date +%s) - _cache_mtime ))
-        [ "$_cache_age" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ] && _cache_stale=1 || _cache_stale=0
-      fi
-      if [ "$_cache_stale" -eq 1 ]; then
+      _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
+      if [ "$(( $(date +%s) - _cache_mtime ))" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ]; then
         (
           _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
           if [ -n "$_new_cache" ]; then
@@ -61,7 +55,7 @@ if command -v doppler >/dev/null 2>&1; then
       fi
     fi
 
-    unset _assignment _doppler_cache _cache_age _cache_mtime _cache_stale _new_cache
+    unset _assignment _doppler_cache _cache_mtime _new_cache
   fi
 fi
 
