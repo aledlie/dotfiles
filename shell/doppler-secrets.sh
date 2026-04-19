@@ -312,30 +312,24 @@ doppler_copy_secret() {
   local key="$1" source_project="$2" target_project="$3"
   local config value failed=0
 
-  # Validate parameters
   if ! _is_valid_identifier "$key" || [[ -z "$source_project" || -z "$target_project" ]]; then
     printf 'doppler_copy_secret: invalid key, source-project, or target-project\n' >&2
     return 1
   fi
 
-  # Fetch values from source for all configs, then parallelize sets to target
-  local -a values=() pids=()
-  local i
+  local -a pids=()
+  local pid
   for config in "${_DOPPLER_CONFIGS[@]}"; do
     if value=$(doppler secrets get "$key" --project "$source_project" --config "$config" --plain 2>/dev/null); then
-      values+=("$value")
-      # Spawn set in background
       doppler secrets set "$key" "$value" --project "$target_project" --config "$config" &
       pids+=($!)
     else
       printf 'doppler_copy_secret: %s not found in %s/%s\n' "$key" "$source_project" "$config" >&2
       (( failed++ ))
-      values+=("")
     fi
   done
 
-  # Wait for all background jobs
-  for i in "${pids[@]}"; do wait "$i" || (( failed++ )); done
+  for pid in "${pids[@]}"; do wait "$pid" || (( failed++ )); done
 
   if (( failed > 0 )); then
     printf 'doppler_copy_secret: %d operation(s) failed\n' "$failed" >&2
