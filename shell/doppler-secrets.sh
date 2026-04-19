@@ -15,6 +15,9 @@ export CONFIG_DEV="dev"
 export CONFIG_STAGING="staging"
 export CONFIG_PRODUCTION="production"
 
+# Cache TTL for the background refresh of DOPPLER_PROJECT_* variables
+_DOPPLER_CACHE_TTL_SECONDS=3600
+
 # Validate identifier is a valid shell variable name
 # Pattern: starts with letter or underscore, followed by alphanumeric or underscore
 _is_valid_identifier() {
@@ -30,7 +33,6 @@ if command -v doppler >/dev/null 2>&1; then
     _doppler_cache="$HOME/.cache/doppler-projects.txt"
     mkdir -p "$(dirname "$_doppler_cache")" 2>/dev/null
 
-    # Load from cache (if exists), export immediately
     if [ -f "$_doppler_cache" ]; then
       while IFS= read -r _assignment; do
         [ -z "$_assignment" ] && continue
@@ -43,12 +45,13 @@ if command -v doppler >/dev/null 2>&1; then
     if [ -z "${_DOPPLER_CACHE_CHECKED:-}" ]; then
       _DOPPLER_CACHE_CHECKED=1
       if [ ! -f "$_doppler_cache" ]; then
-        _cache_age=3601
+        _cache_stale=1
       else
         _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
         _cache_age=$(( $(date +%s) - _cache_mtime ))
+        [ "$_cache_age" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ] && _cache_stale=1 || _cache_stale=0
       fi
-      if [ "$_cache_age" -gt 3600 ]; then
+      if [ "$_cache_stale" -eq 1 ]; then
         (
           _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
           if [ -n "$_new_cache" ]; then
@@ -58,7 +61,7 @@ if command -v doppler >/dev/null 2>&1; then
       fi
     fi
 
-    unset _assignment _doppler_cache _cache_age _cache_mtime _new_cache
+    unset _assignment _doppler_cache _cache_age _cache_mtime _cache_stale _new_cache
   fi
 fi
 
@@ -89,12 +92,9 @@ load_doppler_cache() {
     fi
   fi
 
-  DOPPLER_CACHE=()
-
   local json doppler_err jq_err
   doppler_err=$(mktemp) || return 1
   jq_err=$(mktemp) || { rm -f "$doppler_err"; return 1; }
-  trap 'rm -f "$doppler_err" "$jq_err"' RETURN
 
   if ! json=$(doppler secrets download \
       --no-file \
@@ -103,28 +103,49 @@ load_doppler_cache() {
       --config "$config" 2>"$doppler_err"); then
     printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
       "$project" "$config" "$(cat "$doppler_err")" >&2
+    rm -f "$doppler_err" "$jq_err"
     return 1
   fi
 
   local parsed
   if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
     printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
+    rm -f "$doppler_err" "$jq_err"
     return 1
   fi
 
-  while IFS=$'\t' read -r k v; do
-    [[ -n "$k" ]] || continue
-    DOPPLER_CACHE[$k]="$v"
-  done <<< "$parsed"
+  rm -f "$doppler_err" "$jq_err"
 
-  if [[ ${#DOPPLER_CACHE[@]} -eq 0 ]]; then
+  # Guard: empty parse would wipe a good cache — bail before resetting.
+  if [[ -z "${parsed//[[:space:]]/}" ]]; then
     printf 'load_doppler_cache: warning: 0 secrets loaded for %s/%s\n' \
       "$project" "$config" >&2
     return 1
   fi
 
+  DOPPLER_CACHE=()
+  while IFS=$'\t' read -r k v; do
+    [[ -n "$k" ]] || continue
+    DOPPLER_CACHE[$k]="$v"
+  done <<< "$parsed"
+
   DOPPLER_CACHE_PROJECT="$project"
   DOPPLER_CACHE_CONFIG="$config"
+
+  _rebuild_doppler_all_secrets
+}
+
+# Rebuild the _DOPPLER_ALL_SECRETS list from current DOPPLER_CACHE keys.
+# Filters out Doppler metadata keys (DOPPLER_PROJECT, DOPPLER_CONFIG, DOPPLER_ENVIRONMENT).
+_rebuild_doppler_all_secrets() {
+  [[ -n "${ZSH_VERSION:-}" ]] || return 0
+  typeset -ga _DOPPLER_ALL_SECRETS
+  _DOPPLER_ALL_SECRETS=()
+  local _k
+  for _k in "${(@k)DOPPLER_CACHE}"; do
+    [[ "$_k" == DOPPLER_* ]] && continue
+    _DOPPLER_ALL_SECRETS+=("$_k")
+  done
 }
 
 # Check current doppler cache status
@@ -202,10 +223,10 @@ fi
 # zsh-only: associative arrays and typeset -gA are not available in bash
 [[ -n "${ZSH_VERSION:-}" ]] || return 0
 
-# Guard: cache must be loaded before secret functions are useful (or generate warning)
+# Warn (but do not abort) if cache is not loaded — define functions regardless
+# so the user can call `load_doppler_cache` manually after fixing the issue.
 if [[ -z "${DOPPLER_CACHE_PROJECT:-}" ]]; then
   printf 'doppler-secrets.sh: cache not loaded; run load_doppler_cache first\n' >&2
-  return 1
 fi
 
 # Env var name -> doppler key name (only non-identity mappings needed)
@@ -220,22 +241,13 @@ _DOPPLER_SECRET_NAMES=(
 # Reverse mapping: doppler key name -> env var alias (built from _DOPPLER_SECRET_NAMES)
 typeset -gA _DOPPLER_REVERSE_NAMES
 _DOPPLER_REVERSE_NAMES=()
-local _env _dop
+typeset _env _dop
 for _env _dop in "${(@kv)_DOPPLER_SECRET_NAMES}"; do
   _DOPPLER_REVERSE_NAMES[$_dop]="$_env"
 done
 unset _env _dop
 
-# All available secret names — derived from DOPPLER_CACHE keys at source time.
-# Filters out Doppler metadata keys (DOPPLER_PROJECT, DOPPLER_CONFIG, DOPPLER_ENVIRONMENT).
-typeset -ga _DOPPLER_ALL_SECRETS
-_DOPPLER_ALL_SECRETS=()
-local _k
-for _k in "${(@k)DOPPLER_CACHE}"; do
-  [[ "$_k" == DOPPLER_* ]] && continue
-  _DOPPLER_ALL_SECRETS+=("$_k")
-done
-unset _k
+_rebuild_doppler_all_secrets
 
 # Standard configs for multi-config operations
 typeset -ga _DOPPLER_CONFIGS
@@ -249,15 +261,12 @@ secret() {
     return 1
   fi
   local key="${_DOPPLER_SECRET_NAMES[$1]:-$1}"
-  local val="${DOPPLER_CACHE[$key]}"
-  if [[ -z "$val" ]]; then
-    val="${(P)1}"
+  if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
+    printf '%s' "${DOPPLER_CACHE[$key]}"
+    return 0
   fi
-  if [[ -z "$val" ]]; then
-    printf 'secret: %s not found\n' "$1" >&2
-    return 1
-  fi
-  printf '%s' "$val"
+  printf 'secret: %s not found\n' "$1" >&2
+  return 1
 }
 
 # Export specific secrets into the environment
