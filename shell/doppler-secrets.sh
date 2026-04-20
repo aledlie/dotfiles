@@ -45,7 +45,7 @@ if command -v doppler >/dev/null 2>&1; then
     if [ -z "${_DOPPLER_CACHE_CHECKED:-}" ]; then
       _DOPPLER_CACHE_CHECKED=1
       _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
-      if [ "$(( $(date +%s) - _cache_mtime ))" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ]; then
+      if [ "$(( ${EPOCHSECONDS:-$(date +%s)} - _cache_mtime ))" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ]; then
         (
           _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
           if [ -n "$_new_cache" ]; then
@@ -72,18 +72,12 @@ load_doppler_cache() {
     return
   fi
 
-  # Use typeset for zsh, declare for bash
-  if command -v typeset > /dev/null 2>&1 && [ -n "${ZSH_VERSION:-}" ]; then
+  if [ -n "${ZSH_VERSION:-}" ]; then
     typeset -gA DOPPLER_CACHE
-    typeset -g DOPPLER_CACHE_PROJECT
-    typeset -g DOPPLER_CACHE_CONFIG
-  elif command -v declare > /dev/null 2>&1; then
-    # Only use declare -g if bash (not sh/dash)
-    if [ -n "${BASH_VERSION:-}" ]; then
-      declare -gA DOPPLER_CACHE
-      declare -g DOPPLER_CACHE_PROJECT
-      declare -g DOPPLER_CACHE_CONFIG
-    fi
+    typeset -g DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
+  elif [ -n "${BASH_VERSION:-}" ]; then
+    declare -gA DOPPLER_CACHE
+    declare -g DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
   fi
 
   local json doppler_err jq_err
@@ -96,14 +90,14 @@ load_doppler_cache() {
       --project "$project" \
       --config "$config" 2>"$doppler_err"); then
     printf 'load_doppler_cache: doppler failed (%s/%s): %s\n' \
-      "$project" "$config" "$(cat "$doppler_err")" >&2
+      "$project" "$config" "$(<"$doppler_err")" >&2
     rm -f "$doppler_err" "$jq_err"
     return 1
   fi
 
   local parsed
   if ! parsed=$(jq -r 'to_entries[] | [.key, (.value // "")] | @tsv' <<< "$json" 2>"$jq_err"); then
-    printf 'load_doppler_cache: jq parse failed: %s\n' "$(cat "$jq_err")" >&2
+    printf 'load_doppler_cache: jq parse failed: %s\n' "$(<"$jq_err")" >&2
     rm -f "$doppler_err" "$jq_err"
     return 1
   fi
@@ -173,7 +167,6 @@ doppler_get() {
   return 1
 }
 
-# debug
 doppler_cache_has() {
   local key="$1"
 
@@ -224,13 +217,12 @@ if [[ -z "${DOPPLER_CACHE_PROJECT:-}" ]]; then
 fi
 
 # Env var name -> doppler key name (only non-identity mappings needed)
+# Note: per-key assignment avoids a zsh -n parse warning with compound [KEY]=VALUE literals.
 typeset -gA _DOPPLER_SECRET_NAMES
-_DOPPLER_SECRET_NAMES=(
-  [OTEL_INGEST_ROUTE]=OBTOOL_INGEST_ROUTE
-  [OTEL_INGEST_URL]=OBTOOL_INGEST_URL
-  [OTEL_INGEST_PREVIEW_URL]=OBTOOL_INGEST_PREVIEW_URL
-  [OTEL_API_KEY]=OBTOOL_API_KEY
-)
+_DOPPLER_SECRET_NAMES[OTEL_INGEST_ROUTE]=OBTOOL_INGEST_ROUTE
+_DOPPLER_SECRET_NAMES[OTEL_INGEST_URL]=OBTOOL_INGEST_URL
+_DOPPLER_SECRET_NAMES[OTEL_INGEST_PREVIEW_URL]=OBTOOL_INGEST_PREVIEW_URL
+_DOPPLER_SECRET_NAMES[OTEL_API_KEY]=OBTOOL_API_KEY
 
 # Reverse mapping: doppler key name -> env var alias (built from _DOPPLER_SECRET_NAMES)
 typeset -gA _DOPPLER_REVERSE_NAMES

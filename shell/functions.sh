@@ -1,6 +1,5 @@
 # Custom shell functions (non-Doppler utility functions)
 
-# Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {
     find . -maxdepth 1 -type d -print0 | xargs -0 du -sh | \
     grep -E ' [0-9.]*[MG]' | sort -h -k1

@@ -88,6 +88,26 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d "$PYENV_ROOT/bin" ]] && _path_prepend "$PYENV_ROOT/bin"
 [[ -d "$PYENV_ROOT/shims" ]] && _path_prepend "$PYENV_ROOT/shims"
 
+if command -v pyenv >/dev/null 2>&1; then
+  if [[ -n "${ZSH_VERSION:-}" ]]; then
+    _pyenv_init_cmd="$(pyenv init - zsh)"
+  elif [[ -n "${BASH_VERSION:-}" ]]; then
+    _pyenv_init_cmd="$(pyenv init - bash)"
+  fi
+  # Avoid startup warnings when shims are not writable.
+  if [[ -n "${_pyenv_init_cmd:-}" && -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+    _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | grep -v '^command pyenv rehash$')"
+  fi
+  [[ -n "${_pyenv_init_cmd:-}" ]] && eval "$_pyenv_init_cmd"
+  unset _pyenv_init_cmd
+fi
+
+command -v direnv >/dev/null 2>&1 && {
+  if [[ -n "${ZSH_VERSION:-}" ]]; then eval "$(direnv hook zsh)"
+  elif [[ -n "${BASH_VERSION:-}" ]]; then eval "$(direnv hook bash)"
+  fi
+}
+
 
 unset -f _path_prepend
 

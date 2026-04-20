@@ -11,7 +11,6 @@ setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
-# History file (size governed by common.sh)
 HISTFILE="$HOME/.zsh_history"
 
 # Zsh completions (rebuild dump only if >24h old)
@@ -24,19 +23,6 @@ fi
 
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-
-# Python via pyenv
-if command -v pyenv >/dev/null 2>&1; then
-    _pyenv_init_cmd="$(pyenv init - zsh)"
-    # Avoid startup warnings when shims are not writable.
-    if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
-        _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | grep -v '^command pyenv rehash$')"
-    fi
-    eval "$_pyenv_init_cmd"
-    unset _pyenv_init_cmd
-fi
-
-command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 export OTEL_CONFIG_DIR="$HOME/.claude"
 

@@ -106,13 +106,17 @@ alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 alias map="xargs -n1"
 alias week='date +%V'
 alias timer='echo "Timer started. Stop with Ctrl-D." && date && time cat && date'
-alias reload='exec /opt/homebrew/bin/zsh -l' # reload shell
+alias reload='exec "$SHELL" -l'
 # URL-encode strings (python)
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	eval "${method}() { lwp-request -m '${method}' \"\$@\"; }"
-done
+GET()     { lwp-request -m GET     "$@"; }
+HEAD()    { lwp-request -m HEAD    "$@"; }
+POST()    { lwp-request -m POST    "$@"; }
+PUT()     { lwp-request -m PUT     "$@"; }
+DELETE()  { lwp-request -m DELETE  "$@"; }
+TRACE()   { lwp-request -m TRACE   "$@"; }
+OPTIONS() { lwp-request -m OPTIONS "$@"; }
 
 # macOS specific aliases
 if [[ "$OSTYPE" == darwin* ]]; then
@@ -164,13 +168,10 @@ if [[ "$OSTYPE" == darwin* ]]; then
 
     # Spotlight
     alias spoton="sudo mdutil -a -i on"
-fi
-
-# ---- clipboard - Ubuntu & linux safe ----
-if command -v xclip >/dev/null; then
-  c() { tr -d '\n' | xclip -selection clipboard; }
-elif command -v xsel >/dev/null; then
-  c() { tr -d '\n' | xsel --clipboard; }
+elif command -v xclip >/dev/null 2>&1; then
+    c() { tr -d '\n' | xclip -selection clipboard; }
+elif command -v xsel >/dev/null 2>&1; then
+    c() { tr -d '\n' | xsel --clipboard; }
 fi
 
 # Explicit Wireshark tshark alias (removed from PATH for security)
