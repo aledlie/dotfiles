@@ -4,12 +4,23 @@
 [[ -n "$DOTFILES_DIR" ]] || { printf '[dotfiles] DOTFILES_DIR is unset\n' >&2; return 1; }
 [[ -n "$SHELL_DIR" ]] || { printf '[dotfiles] SHELL_DIR is unset\n' >&2; return 1; }
 
+# ---------- platform detection ----------
+case "$OSTYPE" in
+  darwin*)  export PLATFORM="macos"  ;;
+  linux*)   export PLATFORM="linux"  ;;
+  *)        export PLATFORM="$OSTYPE" ;;
+esac
+
 # ---------- otel config  ----------
 export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
 export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
 export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 export OTEL_SERVICE_NAME="claude-code-hooks"
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
+
+# ---------- Sentry ----------
+export SENTRY_DISPLAY_NAME="integrity"
+export SENTRY_ORG_SLUG="integrity-jq"
 
 # ---------- shell quality-of-life ----------
 export EDITOR="${EDITOR:-vim}"

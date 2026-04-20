@@ -4,11 +4,13 @@
 if command -v eza >/dev/null 2>&1; then
   EZA_BASE='eza --icons --group-directories-first'
   alias ls="$EZA_BASE"
+  alias l="$EZA_BASE -lh"
   alias ll="$EZA_BASE -lh"
   alias la="$EZA_BASE -lha"
   alias lt="$EZA_BASE --tree"
 else
   alias ls='_plain_ls'
+  alias l='_plain_ls -lh'
   alias ll='_plain_ls -lh'
   alias la='_plain_ls -lha'
   # tree fallback: prefer tree, otherwise use find
