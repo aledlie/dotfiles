@@ -89,12 +89,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d "$PYENV_ROOT/shims" ]] && _path_prepend "$PYENV_ROOT/shims"
 
 
-# Shell-specific pyenv initialization is in bash/bashrc and zsh/zshrc
-
-# All _path_prepend calls must precede this line
 unset -f _path_prepend
 
-# Source Doppler and utility functions
-# doppler-secrets.sh defines CONFIG_* and DEFAULT_* constants, and auto-loads secrets
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"

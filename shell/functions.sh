@@ -1,5 +1,4 @@
 # Custom shell functions (non-Doppler utility functions)
-# Doppler-specific functions have been moved to doppler-secrets.sh
 
 # Directory size function - finds directory sizes and lists them for the current directory
 dirsize() {

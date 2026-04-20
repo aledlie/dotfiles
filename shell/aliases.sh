@@ -1,10 +1,6 @@
-# -------------------- Convenience Aliases - all archs --------------- #
-
-# Listing variants (ls alias and LS_COLORS set in common.sh via dircolors)
-# ---- eza (ls replacement) ----
+# Convenience aliases (ls colors set in common.sh via dircolors)
 
 # ---------- eza / ls fallbacks ----------
-
 if command -v eza >/dev/null 2>&1; then
   EZA_BASE='eza --icons --group-directories-first'
   alias ls="$EZA_BASE"
@@ -29,17 +25,12 @@ if command -v bat >/dev/null 2>&1; then
   alias cat='bat --paging=never'
 elif command -v batcat >/dev/null 2>&1; then
   alias cat='batcat --paging=never'
-  # Only alias bat if batcat exists to avoid undefined command
   alias bat='batcat'
 fi
 
 # ---------- fzf ----------
 
 if command -v fzf >/dev/null 2>&1; then
-  # Load fzf shell integration if present
-  [ -f ~/.fzf.bash ] && . ~/.fzf.bash
-  [ -f ~/.fzf.zsh ] && . ~/.fzf.zsh
-
   # Better previews if bat/batcat is available
   if command -v bat >/dev/null 2>&1; then
     export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range=:200 {}"'
@@ -106,9 +97,7 @@ alias ast="cd ~/code/ast-grep-mcp"
 
 # handy extras
 alias dp="doppler secrets --project integrity-studio --config dev --" # get doppler value
-# grep --color alias removed: aliases cannot safely contain pipes (||)
 
-# ips function - extract IPv4/IPv6 addresses (must be function, not alias with pipes)
 ips() {
   ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, ""); print }'
 }
@@ -121,13 +110,12 @@ alias reload='exec /opt/homebrew/bin/zsh -l' # reload shell
 # URL-encode strings (python)
 alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
-# HTTP method functions - must be functions, not aliases (aliases can't contain pipes safely)
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	eval "${method}() { lwp-request -m '${method}' \"\$@\"; }"
 done
 
 # macOS specific aliases
-if [[ "$ARCH" == "macos" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
     # Volume control
     alias stfu="osascript -e 'set volume output muted true'"
     alias pumpitup="osascript -e 'set volume 7'"
@@ -161,7 +149,6 @@ if [[ "$ARCH" == "macos" ]]; then
 
     # Network monitoring
     alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
-    # httpdump alias removed - aliases cannot safely contain pipes
     httpdump() { sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E 'Host\: .*|GET /.*'; }
 
     # Trash and system logs

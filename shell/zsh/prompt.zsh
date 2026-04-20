@@ -37,6 +37,3 @@ git_prompt_info() {
 
 # Build the prompt
 PROMPT='${user_color}%n${reset_color}@${host_color}%m${reset_color}:${dir_color}%~${reset_color}${git_color}$(git_prompt_info)${reset_color}$ '
-
-# Right prompt with timestamp (optional)
-# RPROMPT='%{$fg[grey]%}%D{%H:%M:%S}%{$reset_color%}'

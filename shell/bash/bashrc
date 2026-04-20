@@ -12,11 +12,6 @@ shopt -s histappend        # append to history file, don't overwrite
 shopt -s checkwinsize      # check window size after each command
 shopt -s cdspell           # autocorrect typos in path names when using cd
 
-# Enable color support of ls
-if [ -x ~/.local/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 
 # Python via pyenv
@@ -37,4 +32,3 @@ fi
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"
-. "$HOME/.cargo/env"
