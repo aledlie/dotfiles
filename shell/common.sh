@@ -25,9 +25,19 @@ else
   alias _plain_ls='ls -G'
 fi
 
-# Load dircolors if available (GNU coreutils, not on macOS by default)
+# Cache dir for expensive shell-init evaluations (dircolors, pyenv init, tput).
+export DOTFILES_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles"
+[[ -d "$DOTFILES_CACHE_DIR" ]] || mkdir -p "$DOTFILES_CACHE_DIR"
+
+# Load dircolors if available (GNU coreutils, not on macOS by default).
+# Cache the eval output; regenerate when the source file changes.
 if [[ -f "$SHELL_DIR/dircolors" ]] && command -v dircolors >/dev/null 2>&1; then
-  eval "$(dircolors "$SHELL_DIR/dircolors")"
+  _dircolors_cache="$DOTFILES_CACHE_DIR/dircolors.sh"
+  if [[ ! -s "$_dircolors_cache" || "$SHELL_DIR/dircolors" -nt "$_dircolors_cache" ]]; then
+    dircolors "$SHELL_DIR/dircolors" > "$_dircolors_cache"
+  fi
+  source "$_dircolors_cache"
+  unset _dircolors_cache
 fi
 
 # helpful aliases & colors
@@ -89,17 +99,26 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d "$PYENV_ROOT/shims" ]] && _path_prepend "$PYENV_ROOT/shims"
 
 if command -v pyenv >/dev/null 2>&1; then
-  if [[ -n "${ZSH_VERSION:-}" ]]; then
-    _pyenv_init_cmd="$(pyenv init - zsh)"
-  elif [[ -n "${BASH_VERSION:-}" ]]; then
-    _pyenv_init_cmd="$(pyenv init - bash)"
+  _pyenv_shell=""
+  [[ -n "${ZSH_VERSION:-}" ]] && _pyenv_shell="zsh"
+  [[ -n "${BASH_VERSION:-}" ]] && _pyenv_shell="bash"
+  if [[ -n "$_pyenv_shell" ]]; then
+    _pyenv_bin="$(command -v pyenv)"
+    _pyenv_cache="$DOTFILES_CACHE_DIR/pyenv-init.$_pyenv_shell.sh"
+    # Regenerate when pyenv binary is newer than cache.
+    if [[ ! -s "$_pyenv_cache" || "$_pyenv_bin" -nt "$_pyenv_cache" ]]; then
+      _pyenv_init_out="$(pyenv init - "$_pyenv_shell")"
+      # Avoid startup warnings when shims are not writable.
+      if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
+        _pyenv_init_out="$(printf '%s\n' "$_pyenv_init_out" | grep -v '^command pyenv rehash$')"
+      fi
+      printf '%s\n' "$_pyenv_init_out" > "$_pyenv_cache"
+      unset _pyenv_init_out
+    fi
+    source "$_pyenv_cache"
+    unset _pyenv_bin _pyenv_cache
   fi
-  # Avoid startup warnings when shims are not writable.
-  if [[ -n "${_pyenv_init_cmd:-}" && -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
-    _pyenv_init_cmd="$(printf '%s\n' "$_pyenv_init_cmd" | grep -v '^command pyenv rehash$')"
-  fi
-  [[ -n "${_pyenv_init_cmd:-}" ]] && eval "$_pyenv_init_cmd"
-  unset _pyenv_init_cmd
+  unset _pyenv_shell
 fi
 
 command -v direnv >/dev/null 2>&1 && {
