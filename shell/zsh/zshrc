@@ -40,11 +40,13 @@ command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 export OTEL_CONFIG_DIR="$HOME/.claude"
 
+zmodload zsh/datetime
+
 # Sync OBTOOL API key (throttled to once per hour)
 _STAMP="$OTEL_CONFIG_DIR/.sync-obtool-key.stamp"
 _SYNC_SCRIPT="$OTEL_CONFIG_DIR/scripts/otel/sync-obtool-key.sh"
 _STAMP_MTIME=$(stat -f%m "$_STAMP" 2>/dev/null || stat -c%Y "$_STAMP" 2>/dev/null) || _STAMP_MTIME=0
-if (( $(date +%s) - _STAMP_MTIME > 3600 )) && [[ -x "$_SYNC_SCRIPT" ]]; then
+if (( EPOCHSECONDS - _STAMP_MTIME > 3600 )) && [[ -x "$_SYNC_SCRIPT" ]]; then
   "$_SYNC_SCRIPT" 2>/dev/null && touch "$_STAMP"
 fi
 unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
