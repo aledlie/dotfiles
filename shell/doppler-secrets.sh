@@ -80,6 +80,12 @@ load_doppler_cache() {
     typeset -gA DOPPLER_CACHE
     typeset -g DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
   elif [ -n "${BASH_VERSION:-}" ]; then
+    # Bash 4+ required for associative arrays and `declare -g`.
+    if [ "${BASH_VERSINFO[0]:-0}" -lt 4 ]; then
+      printf 'load_doppler_cache: bash %s too old (need 4+); use zsh or install modern bash via Homebrew\n' \
+        "$BASH_VERSION" >&2
+      return 1
+    fi
     declare -gA DOPPLER_CACHE
     declare -g DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
   fi

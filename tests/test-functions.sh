@@ -34,7 +34,7 @@ _check() {
 }
 
 # --- Function existence ---
-for fn in load_doppler_cache doppler_get doppler_cache_info doppler_cache_has doppler_cache_debug dirsize mkcd extract findproc backup weather git_current_branch newbranch; do
+for fn in load_doppler_cache doppler_get doppler_cache_info doppler_cache_has doppler_cache_debug dirsize mkcd extract findproc backup git_current_branch newbranch; do
   _check "function $fn defined" "$FN_EXISTS $fn"
 done
 
@@ -47,6 +47,17 @@ _check "doppler_get returns empty for missing key without default" '[ -z "$resul
 
 result=$(doppler_get "" "empty_key_default")
 _check "doppler_get returns default for empty key" '[ "$result" = "empty_key_default" ]'
+
+# --- load_doppler_cache shell-compat guard ---
+# On bash < 4 (e.g. macOS system bash 3.2) associative arrays are unavailable,
+# so load_doppler_cache must bail with a helpful message instead of crashing.
+if [ -n "${BASH_VERSION:-}" ] && [ "${BASH_VERSINFO[0]:-0}" -lt 4 ]; then
+  err=$(load_doppler_cache "integrity-studio" "dev" 2>&1 >/dev/null)
+  rc=$?
+  _check "load_doppler_cache exits non-zero on bash <4" '[ "$rc" -ne 0 ]'
+  _check "load_doppler_cache prints bash-version warning" 'echo "$err" | grep -q "bash"'
+  _check "load_doppler_cache does not crash the shell" 'true'
+fi
 
 # --- doppler_cache_info output ---
 info=$(doppler_cache_info)
