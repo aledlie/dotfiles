@@ -54,7 +54,5 @@ unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 # Drop stale /opt/pmk path entries
 path=(${path:#/opt/pmk*})
 
-# GitHub MCP server (claude-plugins-official/github) reads its bearer token from
-# this var. Sourced from the already-loaded Doppler cache (integrity-studio/dev)
-# via secret(), avoiding an extra `doppler secrets get` subprocess.
+# Re-alias our Doppler GITHUB_TOKEN to the name the upstream github MCP plugin requires.
 export GITHUB_PERSONAL_ACCESS_TOKEN="$(secret GITHUB_TOKEN)"

@@ -2,13 +2,17 @@
 
 .PHONY: help install backup clean test test-syntax test-suite
 
-# Files install.sh symlinks into $HOME (keep in sync with create_symlink calls)
-DOTFILES := .zshenv .zshrc .zprofile .bashrc .bash_profile \
-            .gitconfig .vimrc .tmux.conf
-
 # Absolute path to this repo (matches install.sh's DOTFILES_DIR resolution).
 # Used to tell repo symlinks apart from real files during backup/clean.
-DOTFILES_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+# ?= honors a DOTFILES_DIR override from the environment, just like install.sh's
+# ${DOTFILES_DIR:-...}; otherwise realpath (a GNU make builtin, not the shell
+# command) resolves symlinks to match install.sh's `pwd -P`, keeping the
+# repo-symlink case-matches stable.
+DOTFILES_DIR ?= $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
+
+# Files install.sh symlinks into $HOME — the $HOME target column of the shared
+# symlinks.conf manifest (single source of truth, also read by install.sh).
+DOTFILES := $(shell awk 'NF && $$1 !~ /^\#/ {print $$2}' $(DOTFILES_DIR)/symlinks.conf)
 
 # Default target
 help:

@@ -9,7 +9,9 @@
 set -e
 
 # Resolve the dotfiles directory (the location of this script) unless overridden
-DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+# pwd -P resolves symlinks so the recorded symlink targets match the Makefile's
+# $(realpath ...) regardless of how the repo was reached.
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)}"
 
 # PID suffix keeps the dir unique if two runs land in the same second (BSD date
 # has no sub-second %N); the timestamp prefix still sorts chronologically.
@@ -50,7 +52,8 @@ detect_arch() {
 
 # Detect operating system type
 detect_ostype() {
-    local kernel=$(uname -s)
+    local kernel
+    kernel=$(uname -s)
     case "$kernel" in
         Darwin)
             echo "darwin"
@@ -121,21 +124,15 @@ main() {
     # Shell/arch/OS are informational only — zshenv/bashrc set these at runtime.
     print_status "Detected shell: $(detect_shell), architecture: $(detect_arch), OS: $(detect_ostype)"
 
-    # Create symlinks for shell configurations. Both shells bootstrap entirely
-    # from these repo files (zshenv/bashrc source common.sh), so there is no
-    # install-time file generation — re-runs stay idempotent.
-    # Prompt and dircolors files are sourced directly from the repo via
-    # $SHELL_DIR by zshrc/bashrc/common.sh, so they need no $HOME symlink.
-    create_symlink "shell/zsh/zshenv" ".zshenv"
-    create_symlink "shell/zsh/zshrc" ".zshrc"
-    create_symlink "shell/zsh/zprofile" ".zprofile"
-    create_symlink "shell/bash/bashrc" ".bashrc"
-    create_symlink "shell/bash/bash_profile" ".bash_profile"
-
-    # Create symlinks for other configurations
-    create_symlink "git/gitconfig" ".gitconfig"
-    create_symlink "vim/vimrc" ".vimrc"
-    create_symlink "tmux/tmux.conf" ".tmux.conf"
+    # Symlinks are defined in symlinks.conf (shared with the Makefile) so the two
+    # never drift. Both shells bootstrap entirely from these repo files
+    # (zshenv/bashrc source common.sh), so there is no install-time file
+    # generation — re-runs stay idempotent. Prompt and dircolors files are
+    # sourced directly from the repo via $SHELL_DIR, so they need no $HOME symlink.
+    while read -r source target _; do
+        case "$source" in ''|'#'*) continue ;; esac
+        create_symlink "$source" "$target"
+    done < "$DOTFILES_DIR/symlinks.conf"
 
     print_status "Installation complete!"
     print_status "Restart your shell to load new configuration"
