@@ -98,13 +98,17 @@ setup_shell_init() {
     local arch="$2"
     local ostype="$3"
     local init_file
-    
-    if [[ "$shell_type" == "zsh" ]]; then
-        init_file="$HOME/.zshenv"
-    else
-        init_file="$HOME/.bash_profile"
+
+    # Bash configures itself from the repo's bashrc (symlinked to ~/.bashrc),
+    # so there is nothing to append. ~/.bash_profile is a symlink into the
+    # repo, and appending through it would corrupt the tracked dotfile.
+    if [[ "$shell_type" != "zsh" ]]; then
+        print_status "Bash initialization is provided by the repo's bashrc; nothing to append"
+        return
     fi
-    
+
+    init_file="$HOME/.zshenv"
+
     # Create file if it doesn't exist
     if [ ! -f "$init_file" ]; then
         touch "$init_file"
