@@ -70,7 +70,8 @@ fi
 alias sudo='sudo '
 
 # Python shortcut
-alias python=python3
+alias python=python3.12
+alias python3=python3.12
 
 # Navigation
 alias ..='cd ..'

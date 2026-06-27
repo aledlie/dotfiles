@@ -13,6 +13,10 @@ setopt HIST_SAVE_NO_DUPS
 
 HISTFILE="$HOME/.zsh_history"
 
+# Disable "You have new mail." notice (triggered by /var/mail/$USER)
+unset MAIL MAILPATH
+MAILCHECK=0
+
 # Zsh completions (rebuild dump only if >24h old)
 autoload -Uz compinit
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then

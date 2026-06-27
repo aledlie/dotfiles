@@ -50,12 +50,19 @@ if command -v doppler >/dev/null 2>&1; then
       _DOPPLER_CACHE_CHECKED=1
       _cache_mtime=$(stat -f%m "$_doppler_cache" 2>/dev/null || stat -c%Y "$_doppler_cache" 2>/dev/null) || _cache_mtime=0
       if [ "$(( ${EPOCHSECONDS:-$(date +%s)} - _cache_mtime ))" -gt "$_DOPPLER_CACHE_TTL_SECONDS" ]; then
+        # Background refresh; suppress job-control notifications.
+        # `& disown` backgrounds + disowns in both bash and zsh. zsh's `&|`
+        # would do the same in one token, but it's a *parse-time* syntax error
+        # in bash — and bash sources this file, so a runtime ZSH_VERSION guard
+        # can't shield it. disown's stderr is redirected in case the shell
+        # lacks the builtin.
         (
           _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
           if [ -n "$_new_cache" ]; then
             printf '%s\n' "$_new_cache" > "$_doppler_cache"
           fi
         ) &
+        disown 2>/dev/null || true
       fi
     fi
 
