@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Dotfiles installation script
-# This script creates symlinks from the home directory to dotfiles in ~/dotfiles
-# Also sets up shell initialization files with DOTFILES_DIR, SHELL_DIR, ARCH, DOTFILES_OS, and common.sh sourcing
+# Creates symlinks from the home directory to dotfiles in ~/dotfiles.
+# Both shells bootstrap from their symlinked repo files: shell/zsh/zshenv and
+# shell/bash/bashrc set DOTFILES_DIR/SHELL_DIR/ARCH/DOTFILES_OS and source
+# common.sh, so the script generates no files at install time.
 
 set -e
 
@@ -92,63 +94,6 @@ create_symlink() {
     fi
 }
 
-# Setup shell initialization file with required exports and sourcing
-setup_shell_init() {
-    local shell_type="$1"
-    local arch="$2"
-    local ostype="$3"
-    local init_file
-
-    # Bash configures itself from the repo's bashrc (symlinked to ~/.bashrc),
-    # so there is nothing to append. ~/.bash_profile is a symlink into the
-    # repo, and appending through it would corrupt the tracked dotfile.
-    if [[ "$shell_type" != "zsh" ]]; then
-        print_status "Bash initialization is provided by the repo's bashrc; nothing to append"
-        return
-    fi
-
-    init_file="$HOME/.zshenv"
-
-    # Create file if it doesn't exist
-    if [ ! -f "$init_file" ]; then
-        touch "$init_file"
-        print_status "Created $init_file"
-    fi
-    
-    # Check if DOTFILES_DIR is already set
-    if ! grep -q 'export DOTFILES_DIR' "$init_file" 2>/dev/null; then
-        cat >> "$init_file" << SHELL_CONFIG
-
-export DOTFILES_DIR="\$HOME/dotfiles"
-export SHELL_DIR="\$DOTFILES_DIR/shell"
-export ARCH="$arch"
-export DOTFILES_OS="$ostype"
-
-# Prepend to PATH only if the entry is not already present
-_path_prepend() {
-  case ":\$PATH:" in
-    *":\$1:"*) ;;
-    *) export PATH="\$1:\$PATH" ;;
-  esac
-}
-
-# Platform-specific PATH setup (macOS)
-if [[ "\$OSTYPE" == "darwin"* ]]; then
-  _path_prepend "/opt/homebrew/bin"
-  _path_prepend "/opt/homebrew/sbin"
-fi
-
-unset -f _path_prepend
-
-# Load common shell configuration
-[[ -f "\$SHELL_DIR/common.sh" ]] && source "\$SHELL_DIR/common.sh"
-SHELL_CONFIG
-        print_status "Added shell initialization to $init_file"
-    else
-        print_status "Shell initialization already configured in $init_file"
-    fi
-}
-
 # Main installation
 main() {
     print_status "Starting dotfiles installation..."
@@ -159,13 +104,16 @@ main() {
         exit 1
     fi
 
-    # Detect shell, architecture, and OS type
+    # Detect shell, architecture, and OS type (informational)
     SHELL_TYPE=$(detect_shell)
     ARCH=$(detect_arch)
     DOTFILES_OS=$(detect_ostype)
     print_status "Detected shell: $SHELL_TYPE, architecture: $ARCH, OS: $DOTFILES_OS"
 
-    # Create symlinks for shell configurations
+    # Create symlinks for shell configurations. Both shells bootstrap entirely
+    # from these repo files (zshenv/bashrc source common.sh), so there is no
+    # install-time file generation — re-runs stay idempotent.
+    create_symlink "shell/zsh/zshenv" ".zshenv"
     create_symlink "shell/zsh/zshrc" ".zshrc"
     create_symlink "shell/zsh/zprofile" ".zprofile"
     create_symlink "shell/zsh/prompt.zsh" ".prompt.zsh"
@@ -178,9 +126,6 @@ main() {
     create_symlink "git/gitconfig" ".gitconfig"
     create_symlink "vim/vimrc" ".vimrc"
     create_symlink "tmux/tmux.conf" ".tmux.conf"
-
-    # Setup shell initialization file
-    setup_shell_init "$SHELL_TYPE" "$ARCH" "$DOTFILES_OS"
 
     print_status "Installation complete!"
     print_status "Restart your shell to load new configuration"

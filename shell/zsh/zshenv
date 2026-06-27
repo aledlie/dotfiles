@@ -1,0 +1,20 @@
+# Zsh environment — sourced for all zsh invocations (login, interactive, scripts)
+# Set dotfiles directory
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export SHELL_DIR="$DOTFILES_DIR/shell"
+
+# Platform metadata (matches install.sh detect_arch/detect_ostype)
+export ARCH="$(uname -m)"
+case "$(uname -s)" in
+  Darwin) export DOTFILES_OS="darwin" ;;
+  Linux)  export DOTFILES_OS="linux" ;;
+  *)      export DOTFILES_OS="$(uname -s | tr '[:upper:]' '[:lower:]')" ;;
+esac
+
+# Disable kiro-cli-term (figterm) PTY wrapper to prevent inline completion parse errors with pipes
+# Fixes: "(eval):486: parse error near '|'" caused by figterm v1.28.1 misidentifying programmatic
+# commands as user input and triggering zsh completion on pipe characters
+export SHOULD_QTERM_LAUNCH=1
+
+# Load common shell configuration shared with bash
+[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"

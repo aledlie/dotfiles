@@ -3,7 +3,7 @@
 .PHONY: help install backup clean test test-syntax test-suite
 
 # Files install.sh symlinks into $HOME (keep in sync with create_symlink calls)
-DOTFILES := .zshrc .zprofile .prompt.zsh .bashrc .bash_profile .prompt.bash \
+DOTFILES := .zshenv .zshrc .zprofile .prompt.zsh .bashrc .bash_profile .prompt.bash \
             .dircolors .gitconfig .vimrc .tmux.conf
 
 # Default target
@@ -51,7 +51,6 @@ clean:
 	else \
 		echo "No backup found"; \
 	fi
-	@echo "Note: ~/.zshenv is not a symlink; remove the install.sh-appended block manually if desired"
 
 # Test shell configurations
 test: test-syntax test-suite
