@@ -140,7 +140,7 @@ install.sh execution:
      └─ export DOTFILES_DIR="$HOME/dotfiles"
         export SHELL_DIR="$DOTFILES_DIR/shell"
         export ARCH="arm64"              # (detected at install time)
-        export OSTYPE="darwin"           # (detected at install time)
+        export DOTFILES_OS="darwin"      # (detected at install time)
         
         # Platform-specific PATH setup (macOS)
         if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -162,7 +162,7 @@ Terminal starts → exec zsh
   │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
   │  ├─ export ARCH="arm64"          # (set at install time)
-  │  ├─ export OSTYPE="darwin"       # (set at install time)
+  │  ├─ export DOTFILES_OS="darwin"  # (set at install time)
   │  │
   │  ├─ Platform-specific PATH setup (if macOS)
   │  │
@@ -206,7 +206,7 @@ Terminal starts → exec bash -l
   │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
   │  ├─ export ARCH="x86_64"         # (set at install time)
-  │  ├─ export OSTYPE="linux"        # (set at install time)
+  │  ├─ export DOTFILES_OS="linux"   # (set at install time)
   │  │
   │  ├─ Platform-specific PATH setup (if macOS)
   │  │
@@ -229,7 +229,7 @@ Terminal starts → exec bash -l
 **Key insights:**
 - **Zsh:** All exports available everywhere (scripts, cron, login, interactive) via `.zshenv`
 - **Bash:** Exports only available in login shells (`.bash_profile`); scripts and non-login shells need separate sourcing
-- **Install-time values:** ARCH, OSTYPE, and platform-specific PATH setup are baked into shell init files
+- **Install-time values:** ARCH, DOTFILES_OS, and platform-specific PATH setup are baked into shell init files
 - **Runtime values:** Everything using `$HOME`, `$USER`, or environment variable expansion stays in `common.sh`
 - **File guards:** All sourcing operations check file existence before loading, preventing errors during fresh installs
 
