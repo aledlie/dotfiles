@@ -4,7 +4,15 @@
 # Bash configuration
 # Set dotfiles directory
 export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+export SHELL_DIR="$DOTFILES_DIR/shell"
 
+# Platform metadata (matches install.sh detect_arch/detect_ostype)
+export ARCH="$(uname -m)"
+case "$(uname -s)" in
+  Darwin) export DOTFILES_OS="darwin" ;;
+  Linux)  export DOTFILES_OS="linux" ;;
+  *)      export DOTFILES_OS="$(uname -s | tr '[:upper:]' '[:lower:]')" ;;
+esac
 
 # Bash-specific settings
 export HISTCONTROL=ignoredups:erasedups
@@ -16,6 +24,9 @@ shopt -s cdspell           # autocorrect typos in path names when using cd
 [[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Load common shell configuration shared with zsh
+[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"
