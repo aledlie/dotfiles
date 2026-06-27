@@ -2,9 +2,12 @@
 
 # Dotfiles installation script
 # This script creates symlinks from the home directory to dotfiles in ~/dotfiles
-# Also sets up shell initialization files with DOTFILES_DIR, SHELL_DIR, ARCH, OSTYPE, and common.sh sourcing
+# Also sets up shell initialization files with DOTFILES_DIR, SHELL_DIR, ARCH, DOTFILES_OS, and common.sh sourcing
 
 set -e
+
+# Resolve the dotfiles directory (the location of this script) unless overridden
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 
 BACKUP_DIR="$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)"
 
@@ -74,7 +77,6 @@ create_symlink() {
 
     if [ -e "$DOTFILES_DIR/$source" ] || [ -L "$DOTFILES_DIR/$source" ]; then
         backup_file "$target"
-        [ -d "$HOME/$target" ] && rm -rf "$HOME/$target"
         ln -sf "$DOTFILES_DIR/$source" "$HOME/$target" || {
             print_error "Failed to create symlink for $source"
             exit 1
@@ -111,7 +113,7 @@ setup_shell_init() {
 export DOTFILES_DIR="\$HOME/dotfiles"
 export SHELL_DIR="\$DOTFILES_DIR/shell"
 export ARCH="$arch"
-export OSTYPE="$ostype"
+export DOTFILES_OS="$ostype"
 
 # Prepend to PATH only if the entry is not already present
 _path_prepend() {
@@ -151,8 +153,8 @@ main() {
     # Detect shell, architecture, and OS type
     SHELL_TYPE=$(detect_shell)
     ARCH=$(detect_arch)
-    OSTYPE=$(detect_ostype)
-    print_status "Detected shell: $SHELL_TYPE, architecture: $ARCH, OS: $OSTYPE"
+    DOTFILES_OS=$(detect_ostype)
+    print_status "Detected shell: $SHELL_TYPE, architecture: $ARCH, OS: $DOTFILES_OS"
 
     # Create symlinks for shell configurations
     create_symlink "shell/zsh/zshrc" ".zshrc"
@@ -169,7 +171,7 @@ main() {
     create_symlink "tmux/tmux.conf" ".tmux.conf"
 
     # Setup shell initialization file
-    setup_shell_init "$SHELL_TYPE" "$ARCH" "$OSTYPE"
+    setup_shell_init "$SHELL_TYPE" "$ARCH" "$DOTFILES_OS"
 
     print_status "Installation complete!"
     print_status "Restart your shell to load new configuration"
