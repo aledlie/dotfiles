@@ -6,12 +6,14 @@ setopt PROMPT_SUBST
 # Colors
 autoload -U colors && colors
 
-# Define color variables for easier use
-local user_color="%{$fg[yellow]%}"
-local host_color="%{$fg[green]%}"
-local dir_color="%{$fg[blue]%}"
-local git_color="%{$fg[red]%}"
-local reset_color="%{$reset_color%}"
+# Define color variables for easier use.
+# typeset -g (not local): this file is sourced at top level, and PROMPT_SUBST
+# re-expands these at each prompt — they must outlive the sourcing scope.
+typeset -g user_color="%{$fg[yellow]%}"
+typeset -g host_color="%{$fg[green]%}"
+typeset -g dir_color="%{$fg[blue]%}"
+typeset -g git_color="%{$fg[red]%}"
+typeset -g reset_color="%{$reset_color%}"
 
 # Highlight the user name when logged in as root
 if [[ "${USER}" == "root" ]]; then
