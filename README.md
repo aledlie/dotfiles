@@ -110,45 +110,27 @@ dotfiles/
 ```
 install.sh execution:
   │
-  ├─ Detect shell type ($SHELL)
-  │  ├─ zsh? → Use ~/.zshenv
-  │  └─ bash? → Use ~/.bash_profile
-  │
-  ├─ Detect machine architecture (uname -m)
-  │  └─ Returns: arm64, x86_64, aarch64, etc.
-  │
-  ├─ Detect operating system type (uname -s)
-  │  └─ Normalizes to: darwin, linux, etc.
+  ├─ Detect shell / arch / OS (informational log only; uname -m, uname -s)
   │
   ├─ Create backup directory (~/.dotfiles.backup/<timestamp>/)
   │
-  ├─ Create symlinks:
-  │  ├─ shell/zsh/zshrc → ~/.zshrc
-  │  ├─ shell/zsh/zprofile → ~/.zprofile
-  │  ├─ shell/zsh/prompt.zsh → ~/.prompt.zsh
-  │  ├─ shell/bash/bashrc → ~/.bashrc
-  │  ├─ shell/bash/bash_profile → ~/.bash_profile
-  │  ├─ shell/bash/prompt.bash → ~/.prompt.bash
-  │  ├─ shell/dircolors → ~/.dircolors
-  │  ├─ git/gitconfig → ~/.gitconfig
-  │  ├─ vim/vimrc → ~/.vimrc
-  │  └─ tmux/tmux.conf → ~/.tmux.conf
-  │
-  ├─ Backup existing files to BACKUP_DIR (if they exist)
-  │
-  └─ Write shell initialization to .zshenv or .bash_profile:
-     └─ export DOTFILES_DIR="$HOME/dotfiles"
-        export SHELL_DIR="$DOTFILES_DIR/shell"
-        export ARCH="arm64"              # (detected at install time)
-        export DOTFILES_OS="darwin"      # (detected at install time)
-        
-        # Platform-specific PATH setup (macOS)
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          _path_prepend "/opt/homebrew/bin"
-          _path_prepend "/opt/homebrew/sbin"
-        fi
-        
-        [[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
+  └─ Create symlinks (backing up any existing file first):
+     ├─ shell/zsh/zshenv → ~/.zshenv
+     ├─ shell/zsh/zshrc → ~/.zshrc
+     ├─ shell/zsh/zprofile → ~/.zprofile
+     ├─ shell/zsh/prompt.zsh → ~/.prompt.zsh
+     ├─ shell/bash/bashrc → ~/.bashrc
+     ├─ shell/bash/bash_profile → ~/.bash_profile
+     ├─ shell/bash/prompt.bash → ~/.prompt.bash
+     ├─ shell/dircolors → ~/.dircolors
+     ├─ git/gitconfig → ~/.gitconfig
+     ├─ vim/vimrc → ~/.vimrc
+     └─ tmux/tmux.conf → ~/.tmux.conf
+
+The script generates no files. Each shell bootstraps from its symlinked repo
+file — `shell/zsh/zshenv` (zsh) and `shell/bash/bashrc` (bash) — which set
+DOTFILES_DIR/SHELL_DIR, detect ARCH/DOTFILES_OS at runtime, and source
+common.sh. ARCH/DOTFILES_OS are computed on each shell start, not baked in.
 ```
 
 ## Shell Startup Data Flow
@@ -157,14 +139,12 @@ install.sh execution:
 ```
 Terminal starts → exec zsh
   │
-  ├─ .zshenv (ALWAYS, every invocation)
+  ├─ .zshenv → symlink to shell/zsh/zshenv (ALWAYS, every invocation)
   │  │
   │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
-  │  ├─ export ARCH="arm64"          # (set at install time)
-  │  ├─ export DOTFILES_OS="darwin"  # (set at install time)
-  │  │
-  │  ├─ Platform-specific PATH setup (if macOS)
+  │  ├─ export ARCH="$(uname -m)"          # (detected at runtime)
+  │  ├─ export DOTFILES_OS=...             # (darwin/linux, detected at runtime)
   │  │
   │  └─ source shell/common.sh
   │     │
@@ -201,36 +181,31 @@ Terminal starts → exec zsh
 ```
 Terminal starts → exec bash -l
   │
-  ├─ .bash_profile (login shells only)
+  ├─ .bash_profile (login shells only) → symlink to shell/bash/bash_profile
+  │  │
+  │  ├─ source ~/.bashrc   (so login shells get the bootstrap below)
+  │  └─ eval "$(brew shellenv)"   (Homebrew PATH on macOS)
+  │
+  ├─ .bashrc → symlink to shell/bash/bashrc (interactive + sourced by .bash_profile)
   │  │
   │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
-  │  ├─ export ARCH="x86_64"         # (set at install time)
-  │  ├─ export DOTFILES_OS="linux"   # (set at install time)
-  │  │
-  │  ├─ Platform-specific PATH setup (if macOS)
-  │  │
-  │  └─ source shell/common.sh
-  │     │ (same as Zsh common.sh setup above)
-  │
-  ├─ .bashrc (interactive shells only)
-  │  │
+  │  ├─ export ARCH="$(uname -m)"          # (detected at runtime)
+  │  ├─ export DOTFILES_OS=...             # (darwin/linux, detected at runtime)
   │  ├─ Bash options (histappend, checkwinsize, cdspell, etc.)
-  │  ├─ Setup completions
-  │  ├─ Configure pyenv (shell-specific init)
-  │  ├─ Setup direnv
   │  ├─ Load prompt.bash (custom prompt with git info)
   │  ├─ Load fzf.bash (fuzzy finder)
-  │  └─ Source cargo env
+  │  └─ source shell/common.sh
+  │     │ (same as Zsh common.sh setup above)
   │
   └─ Shell ready
 ```
 
 **Key insights:**
+- **No generated files:** Both shells bootstrap from their symlinked repo files (`shell/zsh/zshenv`, `shell/bash/bashrc`); install.sh only creates symlinks
 - **Zsh:** All exports available everywhere (scripts, cron, login, interactive) via `.zshenv`
-- **Bash:** Exports only available in login shells (`.bash_profile`); scripts and non-login shells need separate sourcing
-- **Install-time values:** ARCH, DOTFILES_OS, and platform-specific PATH setup are baked into shell init files
-- **Runtime values:** Everything using `$HOME`, `$USER`, or environment variable expansion stays in `common.sh`
+- **Bash:** Bootstrap lives in `.bashrc`; login shells pick it up because `.bash_profile` sources `.bashrc`. Non-interactive non-login bash still needs separate sourcing
+- **Runtime values:** ARCH/DOTFILES_OS and everything using `$HOME`/`$USER` are computed on each shell start, never baked in
 - **File guards:** All sourcing operations check file existence before loading, preventing errors during fresh installs
 
 ## Make Targets
