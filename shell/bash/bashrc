@@ -2,8 +2,24 @@
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash"
 
 # Bash configuration
-# Set dotfiles directory
-export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+# Locate the repo by resolving this file's own symlink. install.sh symlinks
+# ~/.bashrc -> $DOTFILES_DIR/shell/bash/bashrc; resolving that link lets the
+# repo work from any clone location. Falls back to ~/dotfiles only if this
+# file was copied rather than symlinked.
+__dotfiles_src="${BASH_SOURCE[0]}"
+__dotfiles_tgt="$(readlink "$__dotfiles_src" 2>/dev/null || true)"
+case "$__dotfiles_tgt" in
+  "") ;;                                                  # not a symlink
+  /*) ;;                                                  # already absolute
+  *)  __dotfiles_tgt="$(dirname "$__dotfiles_src")/$__dotfiles_tgt" ;;
+esac
+case "$__dotfiles_tgt" in
+  */shell/bash/bashrc)
+    export DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "$__dotfiles_tgt")/../.." && pwd)}" ;;
+  *)
+    export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}" ;;
+esac
+unset __dotfiles_src __dotfiles_tgt
 export SHELL_DIR="$DOTFILES_DIR/shell"
 
 # Platform metadata (matches install.sh detect_arch/detect_ostype)

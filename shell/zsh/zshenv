@@ -1,6 +1,16 @@
 # Zsh environment — sourced for all zsh invocations (login, interactive, scripts)
-# Set dotfiles directory
-export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+# Locate the repo by resolving this file's own symlink. install.sh symlinks
+# ~/.zshenv -> $DOTFILES_DIR/shell/zsh/zshenv; the :A modifier resolves that
+# link to the real path, so the repo works from any clone location. Falls back
+# to ~/dotfiles only if this file was copied rather than symlinked.
+() {
+  local self="${${(%):-%x}:A}"
+  if [[ "$self" == */shell/zsh/zshenv ]]; then
+    export DOTFILES_DIR="${DOTFILES_DIR:-${self:h:h:h}}"
+  else
+    export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+  fi
+}
 export SHELL_DIR="$DOTFILES_DIR/shell"
 
 # Platform metadata (matches install.sh detect_arch/detect_ostype)

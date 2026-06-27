@@ -81,13 +81,16 @@ test-syntax:
 	@echo "=== Syntax checks ==="
 	@failed=0; \
 	bash -n shell/bash/bashrc && echo "  ✓ bashrc" || { echo "  ✗ bashrc"; failed=1; }; \
+	bash -n shell/bash/bash_profile && echo "  ✓ bash_profile" || { echo "  ✗ bash_profile"; failed=1; }; \
 	bash -n shell/common.sh && echo "  ✓ common.sh" || { echo "  ✗ common.sh"; failed=1; }; \
 	bash -n shell/functions.sh && echo "  ✓ functions.sh" || { echo "  ✗ functions.sh"; failed=1; }; \
 	bash -n shell/aliases.sh && echo "  ✓ aliases.sh" || { echo "  ✗ aliases.sh"; failed=1; }; \
 	if command -v zsh >/dev/null 2>&1; then \
+		zsh -n shell/zsh/zshenv && echo "  ✓ zshenv" || { echo "  ✗ zshenv"; failed=1; }; \
+		zsh -n shell/zsh/zprofile && echo "  ✓ zprofile" || { echo "  ✗ zprofile"; failed=1; }; \
 		zsh -n shell/zsh/zshrc && echo "  ✓ zshrc" || { echo "  ✗ zshrc"; failed=1; }; \
 	else \
-		echo "  - zshrc (skipped: zsh not installed)"; \
+		echo "  - zshenv/zprofile/zshrc (skipped: zsh not installed)"; \
 	fi; \
 	exit $$failed
 
