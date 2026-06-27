@@ -69,9 +69,7 @@ fi
 # Enable aliases to be sudo'ed
 alias sudo='sudo '
 
-# Python shortcut
-alias python=python3.12
-alias python3=python3.12
+# Python: defer to pyenv shims (set up in common.sh) instead of pinning a version.
 
 # Navigation
 alias ..='cd ..'
@@ -145,7 +143,7 @@ if [[ "$OSTYPE" == darwin* ]]; then
     alias plistbuddy="/usr/libexec/PlistBuddy"
 
     # System update
-    alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update'
+    alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install -g npm@latest; npm update -g; sudo gem update --system; sudo gem update'
 
     # Applications
     alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
