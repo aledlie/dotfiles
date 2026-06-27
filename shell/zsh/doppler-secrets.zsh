@@ -48,7 +48,9 @@ typeset -ga _DOPPLER_CONFIGS
 _DOPPLER_CONFIGS=("$CONFIG_DEV" "$CONFIG_STAGING" "$CONFIG_PRODUCTION")
 
 # Get a secret value without exporting (reads from cache)
-# Returns exit code 1 if the secret is empty or missing.
+# Returns exit code 1 only if the key is absent from the cache; a key that is
+# present with an empty value prints nothing and returns 0. (doppler_export, by
+# contrast, treats an empty value as not-found.)
 secret() {
   if ! _is_valid_identifier "$1"; then
     printf 'secret: invalid identifier: %s\n' "$1" >&2

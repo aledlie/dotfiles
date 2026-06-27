@@ -7,6 +7,11 @@
 #   doppler_export GITHUB_TOKEN STRIPE_API_KEY  # export specific vars
 #   doppler_export_all                          # export everything (rare)
 #
+# zsh only: secret, doppler_export, doppler_export_all, doppler_copy_secret are
+# defined in shell/zsh/doppler-secrets.zsh (zsh-only parameter expansions). A
+# bash shell sourcing this file gets load_doppler_cache, doppler_get, and the
+# doppler_cache_* helpers, but not those.
+#
 # Note: secrets with raw embedded newlines (e.g. PEM keys) are truncated by
 # command substitution. Escaped \n literals in JSON values are unaffected.
 
