@@ -11,7 +11,9 @@ set -e
 # Resolve the dotfiles directory (the location of this script) unless overridden
 DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 
-BACKUP_DIR="$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)"
+# PID suffix keeps the dir unique if two runs land in the same second (BSD date
+# has no sub-second %N); the timestamp prefix still sorts chronologically.
+BACKUP_DIR="$HOME/.dotfiles.backup/$(date +%Y%m%dT%H%M%S)-$$"
 
 # Colors for output
 RED='\033[0;31m'
@@ -62,14 +64,26 @@ detect_ostype() {
     esac
 }
 
-# Backup existing file if it exists
+# Backup existing file if it exists. A symlink already pointing into the repo
+# has no original worth saving (matches the Makefile backup/clean behavior), so
+# drop it rather than copy it into the backup.
 backup_file() {
     local file="$1"
-    if [ -f "$HOME/$file" ] || [ -L "$HOME/$file" ] || [ -d "$HOME/$file" ]; then
-        mkdir -p "$BACKUP_DIR"
-        print_status "Backing up existing $file"
-        mv -f "$HOME/$file" "$BACKUP_DIR/"
-    fi
+    local target="$HOME/$file"
+
+    [ -e "$target" ] || [ -L "$target" ] || return 0
+
+    case "$(readlink "$target" 2>/dev/null)" in
+        "$DOTFILES_DIR"/*)
+            print_status "Replacing stale repo symlink $file"
+            rm -f "$target"
+            return 0
+            ;;
+    esac
+
+    mkdir -p "$BACKUP_DIR"
+    print_status "Backing up existing $file"
+    mv -f "$target" "$BACKUP_DIR/"
 }
 
 # Create symlink
@@ -104,23 +118,19 @@ main() {
         exit 1
     fi
 
-    # Detect shell, architecture, and OS type (informational)
-    SHELL_TYPE=$(detect_shell)
-    ARCH=$(detect_arch)
-    DOTFILES_OS=$(detect_ostype)
-    print_status "Detected shell: $SHELL_TYPE, architecture: $ARCH, OS: $DOTFILES_OS"
+    # Shell/arch/OS are informational only — zshenv/bashrc set these at runtime.
+    print_status "Detected shell: $(detect_shell), architecture: $(detect_arch), OS: $(detect_ostype)"
 
     # Create symlinks for shell configurations. Both shells bootstrap entirely
     # from these repo files (zshenv/bashrc source common.sh), so there is no
     # install-time file generation — re-runs stay idempotent.
+    # Prompt and dircolors files are sourced directly from the repo via
+    # $SHELL_DIR by zshrc/bashrc/common.sh, so they need no $HOME symlink.
     create_symlink "shell/zsh/zshenv" ".zshenv"
     create_symlink "shell/zsh/zshrc" ".zshrc"
     create_symlink "shell/zsh/zprofile" ".zprofile"
-    create_symlink "shell/zsh/prompt.zsh" ".prompt.zsh"
     create_symlink "shell/bash/bashrc" ".bashrc"
     create_symlink "shell/bash/bash_profile" ".bash_profile"
-    create_symlink "shell/bash/prompt.bash" ".prompt.bash"
-    create_symlink "shell/dircolors" ".dircolors"
 
     # Create symlinks for other configurations
     create_symlink "git/gitconfig" ".gitconfig"

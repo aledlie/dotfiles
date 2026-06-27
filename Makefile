@@ -3,8 +3,12 @@
 .PHONY: help install backup clean test test-syntax test-suite
 
 # Files install.sh symlinks into $HOME (keep in sync with create_symlink calls)
-DOTFILES := .zshenv .zshrc .zprofile .prompt.zsh .bashrc .bash_profile .prompt.bash \
-            .dircolors .gitconfig .vimrc .tmux.conf
+DOTFILES := .zshenv .zshrc .zprofile .bashrc .bash_profile \
+            .gitconfig .vimrc .tmux.conf
+
+# Absolute path to this repo (matches install.sh's DOTFILES_DIR resolution).
+# Used to tell repo symlinks apart from real files during backup/clean.
+DOTFILES_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 # Default target
 help:
@@ -20,37 +24,55 @@ install:
 	@echo "Installing dotfiles..."
 	@./install.sh
 
-# Backup existing dotfiles (matches install.sh timestamped layout)
+# Backup existing dotfiles (matches install.sh timestamped layout).
+# Skips symlinks that already point into the repo: those have no original
+# worth saving, and snapshotting them would make `clean` restore them.
 backup:
 	@echo "Creating backup of existing dotfiles..."
-	@dest="$$HOME/.dotfiles.backup/$$(date +%Y%m%dT%H%M%S)"; \
+	@dest="$$HOME/.dotfiles.backup/$$(date +%Y%m%dT%H%M%S)-$$$$"; \
 	for file in $(DOTFILES); do \
-		if [ -e "$$HOME/$$file" ] || [ -L "$$HOME/$$file" ]; then \
-			mkdir -p "$$dest"; \
-			echo "Backing up $$file"; \
-			cp -RP "$$HOME/$$file" "$$dest/"; \
-		fi; \
+		target="$$HOME/$$file"; \
+		{ [ -e "$$target" ] || [ -L "$$target" ]; } || continue; \
+		case "$$(readlink "$$target" 2>/dev/null)" in \
+			"$(DOTFILES_DIR)"/*) echo "Skipping $$file (symlink into repo)"; continue ;; \
+		esac; \
+		mkdir -p "$$dest"; \
+		echo "Backing up $$file"; \
+		cp -RP "$$target" "$$dest/"; \
 	done; \
 	if [ -d "$$dest" ]; then echo "Backup created at $$dest"; else echo "Nothing to back up"; fi
 
-# Clean installation (remove symlinks)
+# Clean installation: remove repo symlinks, then restore originals.
+# Only removes symlinks that point into the repo (never real files), and
+# restores per-file — only files this repo manages, only when absent in $HOME,
+# never re-creating a repo symlink captured in an older backup.
 clean:
 	@echo "Removing dotfiles symlinks..."
 	@for file in $(DOTFILES); do \
-		if [ -L "$$HOME/$$file" ]; then \
-			echo "Removing symlink $$file"; \
-			rm "$$HOME/$$file"; \
-		fi; \
+		target="$$HOME/$$file"; \
+		[ -L "$$target" ] || continue; \
+		case "$$(readlink "$$target" 2>/dev/null)" in \
+			"$(DOTFILES_DIR)"/*) echo "Removing symlink $$file"; rm "$$target" ;; \
+			*) echo "Leaving $$file (not a repo symlink)" ;; \
+		esac; \
 	done
 	@echo "Restoring from most recent backup if available..."
 	@latest=$$(ls -1d "$$HOME"/.dotfiles.backup/*/ 2>/dev/null | sort | tail -n1); \
 	latest=$${latest%/}; \
-	if [ -n "$$latest" ] && [ -d "$$latest" ]; then \
-		echo "Restoring from $$latest"; \
-		cp -Rp "$$latest/." "$$HOME/" 2>/dev/null || true; \
-	else \
-		echo "No backup found"; \
-	fi
+	if [ -z "$$latest" ] || [ ! -d "$$latest" ]; then echo "No backup found"; exit 0; fi; \
+	echo "Restoring from $$latest"; \
+	for file in $(DOTFILES); do \
+		src="$$latest/$$file"; \
+		{ [ -e "$$src" ] || [ -L "$$src" ]; } || continue; \
+		case "$$(readlink "$$src" 2>/dev/null)" in \
+			"$(DOTFILES_DIR)"/*) echo "Skipping $$file (backup is a repo symlink)"; continue ;; \
+		esac; \
+		if [ -e "$$HOME/$$file" ] || [ -L "$$HOME/$$file" ]; then \
+			echo "Skipping $$file (already present)"; continue; \
+		fi; \
+		echo "Restoring $$file"; \
+		cp -RP "$$src" "$$HOME/$$file"; \
+	done
 
 # Test shell configurations
 test: test-syntax test-suite

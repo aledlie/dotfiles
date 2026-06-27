@@ -48,8 +48,13 @@ unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 
 [ -f ~/.fzf.zsh ] && builtin source ~/.fzf.zsh
 
-# Load zsh prompt customization
-[[ -f "$HOME/.prompt.zsh" ]] && source "$HOME/.prompt.zsh"
+# Load zsh prompt customization (from the repo, matching bashrc)
+[[ -f "$SHELL_DIR/zsh/prompt.zsh" ]] && source "$SHELL_DIR/zsh/prompt.zsh"
 
 # Drop stale /opt/pmk path entries
 path=(${path:#/opt/pmk*})
+
+# GitHub MCP server (claude-plugins-official/github) reads its bearer token from
+# this var. Sourced from the already-loaded Doppler cache (integrity-studio/dev)
+# via secret(), avoiding an extra `doppler secrets get` subprocess.
+export GITHUB_PERSONAL_ACCESS_TOKEN="$(secret GITHUB_TOKEN)"
