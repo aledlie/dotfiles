@@ -76,6 +76,11 @@ create_symlink() {
     local target="$2"
 
     if [ -e "$DOTFILES_DIR/$source" ] || [ -L "$DOTFILES_DIR/$source" ]; then
+        # Already linked correctly — skip to keep re-runs idempotent (no churn backups)
+        if [ "$(readlink "$HOME/$target" 2>/dev/null)" = "$DOTFILES_DIR/$source" ]; then
+            print_status "Already linked $source -> ~/$target"
+            return
+        fi
         backup_file "$target"
         ln -sf "$DOTFILES_DIR/$source" "$HOME/$target" || {
             print_error "Failed to create symlink for $source"
