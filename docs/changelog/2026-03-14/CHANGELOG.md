@@ -50,3 +50,14 @@ Migration of completed backlog items.
 | L3 | PATH grows unboundedly on repeated sources | Added `typeset -U path` for zsh and membership checks before prepending to prevent duplicates on re-source. |
 | L4 | Export colorflag for subprocess visibility | Added `export colorflag` so subprocesses can access the variable. |
 | L5 | Add input validation to qcommit function | Documented as known footgun that qcommit stages all files; now removed entirely (replaced by explicit git add patterns). |
+
+## Observability (P3)
+
+| ID | Title | Resolution |
+|----|-------|-----------|
+| OB1 | Upgrade observability-toolkit OTEL SDK to v0.213 + v2.x trace-base | Updated SDK dependencies (sdk-node 0.52→0.213, trace-otlp-http 0.52→0.213, resources 1.25→2.6, semantic-conventions 1.25→1.40) and fixed 3 API breaking changes: `new Resource()` → `resourceFromAttributes()` (2 callsites), `BasicTracerProvider.addSpanProcessor()` → constructor `spanProcessors` config. All 1567 tests pass. Commit: bfddc25 |
+| OB2 | Fix langtrace.ts import extension | `import './load-envrc'` → `import './load-envrc.js'` for TypeScript moduleResolution=node16/nodenext ES module compatibility. Commit: b55b6657 |
+| OB3 | Fix OTEL SDK API incompatibilities in lib/otel.ts | Fixed 4 API breaks from SDK version drift (resources v2.x, sdk-trace-base v2.x, sdk-logs v0.213.0): `detectResourcesSync+*DetectorSync` → `detectResources+*Detector`; `new Resource()` → `resourceFromAttributes()`; `parentSpanId` → dual-path shim for v1/v2 pnpm mismatch; `addLogRecordProcessor()` → `processors[]` constructor param. Commits: 41ad06f1, b15dd13c |
+| OB4 | Fix chruby auto.sh unset variable warning | `chruby/auto.sh` referenced unset `$RUBY_AUTO_VERSION` in non-interactive shells. Workaround: skip chruby loading in non-interactive shells via `[[ -t 0 ]]` check in `shell/common.sh`. Permanent fix already in installed chruby package — all `$RUBY_AUTO_VERSION` references are quoted. Commit: 08b96f8 |
+| OB5 | Migrate CLAUDE_* consumers to OTEL_* env vars | Consumers in `hooks/lib/constants.ts`, `hooks/lib/otel-monitor.ts`, `scripts/lib/colors.{js,sh}`, `scripts/env/health.sh`, `scripts/env/check-environment.js`, and `jobs/sidequest/workers/claude-health-worker.ts` updated to prefer `OTEL_*` vars with backward-compat fallback to `CLAUDE_*`. Commits: 42d8ba61, 13e3c583, 9d43e47, 99b6f59 |
+| OB6 | Fix test-shell-startup.sh hanging + bash 3.2 compat | Replaced bash 4.2+ `-v` operator in `functions.sh` (`doppler_get`, `doppler_cache_debug`) with bash 3.2-compatible `${var+set}` parameter expansion. Test harness already batches checks into single shell invocation per shell type. |
