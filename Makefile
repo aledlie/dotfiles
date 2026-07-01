@@ -29,6 +29,9 @@ install:
 	@./install.sh
 
 # Backup existing dotfiles (matches install.sh timestamped layout).
+# Non-destructive: copies (cp -RP) and leaves originals in place, unlike
+# install.sh's backup_file which moves (mv -f) them out of $HOME to make room
+# for symlinks.
 # Skips symlinks that already point into the repo: those have no original
 # worth saving, and snapshotting them would make `clean` restore them.
 backup:

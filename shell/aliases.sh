@@ -175,5 +175,8 @@ elif command -v xsel >/dev/null 2>&1; then
     c() { tr -d '\n' | xsel --clipboard; }
 fi
 
-# Explicit Wireshark tshark alias (removed from PATH for security)
-alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'
+# Explicit Wireshark tshark alias (removed from PATH for security).
+# Only alias when the macOS bundle exists, so on Linux a real tshark on PATH
+# is not shadowed by a nonexistent path.
+[[ -x '/Applications/Wireshark.app/Contents/MacOS/tshark' ]] && \
+    alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'

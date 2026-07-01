@@ -170,12 +170,9 @@ if (&t_Co == 256 || has('gui_running'))
     set guioptions-=e
     set t_Co=256
     set guitablabel=%M\ %t
-    if ($TERM_PROGRAM == 'iTerm.app')
-        colorscheme solarized
-    else
-        colorscheme desert
-    endif
 endif
+
+colorscheme solarized
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac

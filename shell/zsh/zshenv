@@ -13,13 +13,8 @@
 }
 export SHELL_DIR="$DOTFILES_DIR/shell"
 
-# Platform metadata (matches install.sh detect_arch/detect_ostype)
-export ARCH="$(uname -m)"
-case "$(uname -s)" in
-  Darwin) export DOTFILES_OS="darwin" ;;
-  Linux)  export DOTFILES_OS="linux" ;;
-  *)      export DOTFILES_OS="$(uname -s | tr '[:upper:]' '[:lower:]')" ;;
-esac
+# Platform detection lives in install.sh (detect_arch/detect_ostype); at runtime
+# common.sh sets $PLATFORM, the only platform variable the shell config consumes.
 
 # Disable kiro-cli-term (figterm) PTY wrapper to prevent inline completion parse errors with pipes
 # Fixes: "(eval):486: parse error near '|'" caused by figterm v1.28.1 misidentifying programmatic

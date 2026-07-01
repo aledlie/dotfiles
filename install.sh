@@ -3,8 +3,9 @@
 # Dotfiles installation script
 # Creates symlinks from the home directory to dotfiles in ~/dotfiles.
 # Both shells bootstrap from their symlinked repo files: shell/zsh/zshenv and
-# shell/bash/bashrc set DOTFILES_DIR/SHELL_DIR/ARCH/DOTFILES_OS and source
-# common.sh, so the script generates no files at install time.
+# shell/bash/bashrc set DOTFILES_DIR/SHELL_DIR and source common.sh (which sets
+# $PLATFORM), so the script generates no files at install time. Machine
+# arch/OS detection lives here in detect_arch/detect_ostype (install-time only).
 
 set -e
 
@@ -127,8 +128,8 @@ main() {
     # Symlinks are defined in symlinks.conf (shared with the Makefile) so the two
     # never drift. Both shells bootstrap entirely from these repo files
     # (zshenv/bashrc source common.sh), so there is no install-time file
-    # generation — re-runs stay idempotent. Prompt and dircolors files are
-    # sourced directly from the repo via $SHELL_DIR, so they need no $HOME symlink.
+    # generation — re-runs stay idempotent. Prompt files are sourced directly
+    # from the repo via $SHELL_DIR, so they need no $HOME symlink.
     while read -r source target _; do
         case "$source" in ''|'#'*) continue ;; esac
         create_symlink "$source" "$target"
