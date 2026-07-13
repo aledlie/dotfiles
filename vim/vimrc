@@ -222,11 +222,7 @@ map <space> /
 map <C-space> ?
 
 
-" Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" <C-h/j/k/l> window navigation is provided by vim-tmux-navigator (line 36)
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>:tabclose<cr>gT
