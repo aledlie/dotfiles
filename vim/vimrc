@@ -85,7 +85,10 @@ set wildmenu
 set backspace=indent,eol,start
 " Set to auto read when a file is changed from the outside
 set autoread
-au FocusGained,BufEnter * silent! checktime
+augroup vimrc_autoread
+  autocmd!
+  autocmd FocusGained,BufEnter * silent! checktime
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => user interface
@@ -153,7 +156,10 @@ set tm=500
 
 " Properly disable sound on errors on MacVim
 if has("gui_macvim")
+  augroup vimrc_macvim
+    autocmd!
     autocmd GUIEnter * set vb t_vb=
+  augroup END
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -241,7 +247,10 @@ map <leader>t<leader> :tabnext
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
+augroup vimrc_lasttab
+  autocmd!
+  autocmd TabLeave * let g:lasttab = tabpagenr()
+augroup END
 
 
 " Opens a new tab with the current buffer's path
@@ -259,7 +268,10 @@ catch
 endtry
 
 " Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup vimrc_restore_pos
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
