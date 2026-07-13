@@ -218,8 +218,9 @@ set wrap "Wrap lines
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+" Terminals send Ctrl-Space as <C-@> / <Nul>, not <C-space>
 map <space> /
-map <C-space> ?
+map <C-@> ?
 
 
 " <C-h/j/k/l> window navigation is provided by vim-tmux-navigator (line 36)
