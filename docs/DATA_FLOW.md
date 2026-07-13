@@ -65,6 +65,7 @@ install.sh execution:
      ├─ shell/dircolors → ~/.dircolors
      ├─ git/gitconfig → ~/.gitconfig
      ├─ vim/vimrc → ~/.vimrc
+     ├─ vim/vim → ~/.vim
      └─ tmux/tmux.conf → ~/.tmux.conf
 
 Prompt files (shell/zsh/prompt.zsh, shell/bash/prompt.bash) are NOT symlinked —
