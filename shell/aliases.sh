@@ -23,21 +23,21 @@ fi
 
 # ---------- bat / cat fallbacks ----------
 
+# Resolve the bat binary once (Debian ships it as batcat); reused by fzf preview.
 if command -v bat >/dev/null 2>&1; then
-  alias cat='bat --paging=never'
+  _bat_cmd='bat'
 elif command -v batcat >/dev/null 2>&1; then
-  alias cat='batcat --paging=never'
+  _bat_cmd='batcat'
   alias bat='batcat'
 fi
+[[ -n "$_bat_cmd" ]] && alias cat="$_bat_cmd --paging=never"
 
 # ---------- fzf ----------
 
 if command -v fzf >/dev/null 2>&1; then
   # Better previews if bat/batcat is available
-  if command -v bat >/dev/null 2>&1; then
-    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range=:200 {}"'
-  elif command -v batcat >/dev/null 2>&1; then
-    export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border --preview "batcat --style=numbers --color=always --line-range=:200 {}"'
+  if [[ -n "$_bat_cmd" ]]; then
+    export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border --preview \"$_bat_cmd --style=numbers --color=always --line-range=:200 {}\""
   else
     export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --border'
   fi
@@ -180,3 +180,5 @@ fi
 # is not shadowed by a nonexistent path.
 [[ -x '/Applications/Wireshark.app/Contents/MacOS/tshark' ]] && \
     alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'
+
+unset _bat_cmd

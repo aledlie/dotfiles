@@ -31,13 +31,14 @@ shopt -s histappend        # append to history file, don't overwrite
 shopt -s checkwinsize      # check window size after each command
 shopt -s cdspell           # autocorrect typos in path names when using cd
 
+# Load common shell configuration shared with zsh. Must precede prompt.bash,
+# which reads DOTFILES_CACHE_DIR (set here) to cache tput colors.
+[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
+
 # Load custom prompt
 [[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# Load common shell configuration shared with zsh
-[[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"
