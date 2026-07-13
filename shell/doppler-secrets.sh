@@ -1,5 +1,8 @@
 # Doppler secret registry — provides project variables, cache loading, and secret access.
 #
+# Secrets for the default project/config are fetched into DOPPLER_CACHE at
+# shell start (see the bottom of this file); the helpers below read that cache.
+#
 # Usage:
 #   load_doppler_cache PROJECT CONFIG           # load secrets into DOPPLER_CACHE
 #   secret GITHUB_TOKEN                         # one-shot read (no export)
@@ -224,4 +227,18 @@ unload_doppler_cache() {
 # zsh-only helpers live in shell/zsh/ — bash can't parse their syntax.
 if [[ -n "${ZSH_VERSION:-}" ]] && [[ -f "${SHELL_DIR:-$HOME/dotfiles/shell}/zsh/doppler-secrets.zsh" ]]; then
   source "${SHELL_DIR:-$HOME/dotfiles/shell}/zsh/doppler-secrets.zsh"
+fi
+
+# Fetch secrets for the default project/config at shell start so secret/
+# doppler_get work immediately. Skipped on bash <4 (load_doppler_cache needs
+# associative arrays; the guard keeps macOS system bash startup quiet).
+# Errors from load_doppler_cache are intentionally NOT suppressed — the function
+# prints actionable diagnostics (auth, jq, empty parse) that a generic fallback
+# warning would mask. Functions are defined regardless so the user can retry
+# manually after fixing the underlying issue.
+if command -v doppler >/dev/null 2>&1; then
+  if [ -n "${ZSH_VERSION:-}" ] || [ "${BASH_VERSINFO[0]:-0}" -ge 4 ]; then
+    load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" || \
+      printf '[dotfiles] doppler cache not loaded; run `load_doppler_cache` after fixing the above\n' >&2
+  fi
 fi

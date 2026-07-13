@@ -14,15 +14,9 @@ _rebuild_doppler_all_secrets() {
   done
 }
 
-# Auto-load secrets for default project/config on startup.
-# Errors from load_doppler_cache are intentionally NOT suppressed — the function
-# prints actionable diagnostics (auth, jq, empty parse) that a generic fallback
-# warning would mask. Functions are defined regardless so the user can retry
-# manually after fixing the underlying issue.
-if command -v doppler >/dev/null 2>&1; then
-  load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" || \
-    printf '[dotfiles] doppler cache not loaded; run `load_doppler_cache` after fixing the above\n' >&2
-fi
+# Startup secret fetch lives in shell/doppler-secrets.sh (shared with bash);
+# it runs after this file is sourced, so the real _rebuild_doppler_all_secrets
+# above is in place before the cache is populated.
 
 # Env var name -> doppler key name (only non-identity mappings needed)
 # Note: per-key assignment avoids a zsh -n parse warning with compound [KEY]=VALUE literals.
