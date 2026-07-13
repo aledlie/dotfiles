@@ -4,13 +4,16 @@
 " Make Vim more useful
 set nocompatible
 
+" Derive repo root from this file's resolved path (follows symlinks)
+let s:dotfiles = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+
 " Store viminfo in dotfiles
-set viminfofile=~/dotfiles/vim/viminfo
+execute 'set viminfofile=' . s:dotfiles . '/vim/viminfo'
 
 " Install w/ :PlugInstall
 " Update w/ :PlugUpdate
 " Clean w/ :PlugClean
-call plug#begin('~/dotfiles/vim/plugin')
+call plug#begin(s:dotfiles . '/vim/plugin')
 
 " In-file linting : https://github.com/dense-analysis/ale
 Plug 'dense-analysis/ale'
@@ -172,7 +175,8 @@ if (&t_Co == 256 || has('gui_running'))
     set guitablabel=%M\ %t
 endif
 
-colorscheme solarized
+" silent! — plugin may be absent on a fresh install (before submodule init / :PlugInstall)
+silent! colorscheme solarized
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
