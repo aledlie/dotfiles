@@ -23,7 +23,12 @@
       "Bash(grep -n 'ls -A.*BACKUP_DIR\\\\|create_symlink\\\\|main.*\\\\$@' /Users/alyshialedlie/dotfiles/install.sh 2>/dev/null | head -10)",
       "Skill(git-commit-smart)",
       "Bash(git -C /Users/alyshialedlie/dotfiles log --oneline origin/main..HEAD)",
-      "Bash(git -C /Users/alyshialedlie/dotfiles push)"
+      "Bash(git -C /Users/alyshialedlie/dotfiles push)",
+      "Bash(zsh -c 'source ~/.zshenv >/dev/null 2>&1; doppler_cache_info')",
+      "Bash(/opt/homebrew/bin/bash --version)",
+      "Bash(/opt/homebrew/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh; doppler_cache_info')",
+      "Bash(/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh 2>&1; doppler_cache_info')",
+      "Bash(/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh && echo \"sourced ok, no warnings\"')"
     ]
   }
 }
