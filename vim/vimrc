@@ -7,9 +7,6 @@ set nocompatible
 " Derive repo root from this file's resolved path (follows symlinks)
 let s:dotfiles = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 
-" Store viminfo in dotfiles
-execute 'set viminfofile=' . s:dotfiles . '/vim/viminfo'
-
 " Install w/ :PlugInstall
 " Update w/ :PlugUpdate
 " Clean w/ :PlugClean
