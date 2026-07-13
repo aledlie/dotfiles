@@ -67,7 +67,7 @@ filetype indent on
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %{getcwd()}\ \ \ Line:\ %l\ \ Column:\ %c
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Convience
@@ -94,8 +94,6 @@ augroup END
 " => user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Turn on the Wild menu
-set wildmenu
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
 if has("win16") || has("win32")
@@ -258,11 +256,8 @@ map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
+set switchbuf=useopen,usetab,newtab
+set stal=2
 
 " Return to last edit position when opening files (You want this!)
 augroup vimrc_restore_pos
