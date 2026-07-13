@@ -36,10 +36,15 @@ new shell
 ### Secret access (runtime)
 
 ```
-secret NAME ──▶ doppler-secrets cache ──▶ Doppler (on demand)
+shell start ──▶ load_doppler_cache ──▶ Doppler ──▶ DOPPLER_CACHE (in memory)
+                                                        │
+secret NAME ────────────────────────────────────────────┘  (cache read)
 ```
 
-Secrets are pulled on demand and cached in memory — never committed.
+doppler-secrets.sh fetches the default project/config from Doppler at shell
+start into the in-memory `DOPPLER_CACHE`; `secret`/`doppler_get` read from that
+cache. Secrets are never written to disk or committed. (Skipped on bash <4,
+which lacks associative arrays — call helpers per-command there.)
 
 ## Install time (detailed)
 
@@ -99,9 +104,9 @@ Terminal starts → exec zsh
   │     ├─ Configure NVM (Node Version Manager)
   │     ├─ Configure chruby (Ruby 3.4.4 auto-switch, interactive only)
   │     ├─ Configure pyenv (Python version management)
-  │     ├─ Export Doppler project names (PROJECT_INTEGRITY, etc.)
-  │     ├─ Source functions.sh (with file existence guard)
-  │     └─ Load Doppler cache (load_doppler_cache)
+  │     ├─ Source doppler-secrets.sh → exports Doppler project names,
+  │     │    then fetches default-project secrets (load_doppler_cache)
+  │     └─ Source functions.sh (with file existence guard)
   │
   ├─ .zprofile (login shells only)
   │
