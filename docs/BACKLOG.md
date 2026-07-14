@@ -1,38 +1,35 @@
 # Project Backlog
 
-Unmitigated findings from the 2026-07-13 vim code review (max effort). Fixed in
-that session and therefore not listed: unregistered submodules (.gitmodules),
-unguarded `colorscheme solarized` (vim/vimrc).
+## Open Items
 
-## High (P2)
+### Medium (P3)
 
-- [x] **vimrc hardcodes `~/dotfiles`** — fixed in 218352c: derive repo root
-  via `fnamemodify(resolve(expand('<sfile>:p')), ':h:h')`.
-- [x] **Duplicate vim-mustache-handlebars submodule inside runtime dir** —
-  fixed in 8c869f1: removed `vim/vim/plugin/vim-mustache-handlebars` gitlink.
-- [x] **`set viminfofile` portability + secrets exposure** — fixed in 1a8cfe3:
-  removed `set viminfofile`; reverts to default `~/.viminfo`.
+- **Fresh-clone vim bootstrap** — commit 12965de moved plugin management to
+  vim-plug only (cleared `.gitmodules`, gitignored `vim/plugin/`), so a fresh
+  clone has zero plugins until `:PlugInstall` is run. Automate it (install.sh
+  step or `vim +PlugInstall +qall`) and document in README/DATA_FLOW.md.
+  *Deferred from 2026-07-13 vim review session.*
+- **Delete stale `vim/viminfo`** — `set viminfofile` was removed (1a8cfe3) so
+  the 24k `vim/viminfo` on disk is orphaned; it contains command/search
+  history with ~71 lines matching token/key/password patterns. Gitignored but
+  should be removed (`rm vim/viminfo`) to eliminate the exposure.
+  *Deferred from 2026-07-13 vim review session.*
+- **Add `make lint` (shellcheck) target** — the repo has no lint target; the
+  2026-07-13 lint run used shellcheck ad hoc. Add a Makefile target over the
+  bash-parseable shell files plus `# shellcheck shell=bash` directives to
+  silence SC2148 on sourced files, so CI/`make test` can gate on it.
 
-## Medium (P3)
+### Low (P4)
 
-- [x] **Autocmds without augroups** — fixed in 165ea9b: wrapped all four bare
-  autocmd declarations in named augroups with `autocmd!`.
-- [x] **Dead second plugin manager in vim-plug's install root** — fixed in
-  bf78766: removed Vundle.vim and Align submodules and their .gitmodules entries.
-- [x] **`<C-h/j/k/l>` window maps silently overridden** — fixed in bb6227b:
-  removed the four dead maps; vim-tmux-navigator handles them.
-- [x] **DATA_FLOW.md install list omits `vim/vim → ~/.vim`** — fixed in
-  c1e8d41: added the missing row.
-- [x] **No test coverage for vim symlink rows** — fixed in 7a85fd0: added
-  `tests/test-symlinks.sh` validating every symlinks.conf row.
-
-## Low (P4)
-
-- [x] **`map <C-space> ?` never fires in terminal vim** — fixed in 1aa21ee:
-  changed to `map <C-@> ?`.
-- [x] **Dead helpers** — fixed in eb74077: deleted VisualSelection() and
-  CmdLine().
-- [x] **Redundant/silent settings** — fixed in d8f3188: removed duplicate
-  `set wildmenu`, fixed statusline duplicate flags, removed empty catch block.
-- [x] **snipmate missing `snippet_version`** — fixed in f2c0375: added
-  `let g:snipMate = {'snippet_version': 1}` before plug#end().
+- **Doppler startup fetch hardening** — `shell/doppler-secrets.sh` now runs
+  `load_doppler_cache` on every shell start (network call); offline or on a
+  slow network this delays startup until the doppler CLI fails. Consider an
+  interactive-shell-only guard or a short-TTL disk cache fallback.
+  *Deferred from 2026-07-13 doppler eager-fetch change.*
+- **Lazy-load heavy vim plugins** — nerdtree, tagbar, fzf.vim, and ale load
+  eagerly at startup; vim-plug supports `{ 'on': ... }` lazy loading. Review
+  finding that was cut by the 15-finding cap in the 2026-07-13 review.
+- **Prefer `noremap` in vimrc mappings** — most mappings use recursive
+  `map`/`nmap` (e.g. `map <space> /`, `map 0 ^`); any plugin remapping the
+  RHS silently changes their behavior. Convert to `noremap` variants where
+  chaining is not intended.
