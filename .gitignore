@@ -20,6 +20,8 @@ Thumbs.db
 
 # Ignore vim runtime state
 vim/viminfo
+# vim/plugin/ is managed exclusively by vim-plug (not git submodules)
+vim/plugin/
 
 # Ignore temporary files
 *.tmp
