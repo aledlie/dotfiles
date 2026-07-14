@@ -45,7 +45,7 @@ if command -v fzf >/dev/null 2>&1; then
   # Fuzzy cd into subdirectories
   fcd() {
     local dir
-    dir="$(find . -type d 2>/dev/null | fzf)" && cd "$dir"
+    dir="$(find . -type d 2>/dev/null | fzf)" && cd "$dir" || return
   }
 
   # Fuzzy open file in editor

@@ -46,7 +46,7 @@ git_current_branch() {
 
 # mkdir and cd into it
 mkcd() {
-  mkdir -p "$1" && cd "$1"
+  mkdir -p "$1" && cd "$1" || return
 }
 
 # Create and switch to new git branch
