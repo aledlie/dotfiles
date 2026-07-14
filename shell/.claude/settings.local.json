@@ -28,7 +28,28 @@
       "Bash(/opt/homebrew/bin/bash --version)",
       "Bash(/opt/homebrew/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh; doppler_cache_info')",
       "Bash(/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh 2>&1; doppler_cache_info')",
-      "Bash(/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh && echo \"sourced ok, no warnings\"')"
+      "Bash(/bin/bash -c 'export DOTFILES_DIR=~/dotfiles SHELL_DIR=~/dotfiles/shell; source ~/dotfiles/shell/doppler-secrets.sh && echo \"sourced ok, no warnings\"')",
+      "Bash(command -v shellcheck shfmt)",
+      "Bash(shellcheck install.sh shell/common.sh shell/aliases.sh shell/functions.sh shell/doppler-secrets.sh shell/bash/bashrc shell/bash/bash_profile shell/bash/prompt.bash tests/*.sh)",
+      "Bash(shellcheck -f gcc install.sh shell/common.sh shell/aliases.sh shell/functions.sh shell/doppler-secrets.sh shell/bash/bashrc shell/bash/bash_profile shell/bash/prompt.bash tests/*.sh)",
+      "Bash(awk -F: '{print $1, $4}')",
+      "Bash(shellcheck -f gcc shell/aliases.sh shell/functions.sh)",
+      "Bash(echo \"SC2164 remaining: $?\")",
+      "Bash(git -C /Users/alyshialedlie/dotfiles ls-files -s vim/)",
+      "Bash(awk '$1==160000')",
+      "Bash(git -C /Users/alyshialedlie/dotfiles show d20250b --stat)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles show d20250b -- shell/aliases.sh shell/bash/bashrc symlinks.conf)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles show 9e87112)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles ls-files)",
+      "Bash(echo \"ls-files-viminfo-exit:$?\")",
+      "Bash(echo \"grep exit: $?\")",
+      "Bash(git -C /Users/alyshialedlie/dotfiles show 3bcdd2f --stat)",
+      "Bash(git -C /Users/alyshialedlie/dotfiles show 18ef9e7 --stat)",
+      "Bash(command -v vim)",
+      "Bash(vim --version)",
+      "Bash(vim -T dumb -N -e -u ~/.vimrc -c 'verbose echo get\\(g:, \"colors_name\", \"NONE\"\\)' -c 'qa!')",
+      "Skill(session-backlog)",
+      "Bash(make install *)"
     ]
   }
 }
