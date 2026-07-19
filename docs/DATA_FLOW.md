@@ -89,7 +89,8 @@ Terminal starts → exec zsh
   │
   ├─ .zshenv → symlink to shell/zsh/zshenv (ALWAYS, every invocation)
   │  │
-  │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
+  │  ├─ export DOTFILES_DIR   (resolved from this file's own symlink;
+  │  │                         falls back to ~/dotfiles if copied)
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
   │  │
   │  └─ source shell/common.sh
@@ -103,8 +104,9 @@ Terminal starts → exec zsh
   │     ├─ Source git-prompt.sh with git settings (with file existence guard)
   │     ├─ Add to PATH: local, cargo, pub-cache, GOPATH, etc.
   │     ├─ Configure NVM (Node Version Manager)
-  │     ├─ Configure chruby (Ruby 3.4.4 auto-switch, interactive only)
-  │     ├─ Configure pyenv (Python version management)
+  │     ├─ Configure chruby (auto-switch, interactive only)
+  │     ├─ Configure pyenv (Python version management, cached init)
+  │     ├─ Setup direnv hook
   │     ├─ Source doppler-secrets.sh → exports Doppler project names,
   │     │    then fetches default-project secrets (load_doppler_cache)
   │     └─ Source functions.sh (with file existence guard)
@@ -114,12 +116,13 @@ Terminal starts → exec zsh
   ├─ .zshrc (interactive shells only)
   │  │
   │  ├─ Zsh options (AUTO_CD, CORRECT_ALL, AUTO_LIST, HIST_*, etc.)
-  │  ├─ Setup completions (compinit)
-  │  ├─ Configure pyenv (shell-specific init)
-  │  ├─ Setup direnv
-  │  ├─ Source $SHELL_DIR/zsh/prompt.zsh (custom prompt with git info; from repo)
+  │  ├─ Setup completions (compinit; full audit at most once per 24h)
+  │  ├─ OBTOOL API key sync (throttled to once per hour)
+  │  ├─ Source dart-cli-completion
   │  ├─ Load ~/.fzf.zsh (fuzzy finder)
-  │  └─ Source dart-cli-completion
+  │  ├─ Source $SHELL_DIR/zsh/prompt.zsh (custom prompt with git info; from repo)
+  │  ├─ Export GITHUB_PERSONAL_ACCESS_TOKEN / HF_TOKEN from Doppler cache
+  │  └─ Re-hoist pyenv shims (path_helper demotes zshenv PATH in login shells)
   │
   └─ Shell ready
 ```
@@ -131,18 +134,20 @@ Terminal starts → exec bash -l
   │
   ├─ .bash_profile (login shells only) → symlink to shell/bash/bash_profile
   │  │
-  │  ├─ source ~/.bashrc   (so login shells get the bootstrap below)
-  │  └─ eval "$(brew shellenv)"   (Homebrew PATH on macOS)
+  │  ├─ eval "$(brew shellenv)"   (Homebrew PATH on macOS; before bashrc so
+  │  │                             common.sh tool detection can see brew bins)
+  │  └─ source ~/.bashrc   (so login shells get the bootstrap below)
   │
   ├─ .bashrc → symlink to shell/bash/bashrc (interactive + sourced by .bash_profile)
   │  │
-  │  ├─ export DOTFILES_DIR="$HOME/dotfiles"
+  │  ├─ export DOTFILES_DIR   (resolved from this file's own symlink;
+  │  │                         falls back to ~/dotfiles if copied)
   │  ├─ export SHELL_DIR="$DOTFILES_DIR/shell"
   │  ├─ Bash options (histappend, checkwinsize, cdspell, etc.)
+  │  ├─ source shell/common.sh   (same as Zsh common.sh setup above; must
+  │  │                            precede prompt.bash, which reads DOTFILES_CACHE_DIR)
   │  ├─ Source $DOTFILES_DIR/shell/bash/prompt.bash (custom prompt; from repo)
-  │  ├─ Load ~/.fzf.bash (fuzzy finder)
-  │  └─ source shell/common.sh
-  │     │ (same as Zsh common.sh setup above)
+  │  └─ Load ~/.fzf.bash (fuzzy finder)
   │
   └─ Shell ready
 ```

@@ -9,11 +9,6 @@
   clone has zero plugins until `:PlugInstall` is run. Automate it (install.sh
   step or `vim +PlugInstall +qall`) and document in README/DATA_FLOW.md.
   *Deferred from 2026-07-13 vim review session.*
-- **Delete stale `vim/viminfo`** — `set viminfofile` was removed (1a8cfe3) so
-  the 24k `vim/viminfo` on disk is orphaned; it contains command/search
-  history with ~71 lines matching token/key/password patterns. Gitignored but
-  should be removed (`rm vim/viminfo`) to eliminate the exposure.
-  *Deferred from 2026-07-13 vim review session.*
 - **Add `make lint` (shellcheck) target** — the repo has no lint target; the
   2026-07-13 lint run used shellcheck ad hoc. Add a Makefile target over the
   bash-parseable shell files plus `# shellcheck shell=bash` directives to

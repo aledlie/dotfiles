@@ -7,29 +7,31 @@ Personal dotfiles for macOS development environment.
 ```
 dotfiles/
 ├── README.md              # This file
-├── Makefile               # Make targets for install/backup/test
+├── Makefile               # Make targets for install/backup/clean/test
 ├── install.sh             # Installation script
+├── symlinks.conf          # Symlink manifest — single source of truth for install.sh + Makefile
 ├── shell/                 # Shell configurations
-│   ├── common.sh          # Shared shell config, exports, Doppler cache init
+│   ├── common.sh          # Shared config: platform, exports, PATH, tool init
 │   ├── aliases.sh         # Command aliases
-│   ├── functions.sh       # Custom shell functions (incl. Doppler cache)
-│   ├── doppler-secrets.sh # Doppler secret registry and export helpers (zsh-only)
+│   ├── functions.sh       # Utility shell functions
+│   ├── doppler-secrets.sh # Doppler cache + helpers shared by bash and zsh
 │   ├── dircolors          # LS_COLORS configuration
 │   ├── bash/              # Bash-specific configs
 │   │   ├── bashrc
 │   │   ├── bash_profile
 │   │   └── prompt.bash
 │   └── zsh/               # Zsh-specific configs
+│       ├── zshenv         # Entry point (all zsh invocations)
 │       ├── zshrc
-│       └── prompt.zsh
-├── git/                   # Git configuration
-│   └── gitconfig
-├── vim/                   # Vim configuration
-│   └── vimrc
+│       ├── zprofile
+│       ├── prompt.zsh
+│       └── doppler-secrets.zsh  # zsh-only helpers (secret, doppler_export, ...)
+├── git/                   # Git configuration (gitconfig, vendored git-prompt.sh)
+├── vim/                   # Vim configuration (vimrc; plugins managed by vim-plug)
 ├── tmux/                  # Tmux configuration
 │   └── tmux.conf
 ├── tests/                 # Shell startup and function tests
-└── docs/                  # Changelogs and backlog
+└── docs/                  # Changelogs, backlog, data-flow docs
 ```
 
 ## Installation
@@ -68,7 +70,6 @@ dotfiles/
   - `extract` - Universal archive extraction
   - `findproc` - Find processes by name
   - `backup` - Quick file backup with timestamp
-  - `weather` - Display weather info
   - Git helpers: `newbranch`, `git_current_branch`
   - Doppler cache: `load_doppler_cache`, `unload_doppler_cache`, `doppler_cache_info`, `doppler_cache_has`, `doppler_cache_debug`
 
@@ -82,14 +83,13 @@ dotfiles/
 
 ### Aliases
 - Directory navigation shortcuts (`..`, `...`, `....`)
-- Git shortcuts (`gs`, `ga`, `gc`, `gp`, `gl`)
+- Git shortcuts via gitconfig aliases (`st`, `co`, `br`, `ci`, `lg`, ...)
 - macOS-specific system commands
-- Development server (`serve`)
 - Network utilities (`localip`, `flush`, `ips`)
 
 ### Environment Setup
 - Homebrew integration (macOS)
-- Python build configuration (Tcl/Tk support)
+- Python via pyenv, Node via nvm (cached/lazy init)
 - Ruby version management with chruby
 - Custom editor (vim) configuration
 - History management
@@ -119,7 +119,7 @@ The Makefile provides convenient commands:
 - `make install` - Install dotfiles (create symlinks)
 - `make backup` - Backup existing dotfiles
 - `make clean` - Remove symlinks and restore from backup
-- `make test` - Test shell configurations for syntax errors
+- `make test` - Run syntax checks and the test suite
 
 ## Dependencies
 
