@@ -56,3 +56,6 @@ path=(${path:#/opt/pmk*})
 
 # Re-alias our Doppler GITHUB_TOKEN to the name the upstream github MCP plugin requires.
 export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GITHUB_TOKEN 2>/dev/null || gh auth token 2>/dev/null)}"
+
+# Hugging Face Hub token from Doppler (silences huggingface_hub auth warnings).
+export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
