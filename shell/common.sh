@@ -30,8 +30,9 @@ export HISTSIZE=50000
 export HISTFILESIZE=100000
 export SAVEHIST=50000
 
-# Enable color support for GNU ls if available
-if ls --color=auto >/dev/null 2>&1; then
+# Enable color support for GNU ls if available (-d . so the probe never
+# lists a large working directory at shell start)
+if ls --color=auto -d . >/dev/null 2>&1; then
   alias _plain_ls='ls --color=auto'
 else
   alias _plain_ls='ls -G'

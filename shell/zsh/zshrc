@@ -17,13 +17,19 @@ HISTFILE="$HOME/.zsh_history"
 unset MAIL MAILPATH
 MAILCHECK=0
 
-# Zsh completions (rebuild dump only if >24h old)
+# Zsh completions: full compinit (with security audit) at most once per 24h,
+# otherwise trust the dump (-C). (#q...) glob qualifiers need EXTENDED_GLOB;
+# scope it locally — enabling it globally breaks args like `git show HEAD^`.
 autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+() {
+  setopt localoptions extendedglob
+  if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+    touch ~/.zcompdump   # full run may not rewrite the dump; reset the 24h clock
+  else
+    compinit -C
+  fi
+}
 
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -59,3 +65,14 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GI
 
 # Hugging Face Hub token from Doppler (silences huggingface_hub auth warnings).
 export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
+
+# Re-hoist pyenv shims: common.sh prepends them at zshenv time, but on macOS
+# login shells /etc/zprofile's path_helper demotes them below /usr/bin.
+# Re-run the cached init (falls back to a live init if the cache is absent).
+if command -v pyenv >/dev/null 2>&1; then
+  source "${DOTFILES_CACHE_DIR:-$HOME/.cache/dotfiles}/pyenv-init.zsh.sh" 2>/dev/null \
+    || eval "$(pyenv init -)"
+fi
+
+# direnv hook
+eval "$(direnv hook zsh)"

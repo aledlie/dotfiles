@@ -92,12 +92,16 @@ test-syntax:
 	bash -n shell/common.sh && echo "  ✓ common.sh" || { echo "  ✗ common.sh"; failed=1; }; \
 	bash -n shell/functions.sh && echo "  ✓ functions.sh" || { echo "  ✗ functions.sh"; failed=1; }; \
 	bash -n shell/aliases.sh && echo "  ✓ aliases.sh" || { echo "  ✗ aliases.sh"; failed=1; }; \
+	bash -n shell/doppler-secrets.sh && echo "  ✓ doppler-secrets.sh" || { echo "  ✗ doppler-secrets.sh"; failed=1; }; \
+	bash -n shell/bash/prompt.bash && echo "  ✓ prompt.bash" || { echo "  ✗ prompt.bash"; failed=1; }; \
 	if command -v zsh >/dev/null 2>&1; then \
 		zsh -n shell/zsh/zshenv && echo "  ✓ zshenv" || { echo "  ✗ zshenv"; failed=1; }; \
 		zsh -n shell/zsh/zprofile && echo "  ✓ zprofile" || { echo "  ✗ zprofile"; failed=1; }; \
 		zsh -n shell/zsh/zshrc && echo "  ✓ zshrc" || { echo "  ✗ zshrc"; failed=1; }; \
+		zsh -n shell/zsh/prompt.zsh && echo "  ✓ prompt.zsh" || { echo "  ✗ prompt.zsh"; failed=1; }; \
+		zsh -n shell/zsh/doppler-secrets.zsh && echo "  ✓ doppler-secrets.zsh" || { echo "  ✗ doppler-secrets.zsh"; failed=1; }; \
 	else \
-		echo "  - zshenv/zprofile/zshrc (skipped: zsh not installed)"; \
+		echo "  - zsh files (skipped: zsh not installed)"; \
 	fi; \
 	exit $$failed
 

@@ -18,22 +18,20 @@ _rebuild_doppler_all_secrets() {
 # it runs after this file is sourced, so the real _rebuild_doppler_all_secrets
 # above is in place before the cache is populated.
 
-# Env var name -> doppler key name (only non-identity mappings needed)
+# Env var alias -> doppler key name, and the reverse. Both are derived from
+# _DOPPLER_SECRET_ALIASES in shell/doppler-secrets.sh so bash's doppler_get and
+# the zsh helpers below can never disagree about a name.
 # Note: per-key assignment avoids a zsh -n parse warning with compound [KEY]=VALUE literals.
-typeset -gA _DOPPLER_SECRET_NAMES
-_DOPPLER_SECRET_NAMES[OTEL_INGEST_ROUTE]=OBTOOL_INGEST_ROUTE
-_DOPPLER_SECRET_NAMES[OTEL_INGEST_URL]=OBTOOL_INGEST_URL
-_DOPPLER_SECRET_NAMES[OTEL_INGEST_PREVIEW_URL]=OBTOOL_INGEST_PREVIEW_URL
-_DOPPLER_SECRET_NAMES[OTEL_API_KEY]=OBTOOL_API_KEY
-
-# Reverse mapping: doppler key name -> env var alias (built from _DOPPLER_SECRET_NAMES)
-typeset -gA _DOPPLER_REVERSE_NAMES
+typeset -gA _DOPPLER_SECRET_NAMES _DOPPLER_REVERSE_NAMES
+_DOPPLER_SECRET_NAMES=()
 _DOPPLER_REVERSE_NAMES=()
-typeset _env _dop
-for _env _dop in "${(@kv)_DOPPLER_SECRET_NAMES}"; do
-  _DOPPLER_REVERSE_NAMES[$_dop]="$_env"
-done
-unset _env _dop
+typeset _pair
+while IFS= read -r _pair; do
+  [[ -n "$_pair" ]] || continue
+  _DOPPLER_SECRET_NAMES[${_pair%%=*}]="${_pair#*=}"
+  _DOPPLER_REVERSE_NAMES[${_pair#*=}]="${_pair%%=*}"
+done <<< "$_DOPPLER_SECRET_ALIASES"
+unset _pair
 
 _rebuild_doppler_all_secrets
 

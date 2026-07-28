@@ -87,7 +87,8 @@ alias code="cd ~/code"
 alias h="history"
 
 # Common project paths
-alias jobs="cd ~/code/jobs"
+# (named cdjobs, not jobs — `jobs` would shadow the job-control builtin)
+alias cdjobs="cd ~/code/jobs"
 alias integrity-ai="cd ~/code/is-public-sites/IntegrityStudioLandingPage"
 alias obtool="cd ~/.claude/mcp-servers/observability-toolkit"
 alias obtool-ui="cd ~/.claude/mcp-servers/observability-toolkit/dashboard"
@@ -129,21 +130,19 @@ if [[ "$OSTYPE" == darwin* ]]; then
    # Kill Chrome renderer tabs
     chromekill() { ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill; }
 
-    # Lock screen
-    alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+    # Lock screen (CGSession was removed from modern macOS; display sleep
+    # locks when "require password after sleep" is enabled)
+    alias afk="pmset displaysleepnow"
 
     # Hash fallbacks
     command -v md5sum > /dev/null || alias md5sum="md5"
     command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
-    # Merge PDF files
-    alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
-
     # PlistBuddy
     alias plistbuddy="/usr/libexec/PlistBuddy"
 
-    # System update
-    alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install -g npm@latest; npm update -g; sudo gem update --system; sudo gem update'
+    # System update (no gem update: SIP blocks writes to system Ruby)
+    alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install -g npm@latest; npm update -g'
 
     # Applications
     alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
@@ -181,4 +180,4 @@ fi
 [[ -x '/Applications/Wireshark.app/Contents/MacOS/tshark' ]] && \
     alias tshark='/Applications/Wireshark.app/Contents/MacOS/tshark'
 
-unset _bat_cmd
+unset _bat_cmd EZA_BASE

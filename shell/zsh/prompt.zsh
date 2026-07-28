@@ -13,7 +13,9 @@ typeset -g user_color="%{$fg[yellow]%}"
 typeset -g host_color="%{$fg[green]%}"
 typeset -g dir_color="%{$fg[blue]%}"
 typeset -g git_color="%{$fg[red]%}"
-typeset -g reset_color="%{$reset_color%}"
+# Own name, NOT reset_color: that would clobber the colors module's variable
+# and re-wrap itself every time this file is re-sourced.
+typeset -g prompt_reset_color="%{$reset_color%}"
 
 # Highlight the user name when logged in as root
 if [[ "${USER}" == "root" ]]; then
@@ -38,4 +40,4 @@ git_prompt_info() {
 }
 
 # Build the prompt
-PROMPT='${user_color}%n${reset_color}@${host_color}%m${reset_color}:${dir_color}%~${reset_color}${git_color}$(git_prompt_info)${reset_color}$ '
+PROMPT='${user_color}%n${prompt_reset_color}@${host_color}%m${prompt_reset_color}:${dir_color}%~${prompt_reset_color}${git_color}$(git_prompt_info)${prompt_reset_color}$ '

@@ -31,3 +31,6 @@ vim/plugin/
 # Ignore local customizations
 *.local
 local/
+
+# Claude Code per-machine permission grants (session artifacts, not dotfiles)
+**/.claude/settings.local.json

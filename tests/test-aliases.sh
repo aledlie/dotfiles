@@ -8,6 +8,18 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+
+# GNU timeout isn't on stock macOS (Homebrew coreutils provides it); fall back
+# to gtimeout, then to running without a timeout.
+run_timeout() {
+  if command -v timeout >/dev/null 2>&1; then timeout "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$@"
+  else shift; "$@"
+  fi
+}
+
 run_alias_checks() {
   local sh="$1"
   local alias_check_cmd tmpfile
@@ -19,9 +31,11 @@ run_alias_checks() {
 
   tmpfile=$(mktemp "${TMPDIR:-/tmp}/alias-test-XXXXXX.sh")
 
+  # Probe line first (needs interpolation); the heredoc below stays single-quoted
+  printf 'export DOTFILES_DIR=%q\n' "$DOTFILES_DIR" > "$tmpfile"
+
   # Pass shell-specific command via env var so heredoc stays single-quoted
-  cat > "$tmpfile" <<'SCRIPT'
-export DOTFILES_DIR="$HOME/dotfiles"
+  cat >> "$tmpfile" <<'SCRIPT'
 source "$DOTFILES_DIR/shell/common.sh"
 
 _check() {
@@ -42,8 +56,12 @@ _check "alias ... defined" "$ALIAS_CHECK ..."
 _check "alias .... defined" "$ALIAS_CHECK ...."
 
 # --- Dynamic Doppler project exports ---
+# Live-account checks need a populated projects cache; the background refresh
+# may not have completed yet on a fresh machine, so gate on the cache file.
+if [ -s "$HOME/.cache/doppler-projects.txt" ]; then
 _check "DOPPLER_PROJECT_INTEGRITY_STUDIO set" '[ "$DOPPLER_PROJECT_INTEGRITY_STUDIO" = "integrity-studio" ]'
 _check "DOPPLER_PROJECT_ANALYTICSBOT set" '[ "$DOPPLER_PROJECT_ANALYTICSBOT" = "analyticsbot" ]'
+fi
 _check "DOPPLER_CONFIG_DEFAULT is dev" '[ "$DOPPLER_CONFIG_DEFAULT" = "dev" ]'
 _check "DOPPLER_CONFIG_PRODUCTION is production" '[ "$DOPPLER_CONFIG_PRODUCTION" = "production" ]'
 
@@ -65,7 +83,7 @@ fi
 SCRIPT
 
   local output total=0
-  output=$(ALIAS_CHECK="$alias_check_cmd" timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  output=$(ALIAS_CHECK="$alias_check_cmd" run_timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
   rm -f "$tmpfile"
 
   while IFS= read -r line; do

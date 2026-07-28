@@ -1,8 +1,11 @@
 # Custom shell functions (non-Doppler utility functions)
 
 dirsize() {
+    # Anchor on the size field: BSD du right-pads it ("772M" has no leading
+    # space, " 12M" does) and GNU du doesn't pad at all, so a bare ' [0-9.]*[MG]'
+    # silently drops entries. Match from line start instead.
     find . -maxdepth 1 -type d -print0 | xargs -0 du -sh | \
-    grep -E ' [0-9.]*[MG]' | sort -h -k1
+    grep -E '^ *[0-9.]+[MG]' | sort -h -k1
 }
 
 

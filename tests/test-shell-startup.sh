@@ -8,6 +8,18 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+
+# GNU timeout isn't on stock macOS (Homebrew coreutils provides it); fall back
+# to gtimeout, then to running without a timeout.
+run_timeout() {
+  if command -v timeout >/dev/null 2>&1; then timeout "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$@"
+  else shift; "$@"
+  fi
+}
+
 # Run all checks for a shell in a single invocation.
 # Each assert previously spawned a new process that sourced common.sh,
 # triggering a Doppler network call every time. Batching into one invocation
@@ -27,7 +39,7 @@ run_shell_checks() {
   tmpfile=$(mktemp "${TMPDIR:-/tmp}/shell-test-XXXXXX.sh")
 
   # Write the probe (source line) separately to avoid unquoted heredoc expansion
-  printf 'export DOTFILES_DIR="$HOME/dotfiles"\nsource "$DOTFILES_DIR/shell/common.sh"\n\n' > "$tmpfile"
+  printf 'export DOTFILES_DIR=%q\nsource "$DOTFILES_DIR/shell/common.sh"\n\n' "$DOTFILES_DIR" > "$tmpfile"
 
   cat >> "$tmpfile" <<'SCRIPT'
 _check() {
@@ -56,7 +68,7 @@ _check "aliases.sh defines ll alias"                '$alias_check_cmd'
 CHECKS
 
   local output total=0
-  output=$(timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  output=$(run_timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
   rm -f "$tmpfile"
 
   while IFS= read -r line; do

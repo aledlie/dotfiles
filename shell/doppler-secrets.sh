@@ -15,8 +15,10 @@
 # bash shell sourcing this file gets load_doppler_cache, doppler_get, and the
 # doppler_cache_* helpers, but not those.
 #
-# Note: secrets with raw embedded newlines (e.g. PEM keys) are truncated by
-# command substitution. Escaped \n literals in JSON values are unaffected.
+# Note: values pass through jq @tsv (which escapes \ tab newline CR) and are
+# unescaped on load, so multi-line secrets (e.g. PEM keys) round-trip intact.
+# Reading one via $(secret X) still strips trailing newlines, as any command
+# substitution does.
 
 # ---------- Doppler constants ----------
 export CONFIG_DEV="dev"
@@ -30,10 +32,31 @@ export DOPPLER_CONFIG_PRODUCTION="$CONFIG_PRODUCTION"
 # Cache TTL for the background refresh of DOPPLER_PROJECT_* variables
 _DOPPLER_CACHE_TTL_SECONDS=3600
 
+# Env var alias -> Doppler key name, one ALIAS=KEY per line. Only non-identity
+# mappings are listed. This is the single source of truth: doppler_get resolves
+# through it here (so bash gets aliases too), and shell/zsh/doppler-secrets.zsh
+# derives both _DOPPLER_SECRET_NAMES and _DOPPLER_REVERSE_NAMES from it.
+_DOPPLER_SECRET_ALIASES='OTEL_INGEST_ROUTE=OBTOOL_INGEST_ROUTE
+OTEL_INGEST_URL=OBTOOL_INGEST_URL
+OTEL_INGEST_PREVIEW_URL=OBTOOL_INGEST_PREVIEW_URL
+OTEL_API_KEY=OBTOOL_API_KEY'
+
 # Validate identifier is a valid shell variable name
 # Pattern: starts with letter or underscore, followed by alphanumeric or underscore
 _is_valid_identifier() {
   [[ $1 =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]
+}
+
+# Resolve an env-var alias to its Doppler key name; prints the input unchanged
+# when no alias exists. Plain loop + case so it works on bash 3.2 (no assoc arrays).
+_doppler_resolve_key() {
+  local _pair
+  while IFS= read -r _pair; do
+    case "$_pair" in
+      "$1="*) printf '%s\n' "${_pair#*=}"; return 0 ;;
+    esac
+  done <<< "$_DOPPLER_SECRET_ALIASES"
+  printf '%s\n' "$1"
 }
 
 # Dynamically populate DOPPLER_PROJECT_* variables from doppler projects (with background refresh)
@@ -47,7 +70,14 @@ if command -v doppler >/dev/null 2>&1; then
 
     if [ -f "$_doppler_cache" ]; then
       while IFS= read -r _assignment; do
-        [ -z "$_assignment" ] && continue
+        # Only accept well-formed DOPPLER_PROJECT_* rows — the cache file is
+        # ordinary user-writable state; never export arbitrary NAME=VALUE
+        # lines (a corrupt/tampered line could set PATH etc. in every shell).
+        case "$_assignment" in
+          DOPPLER_PROJECT_*=*) ;;
+          *) continue ;;
+        esac
+        _is_valid_identifier "${_assignment%%=*}" || continue
         export "$_assignment"
       done < "$_doppler_cache"
     fi
@@ -67,7 +97,14 @@ if command -v doppler >/dev/null 2>&1; then
         (
           _new_cache=$(doppler projects --json 2>/dev/null | jq -r '.[] | "DOPPLER_PROJECT_\(.name | gsub("-";"_") | ascii_upcase)=\(.name)"')
           if [ -n "$_new_cache" ]; then
-            printf '%s\n' "$_new_cache" > "$_doppler_cache"
+            # Write-then-rename: a plain `>` truncates in place, so a shell
+            # starting mid-write could read a partial project list and keep it
+            # for the rest of its session. rename(2) is atomic within a dir.
+            _tmp_cache="$_doppler_cache.$$"
+            if printf '%s\n' "$_new_cache" > "$_tmp_cache" 2>/dev/null; then
+              mv -f "$_tmp_cache" "$_doppler_cache" 2>/dev/null
+            fi
+            rm -f "$_tmp_cache" 2>/dev/null
           fi
         ) &
         disown 2>/dev/null || true
@@ -84,8 +121,10 @@ DEFAULT_CONFIG="$CONFIG_DEV"
 
 # Load Doppler secrets into cache (both bash/zsh compatible)
 load_doppler_cache() {
-  local project="${1:-integrity-studio}"
-  local config="${2:-dev}"
+  # Defaults must match what the startup fetch at the bottom of this file passes,
+  # otherwise a bare `load_doppler_cache` silently targets a different project.
+  local project="${1:-$DEFAULT_PROJECT}"
+  local config="${2:-$DEFAULT_CONFIG}"
 
   if [ "${DOPPLER_CACHE_PROJECT:-}" = "$project" ] && [ "${DOPPLER_CACHE_CONFIG:-}" = "$config" ]; then
     return
@@ -137,8 +176,13 @@ load_doppler_cache() {
   fi
 
   DOPPLER_CACHE=()
+  local k v
   while IFS=$'\t' read -r k v; do
     [[ -n "$k" ]] || continue
+    # Undo @tsv escaping (\\ \t \n \r) so multi-line values round-trip.
+    # %b interprets exactly those; @tsv doubled every literal backslash, so
+    # no other %b escape can fire from original content.
+    printf -v v '%b' "$v"
     DOPPLER_CACHE[$k]="$v"
   done <<< "$parsed"
 
@@ -160,6 +204,8 @@ doppler_cache_info() {
 }
 
 # Read a doppler key from cache
+# Accepts either the Doppler key name or its env-var alias (see
+# _DOPPLER_SECRET_ALIASES) — same resolution zsh's `secret` does.
 # Returns exit 1 when key is missing and no default is provided.
 doppler_get() {
   local key="$1"
@@ -174,6 +220,8 @@ doppler_get() {
     printf 'doppler_get: key required\n' >&2
     return 1
   fi
+
+  key=$(_doppler_resolve_key "$key")
 
   [[ -n "${DOPPLER_CACHE[$key]+set}" ]] && {
     printf '%s\n' "${DOPPLER_CACHE[$key]}"
@@ -221,6 +269,9 @@ doppler_cache_debug() {
 unload_doppler_cache() {
   DOPPLER_CACHE=()
   unset DOPPLER_CACHE_PROJECT DOPPLER_CACHE_CONFIG
+  # Must mirror load_doppler_cache — otherwise _DOPPLER_ALL_SECRETS keeps the
+  # old key list and doppler_export_all warns once per stale key.
+  _rebuild_doppler_all_secrets
 }
 
 

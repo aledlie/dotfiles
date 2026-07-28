@@ -8,6 +8,18 @@ PASS=0
 FAIL=0
 TIMEOUT=30
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+
+# GNU timeout isn't on stock macOS (Homebrew coreutils provides it); fall back
+# to gtimeout, then to running without a timeout.
+run_timeout() {
+  if command -v timeout >/dev/null 2>&1; then timeout "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$@"
+  else shift; "$@"
+  fi
+}
+
 run_fn_checks() {
   local sh="$1"
   local fn_exists tmpfile
@@ -19,9 +31,11 @@ run_fn_checks() {
 
   tmpfile=$(mktemp "${TMPDIR:-/tmp}/fn-test-XXXXXX.sh")
 
+  # Probe line first (needs interpolation); the heredoc below stays single-quoted
+  printf 'export DOTFILES_DIR=%q\n' "$DOTFILES_DIR" > "$tmpfile"
+
   # Pass shell-specific command via env var so heredoc can stay single-quoted
-  cat > "$tmpfile" <<'SCRIPT'
-export DOTFILES_DIR="$HOME/dotfiles"
+  cat >> "$tmpfile" <<'SCRIPT'
 source "$DOTFILES_DIR/shell/common.sh"
 
 _check() {
@@ -96,7 +110,7 @@ _check "extract reports error for missing file" 'echo "$result" | grep -q "not a
 SCRIPT
 
   local output total=0
-  output=$(FN_EXISTS="$fn_exists" timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
+  output=$(FN_EXISTS="$fn_exists" run_timeout "$TIMEOUT" "$sh" "$tmpfile" </dev/null 2>/dev/null) || true
   rm -f "$tmpfile"
 
   while IFS= read -r line; do
