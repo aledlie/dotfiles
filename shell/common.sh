@@ -67,28 +67,44 @@ fi
 
 # ---------- dev dependency sanity ----------
 
-# Prepend to PATH only if the entry is not already present
+# Prepend to PATH, forcing position: an entry already present is MOVED to the
+# front rather than skipped.
+#
+# The previous guard only tested presence, so it could add a directory but never
+# reposition one. That made it unable to survive macOS login shells: this file is
+# sourced from zshenv, and /etc/zprofile's path_helper runs afterwards and hoists
+# /etc/paths to the front, demoting every entry below. Re-running the old helper
+# was a no-op — the entries were still *present* — so .local/bin, .cargo/bin,
+# $GOPATH/bin and .pub-cache/bin all sat below /usr/bin, and only pyenv was
+# rescued (by a separate `pyenv init` re-eval in zsh/zshrc).
 _path_prepend() {
-  case ":$PATH:" in
-    *":$1:"*) ;;
-    *) export PATH="$1:$PATH" ;;
-  esac
+  [ -d "$1" ] || return 0
+  PATH=":$PATH:"
+  PATH="${PATH//":$1:"/:}"
+  PATH="${PATH#:}"
+  PATH="${PATH%:}"
+  export PATH="$1:$PATH"
 }
 
-# add local bin to PATH
-_path_prepend "$HOME/.local/bin"
-
-# Dart/Flutter pub cache (Flutter installed via Homebrew)
-_path_prepend "$HOME/.pub-cache/bin"
+# Every PATH entry this repo owns, in ASCENDING priority — _path_prepend puts the
+# last call at the front. Grouped so macOS login shells can re-run the whole set
+# after path_helper; see the call in zsh/zshrc. Callers must have exported GOPATH
+# and PYENV_ROOT first (the body is only evaluated when invoked).
+_dotfiles_hoist_path() {
+  _path_prepend "$HOME/.local/bin"
+  _path_prepend "$HOME/.pub-cache/bin"
+  _path_prepend "$HOME/.cargo/bin"
+  _path_prepend "$GOPATH/bin"
+  _path_prepend "$PYENV_ROOT/bin"
+  _path_prepend "$PYENV_ROOT/shims"
+}
 
 # add rustup to PATH
 export RUSTUP_HOME="$HOME/.rustup"
 export CARGO_HOME="$HOME/.cargo"
-_path_prepend "$HOME/.cargo/bin"
 
 # add go to PATH
 export GOPATH="$HOME/code/go"
-_path_prepend "$GOPATH/bin"
 
 # Use nvm instead of brew default for node and typescript
 export NVM_DIR="$HOME/.nvm"
@@ -108,8 +124,10 @@ fi
 
 # Python via pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-[[ -d "$PYENV_ROOT/bin" ]] && _path_prepend "$PYENV_ROOT/bin"
-[[ -d "$PYENV_ROOT/shims" ]] && _path_prepend "$PYENV_ROOT/shims"
+
+# Now that GOPATH and PYENV_ROOT are set, lay down the full PATH. _path_prepend
+# skips directories that do not exist, so absent entries cost nothing.
+_dotfiles_hoist_path
 
 if command -v pyenv >/dev/null 2>&1; then
   _pyenv_shell=""
@@ -141,7 +159,12 @@ command -v direnv >/dev/null 2>&1 && {
 }
 
 
-unset -f _path_prepend
+# _path_prepend and _dotfiles_hoist_path deliberately stay defined. They used to
+# be unset here as hygiene, which left every later PATH repair to hand-roll its
+# own mechanism — zsh/zshrc grew three (a pmk filter using zsh array syntax, a
+# `pyenv init` re-eval, a `brew shellenv` block) for one job. Keeping the helper
+# available is what lets zsh/zshrc re-run the same ordering after path_helper
+# instead of reimplementing it.
 
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"
 [[ -f "$SHELL_DIR/functions.sh" ]] && source "$SHELL_DIR/functions.sh"
