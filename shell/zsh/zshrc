@@ -66,6 +66,19 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GI
 # Hugging Face Hub token from Doppler (silences huggingface_hub auth warnings).
 export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 
+# Hoist Homebrew: path_helper demotes /opt/homebrew/bin below /usr/bin the same
+# way it demotes the pyenv shims below, leaving Apple's /usr/bin/git stub first.
+# That stub is a re-exec wrapper and costs ~8ms to start against ~3ms for the
+# real binary, which every git-spawning hook pays. bash_profile already does
+# this; zsh was the gap.
+#
+# Must precede the pyenv re-hoist: brew ships its own python3, so prepending
+# Homebrew after pyenv would shadow the shims — and this machine needs
+# pyenv-built pythons (brew's are broken by the libexpat ABI on macOS 26).
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Re-hoist pyenv shims: common.sh prepends them at zshenv time, but on macOS
 # login shells /etc/zprofile's path_helper demotes them below /usr/bin.
 # Re-run the cached init (falls back to a live init if the cache is absent).
