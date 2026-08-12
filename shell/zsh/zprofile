@@ -3,5 +3,16 @@
 
 # zshrc is sourced automatically by zsh for interactive shells; no manual source needed
 
+# Repair PATH after /etc/zprofile's path_helper, which hoists /etc/paths to the
+# front and demotes everything zshenv laid down. This is the right file for it:
+# path_helper is invoked from /etc/zprofile and nowhere else, so only LOGIN shells
+# are affected, and ~/.zprofile is the first file that runs after it. Doing it in
+# zshrc instead made every interactive shell repair damage that only login shells
+# ever took.
+#
+# Non-login shells need no repair at all — _path_prepend forces position, so the
+# zshenv pass already yields the intended order, whatever PATH was inherited.
+_dotfiles_hoist_path
+
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh"

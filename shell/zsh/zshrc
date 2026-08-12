@@ -81,20 +81,13 @@ export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 # added after this point too, including pyenv init and direnv below.
 typeset -U path
 
-# Re-lay the repo's PATH entries. common.sh ran at zshenv time, before
-# /etc/zprofile's path_helper hoisted /etc/paths to the front and demoted all of
-# them below /usr/bin. _path_prepend now forces position, so re-running the same
-# function restores the intended order rather than no-oping on "already present".
-# Ascending priority is defined once, in common.sh — not duplicated here.
-_dotfiles_hoist_path
-
-# Re-hoist pyenv shims: common.sh prepends them at zshenv time, but on macOS
-# login shells /etc/zprofile's path_helper demotes them below /usr/bin.
-# Re-run the cached init (falls back to a live init if the cache is absent).
-if command -v pyenv >/dev/null 2>&1; then
-  source "${DOTFILES_CACHE_DIR:-$HOME/.cache/dotfiles}/pyenv-init.zsh.sh" 2>/dev/null \
-    || eval "$(pyenv init -)"
-fi
+# PATH repair moved to zsh/zprofile — path_helper only runs for login shells, so
+# that is where the damage happens and the first place that can undo it.
+#
+# The pyenv re-hoist that used to sit here went with it, and is not replaced:
+# _dotfiles_hoist_path already puts $PYENV_ROOT/shims at the front, which was the
+# only thing that block achieved. `pyenv init` itself still runs once at zshenv
+# time via common.sh, so the pyenv shell function and PYENV_SHELL are unaffected.
 
 # No direnv hook here: common.sh already installs it for whichever shell is
 # running. direnv guards against double registration, so the second eval only
