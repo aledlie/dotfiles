@@ -36,6 +36,18 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 export OTEL_CONFIG_DIR="$HOME/.claude"
 
+# OTLP ingest endpoint for the detached telemetry shipper (hooks/lib/span-shipper.ts).
+# Set here, unconditionally, because neither of the other two sources reaches the
+# hook processes that actually ship: settings.json `env` does not propagate to them,
+# and ~/.claude/.envrc only applies under directories direnv has loaded. Without it
+# shipTelemetry short-circuits to `outcome: "no-endpoint"` and writes nothing --
+# silently, because metrics are the only signal that depends on it (the MCP server
+# exports its own spans and logs inline, so a dead shipper still looks healthy).
+# Static, non-secret value: auth is separate and already satisfied by OBTOOL_API_KEY,
+# which hasOtlpAuth() accepts on its own, so no credential belongs in this file.
+# Stalled 2026-07-27 -> 08-01 this way; ~159 MB of metrics went unshipped.
+export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_EXPORTER_OTLP_ENDPOINT:-https://ingest.integritystudio.ai}"
+
 zmodload zsh/datetime
 
 # Sync OBTOOL API key (throttled to once per hour)
