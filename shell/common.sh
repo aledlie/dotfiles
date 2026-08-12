@@ -100,14 +100,23 @@ export DOTFILES_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles"
 
 # Load dircolors if available (GNU coreutils, not on macOS by default).
 # Cache the eval output; regenerate when the source file changes.
-if [[ -f "$SHELL_DIR/dircolors" ]] && command -v dircolors >/dev/null 2>&1; then
+#
+# Accept the g-prefixed name too. Homebrew's coreutils installs GNU tools as
+# gdircolors/gls and only exposes the unprefixed names through a gnubin shim dir
+# that is deliberately not on PATH (it would shadow every BSD counterpart). So
+# `command -v dircolors` alone never matched on this machine and the whole block
+# was skipped in silence — LS_COLORS went unset, and this repo's dircolors file
+# had no effect on eza, which is what `ls` actually resolves to (see aliases.sh).
+_dircolors_bin="$(command -v dircolors || command -v gdircolors || true)"
+if [[ -f "$SHELL_DIR/dircolors" && -n "$_dircolors_bin" ]]; then
   _dircolors_cache="$DOTFILES_CACHE_DIR/dircolors.sh"
   if [[ ! -s "$_dircolors_cache" || "$SHELL_DIR/dircolors" -nt "$_dircolors_cache" ]]; then
-    dircolors "$SHELL_DIR/dircolors" > "$_dircolors_cache"
+    "$_dircolors_bin" "$SHELL_DIR/dircolors" > "$_dircolors_cache"
   fi
   source "$_dircolors_cache"
   unset _dircolors_cache
 fi
+unset _dircolors_bin
 
 # helpful aliases & colors
 [[ -f "$SHELL_DIR/aliases.sh" ]] && source "$SHELL_DIR/aliases.sh"
