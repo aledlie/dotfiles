@@ -60,6 +60,14 @@ unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 # Drop stale /opt/pmk path entries
 path=(${path:#/opt/pmk*})
 
+# Warm the Doppler cache once, in THIS shell, before the two reads below.
+# `secret` populates it lazily, but each $(...) below is a subshell: the fetch
+# would happen inside the fork and die with it, so both reads would pay their own
+# network round-trip and the parent would still hold nothing. One call here keeps
+# an interactive shell at exactly one fetch — the same as the old eager load —
+# while non-interactive shells, which never reach zshrc, pay none.
+_doppler_ensure_cache
+
 # Re-alias our Doppler GITHUB_TOKEN to the name the upstream github MCP plugin requires.
 export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GITHUB_TOKEN 2>/dev/null || gh auth token 2>/dev/null)}"
 

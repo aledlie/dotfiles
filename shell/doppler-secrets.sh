@@ -1,7 +1,8 @@
 # Doppler secret registry — provides project variables, cache loading, and secret access.
 #
-# Secrets for the default project/config are fetched into DOPPLER_CACHE at
-# shell start (see the bottom of this file); the helpers below read that cache.
+# Secrets for the default project/config are fetched into DOPPLER_CACHE lazily,
+# on the first read by any helper below (see _doppler_ensure_cache), not at shell
+# start — the fetch is a synchronous network call and most shells never read one.
 #
 # Usage:
 #   load_doppler_cache PROJECT CONFIG           # load secrets into DOPPLER_CACHE
@@ -196,8 +197,42 @@ load_doppler_cache() {
 # (bash parser can't handle ${(@k)...} syntax, even inside a function body.)
 _rebuild_doppler_all_secrets() { :; }
 
+# Populate DOPPLER_CACHE on first read instead of at shell start.
+#
+# Sourcing this file used to call load_doppler_cache unconditionally, which runs
+# a synchronous `doppler secrets download` — measured 241-676ms, network-bound.
+# Nothing carried that across a process boundary: DOPPLER_CACHE is a shell
+# associative array, and DOPPLER_CACHE_PROJECT/_CONFIG are `typeset -g`, global
+# but NOT exported. So every new shell paid it again, including every `zsh -c`
+# in a script that never reads a secret at all.
+#
+# The latch records the attempt, not the outcome. Without it a failed download
+# (offline, expired auth) would retry on every subsequent `secret` call, turning
+# one slow shell into a uniformly slow one. Callers that want a retry after
+# fixing the cause can run `load_doppler_cache` directly, as the message says.
+#
+# CAVEAT for scripts: `v=$(secret X)` runs in a subshell, so the fetch it triggers
+# dies with that subshell and the parent still holds nothing. Reading N secrets
+# that way costs N fetches — measured 831ms for three, against 327ms for one
+# `_doppler_ensure_cache` followed by the same three. Call this function once up
+# front if a script reads more than one secret; zsh/zshrc does exactly that.
+_doppler_ensure_cache() {
+  [ -n "${_DOPPLER_LOAD_ATTEMPTED:-}" ] && return 0
+  _DOPPLER_LOAD_ATTEMPTED=1
+  command -v doppler >/dev/null 2>&1 || return 0
+  # Skipped on bash <4: load_doppler_cache needs associative arrays, and the
+  # guard keeps macOS system-bash startup quiet.
+  if [ -n "${ZSH_VERSION:-}" ] || [ "${BASH_VERSINFO[0]:-0}" -ge 4 ]; then
+    # Errors are intentionally not suppressed — load_doppler_cache prints
+    # actionable diagnostics (auth, jq, empty parse) a generic warning would mask.
+    load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" || \
+      printf '[dotfiles] doppler cache not loaded; run `load_doppler_cache` after fixing the above\n' >&2
+  fi
+}
+
 # Check current doppler cache status
 doppler_cache_info() {
+  _doppler_ensure_cache
   echo "Project: ${DOPPLER_CACHE_PROJECT:-none}"
   echo "Config:  ${DOPPLER_CACHE_CONFIG:-none}"
   echo "Secrets: ${#DOPPLER_CACHE[@]}"
@@ -208,6 +243,7 @@ doppler_cache_info() {
 # _DOPPLER_SECRET_ALIASES) — same resolution zsh's `secret` does.
 # Returns exit 1 when key is missing and no default is provided.
 doppler_get() {
+  _doppler_ensure_cache
   local key="$1"
   local default="${2-}"
 
@@ -237,6 +273,7 @@ doppler_get() {
 }
 
 doppler_cache_has() {
+  _doppler_ensure_cache
   local key="$1"
 
   if [[ -n "${DOPPLER_CACHE[$key]+set}" ]]; then
@@ -280,16 +317,8 @@ if [[ -n "${ZSH_VERSION:-}" ]] && [[ -f "${SHELL_DIR:-$HOME/dotfiles/shell}/zsh/
   source "${SHELL_DIR:-$HOME/dotfiles/shell}/zsh/doppler-secrets.zsh"
 fi
 
-# Fetch secrets for the default project/config at shell start so secret/
-# doppler_get work immediately. Skipped on bash <4 (load_doppler_cache needs
-# associative arrays; the guard keeps macOS system bash startup quiet).
-# Errors from load_doppler_cache are intentionally NOT suppressed — the function
-# prints actionable diagnostics (auth, jq, empty parse) that a generic fallback
-# warning would mask. Functions are defined regardless so the user can retry
-# manually after fixing the underlying issue.
-if command -v doppler >/dev/null 2>&1; then
-  if [ -n "${ZSH_VERSION:-}" ] || [ "${BASH_VERSINFO[0]:-0}" -ge 4 ]; then
-    load_doppler_cache "$DEFAULT_PROJECT" "$DEFAULT_CONFIG" || \
-      printf '[dotfiles] doppler cache not loaded; run `load_doppler_cache` after fixing the above\n' >&2
-  fi
-fi
+# No fetch at shell start. Every reader calls _doppler_ensure_cache first, so the
+# `doppler secrets download` happens on the first secret actually read and not at
+# all in a shell that reads none — which is most of them, every `zsh -c` in a
+# script included. See _doppler_ensure_cache for why nothing could be carried
+# across a process boundary to make the old eager load a one-time cost.

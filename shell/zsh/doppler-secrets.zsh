@@ -44,6 +44,7 @@ _DOPPLER_CONFIGS=("$CONFIG_DEV" "$CONFIG_STAGING" "$CONFIG_PRODUCTION")
 # present with an empty value prints nothing and returns 0. (doppler_export, by
 # contrast, treats an empty value as not-found.)
 secret() {
+  _doppler_ensure_cache
   if ! _is_valid_identifier "$1"; then
     printf 'secret: invalid identifier: %s\n' "$1" >&2
     return 1
@@ -59,6 +60,7 @@ secret() {
 
 # Export specific secrets into the environment
 doppler_export() {
+  _doppler_ensure_cache
   local var key val failed=0
   for var in "$@"; do
     if ! _is_valid_identifier "$var"; then
@@ -83,6 +85,7 @@ doppler_export() {
 # Export all cached secrets (backward-compat escape hatch)
 # Exports each Doppler key under its env alias if one exists, otherwise under its own name.
 doppler_export_all() {
+  _doppler_ensure_cache
   local failed=0
   local doppler_key env_name val
   for doppler_key in "${_DOPPLER_ALL_SECRETS[@]}"; do
