@@ -66,6 +66,13 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GI
 # Hugging Face Hub token from Doppler (silences huggingface_hub auth warnings).
 export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 
+# Keep $path unique. zsh ties it to $PATH and, on a duplicate, keeps the FIRST
+# occurrence — so this both dedupes and preserves priority. It is a safety net,
+# not the mechanism: _path_prepend still removes before prepending, because
+# common.sh is shared with bash, which has no equivalent. Applies to everything
+# added after this point too, including pyenv init and direnv below.
+typeset -U path
+
 # Re-lay the repo's PATH entries. common.sh ran at zshenv time, before
 # /etc/zprofile's path_helper hoisted /etc/paths to the front and demoted all of
 # them below /usr/bin. _path_prepend now forces position, so re-running the same
