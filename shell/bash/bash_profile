@@ -2,11 +2,10 @@
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.pre.bash"
 # Bash profile
 
-# macOS specific: Add Homebrew to PATH. Must precede bashrc, whose common.sh
-# tool detection (pyenv, direnv, doppler, dircolors) needs brew bins on PATH.
-if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+# Homebrew is no longer hoisted here. common.sh does it, from _dotfiles_hoist_path
+# at the top of the file — ahead of the same tool detection (pyenv, direnv,
+# doppler, dircolors) this block used to run before, and shared with zsh instead
+# of being implemented once per shell.
 
 # Load bashrc if it exists
 [[ -f ~/.bashrc ]] && source ~/.bashrc

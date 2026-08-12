@@ -11,6 +11,62 @@ case "$OSTYPE" in
   *)        export PLATFORM="$OSTYPE" ;;
 esac
 
+# ---------- PATH ----------
+# Laid down here, before everything below that resolves a tool through PATH: the
+# GNU-ls probe, dircolors, pyenv and direnv all do. bash/bash_profile used to
+# hoist Homebrew itself for exactly that reason, before sourcing bashrc; doing it
+# here instead means bash and zsh share one implementation rather than two.
+
+# Prepend to PATH, forcing position: an entry already present is MOVED to the
+# front rather than skipped.
+#
+# The previous guard only tested presence, so it could add a directory but never
+# reposition one. That made it unable to survive macOS login shells: this file is
+# sourced from zshenv, and /etc/zprofile's path_helper runs afterwards and hoists
+# /etc/paths to the front, demoting every entry below. Re-running the old helper
+# was a no-op — the entries were still *present* — so .local/bin, .cargo/bin,
+# $GOPATH/bin and .pub-cache/bin all sat below /usr/bin, and only pyenv was
+# rescued (by a separate `pyenv init` re-eval in zsh/zshrc).
+_path_prepend() {
+  [ -d "$1" ] || return 0
+  PATH=":$PATH:"
+  PATH="${PATH//":$1:"/:}"
+  PATH="${PATH#:}"
+  PATH="${PATH%:}"
+  export PATH="$1:$PATH"
+}
+
+# Every PATH entry this repo owns, in ASCENDING priority — _path_prepend puts the
+# last call at the front. Grouped so macOS login shells can re-run the whole set
+# after path_helper; see the call in zsh/zshrc.
+_dotfiles_hoist_path() {
+  _path_prepend "$HOME/.local/bin"
+  _path_prepend "$HOME/.pub-cache/bin"
+  _path_prepend "$HOME/.cargo/bin"
+  _path_prepend "$GOPATH/bin"
+  # Homebrew. `brew shellenv` sets HOMEBREW_PREFIX/MANPATH/INFOPATH/fpath as well
+  # as PATH, so it is evaluated rather than hand-prepended — but it spawns brew and
+  # costs ~71ms, and this function is deliberately re-run on macOS login shells.
+  # So: evaluate once, then reposition the bin dirs cheaply on every later call.
+  # Must precede the pyenv shims below — brew ships its own python3, and this
+  # machine needs pyenv-built interpreters (brew's are broken by the libexpat ABI
+  # on macOS 26).
+  if [ -z "${HOMEBREW_PREFIX:-}" ] && [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+  _path_prepend "${HOMEBREW_PREFIX:-/opt/homebrew}/sbin"
+  _path_prepend "${HOMEBREW_PREFIX:-/opt/homebrew}/bin"
+  _path_prepend "$PYENV_ROOT/bin"
+  _path_prepend "$PYENV_ROOT/shims"
+}
+
+export RUSTUP_HOME="$HOME/.rustup"
+export CARGO_HOME="$HOME/.cargo"
+export GOPATH="$HOME/code/go"
+export PYENV_ROOT="$HOME/.pyenv"
+
+_dotfiles_hoist_path
+
 # ---------- otel config  ----------
 export OTEL_DEBUG=1
 export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
@@ -67,45 +123,6 @@ fi
 
 # ---------- dev dependency sanity ----------
 
-# Prepend to PATH, forcing position: an entry already present is MOVED to the
-# front rather than skipped.
-#
-# The previous guard only tested presence, so it could add a directory but never
-# reposition one. That made it unable to survive macOS login shells: this file is
-# sourced from zshenv, and /etc/zprofile's path_helper runs afterwards and hoists
-# /etc/paths to the front, demoting every entry below. Re-running the old helper
-# was a no-op — the entries were still *present* — so .local/bin, .cargo/bin,
-# $GOPATH/bin and .pub-cache/bin all sat below /usr/bin, and only pyenv was
-# rescued (by a separate `pyenv init` re-eval in zsh/zshrc).
-_path_prepend() {
-  [ -d "$1" ] || return 0
-  PATH=":$PATH:"
-  PATH="${PATH//":$1:"/:}"
-  PATH="${PATH#:}"
-  PATH="${PATH%:}"
-  export PATH="$1:$PATH"
-}
-
-# Every PATH entry this repo owns, in ASCENDING priority — _path_prepend puts the
-# last call at the front. Grouped so macOS login shells can re-run the whole set
-# after path_helper; see the call in zsh/zshrc. Callers must have exported GOPATH
-# and PYENV_ROOT first (the body is only evaluated when invoked).
-_dotfiles_hoist_path() {
-  _path_prepend "$HOME/.local/bin"
-  _path_prepend "$HOME/.pub-cache/bin"
-  _path_prepend "$HOME/.cargo/bin"
-  _path_prepend "$GOPATH/bin"
-  _path_prepend "$PYENV_ROOT/bin"
-  _path_prepend "$PYENV_ROOT/shims"
-}
-
-# add rustup to PATH
-export RUSTUP_HOME="$HOME/.rustup"
-export CARGO_HOME="$HOME/.cargo"
-
-# add go to PATH
-export GOPATH="$HOME/code/go"
-
 # Use nvm instead of brew default for node and typescript
 export NVM_DIR="$HOME/.nvm"
 _nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
@@ -122,13 +139,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -t 0 ]]; then
 fi
 
 
-# Python via pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-
-# Now that GOPATH and PYENV_ROOT are set, lay down the full PATH. _path_prepend
-# skips directories that do not exist, so absent entries cost nothing.
-_dotfiles_hoist_path
-
+# Python via pyenv (PYENV_ROOT and the shims are set up in the PATH section above)
 if command -v pyenv >/dev/null 2>&1; then
   _pyenv_shell=""
   [[ -n "${ZSH_VERSION:-}" ]] && _pyenv_shell="zsh"

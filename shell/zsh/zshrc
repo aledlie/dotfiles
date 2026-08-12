@@ -73,19 +73,6 @@ export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 # Ascending priority is defined once, in common.sh — not duplicated here.
 _dotfiles_hoist_path
 
-# Hoist Homebrew: path_helper demotes /opt/homebrew/bin below /usr/bin the same
-# way it demotes the pyenv shims below, leaving Apple's /usr/bin/git stub first.
-# That stub is a re-exec wrapper and costs ~8ms to start against ~3ms for the
-# real binary, which every git-spawning hook pays. bash_profile already does
-# this; zsh was the gap.
-#
-# Must precede the pyenv re-hoist: brew ships its own python3, so prepending
-# Homebrew after pyenv would shadow the shims — and this machine needs
-# pyenv-built pythons (brew's are broken by the libexpat ABI on macOS 26).
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
 # Re-hoist pyenv shims: common.sh prepends them at zshenv time, but on macOS
 # login shells /etc/zprofile's path_helper demotes them below /usr/bin.
 # Re-run the cached init (falls back to a live init if the cache is absent).
@@ -94,5 +81,7 @@ if command -v pyenv >/dev/null 2>&1; then
     || eval "$(pyenv init -)"
 fi
 
-# direnv hook
-eval "$(direnv hook zsh)"
+# No direnv hook here: common.sh already installs it for whichever shell is
+# running. direnv guards against double registration, so the second eval only
+# ever cost an extra subprocess per shell start — but it read as though one of
+# the two were load-bearing.
