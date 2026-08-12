@@ -176,13 +176,24 @@ if command -v pyenv >/dev/null 2>&1; then
   if [[ -n "$_pyenv_shell" ]]; then
     _pyenv_bin="$(command -v pyenv)"
     _pyenv_cache="$DOTFILES_CACHE_DIR/pyenv-init.$_pyenv_shell.sh"
-    # Regenerate when pyenv binary is newer than cache.
-    if [[ ! -s "$_pyenv_cache" || "$_pyenv_bin" -nt "$_pyenv_cache" ]]; then
-      _pyenv_init_out="$(pyenv init - "$_pyenv_shell")"
-      # Avoid startup warnings when shims are not writable.
-      if [[ -d "$PYENV_ROOT/shims" && ! -w "$PYENV_ROOT/shims" ]]; then
-        _pyenv_init_out="$(printf '%s\n' "$_pyenv_init_out" | grep -v '^command pyenv rehash$')"
-      fi
+    # Regenerate when the pyenv binary changes, OR when this file does. The flags
+    # below are baked into the generated output, so editing them has to invalidate
+    # the cache; keying on the binary alone would leave a stale cache silently in
+    # place across exactly that kind of change.
+    if [[ ! -s "$_pyenv_cache" || "$_pyenv_bin" -nt "$_pyenv_cache" \
+          || "$SHELL_DIR/common.sh" -nt "$_pyenv_cache" ]]; then
+      # --no-rehash: `pyenv init -` emits `command pyenv rehash`, which rebuilds
+      # every shim on each shell start — 66ms of this block's 79.5ms, 83% of it.
+      # Rehash is only needed after a new interpreter or a package that installs a
+      # console script, and `pyenv install` rehashes on its own.
+      #
+      # TRADE-OFF: after `pip install` of something with an entry point, its shim
+      # will not exist until you run `pyenv rehash` yourself.
+      #
+      # This also replaces a grep that stripped the same line, but only when the
+      # shims dir was unwritable — warning suppression that left the 66ms in place
+      # whenever it was writable, which is the normal case and was so here.
+      _pyenv_init_out="$(pyenv init - --no-rehash "$_pyenv_shell")"
       printf '%s\n' "$_pyenv_init_out" > "$_pyenv_cache"
       unset _pyenv_init_out
     fi
