@@ -132,11 +132,31 @@ unset _dircolors_bin
 
 # ---------- dev dependency sanity ----------
 
-# Use nvm instead of brew default for node and typescript
+# nvm, loaded on first use rather than at shell start.
+#
+# Sourcing nvm.sh costs ~82ms — the largest single item in shell startup — and
+# with --no-use it activates no version, so `node` and `npm` resolve to Homebrew
+# regardless (verified: both are /opt/homebrew/bin, despite nvm having v24.14.0
+# and v24.19.0 installed and a `default` alias set). The old comment here claimed
+# "use nvm instead of brew default for node", which --no-use has never actually
+# done. That 82ms therefore bought only the `nvm` function itself.
+#
+# So define a stub that replaces itself on first call. --no-use is preserved, so
+# invoking nvm still does not silently change which node is on PATH; run
+# `nvm use <version>` to do that deliberately. Nothing else depends on nvm.sh
+# being sourced eagerly — no .nvmrc chpwd hook is installed, and no other file in
+# this repo references it.
+#
+# _NVM_SH is deliberately NOT unset: the stub dereferences it when it fires.
 export NVM_DIR="$HOME/.nvm"
-_nvm_sh="/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "$_nvm_sh" ] && . "$_nvm_sh" --no-use
-unset _nvm_sh
+_NVM_SH="/opt/homebrew/opt/nvm/nvm.sh"
+if [ -s "$_NVM_SH" ]; then
+  nvm() {
+    unset -f nvm            # drop the stub first, so the real one can define itself
+    . "$_NVM_SH" --no-use
+    nvm "$@"
+  }
+fi
 
 # chruby configuration - auto-switch Ruby versions (skip in non-interactive shells)
 if [[ "$OSTYPE" == "darwin"* ]] && [[ -t 0 ]]; then
