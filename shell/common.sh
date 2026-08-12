@@ -172,11 +172,30 @@ if command -v pyenv >/dev/null 2>&1; then
   unset _pyenv_shell
 fi
 
-command -v direnv >/dev/null 2>&1 && {
-  if [[ -n "${ZSH_VERSION:-}" ]]; then eval "$(direnv hook zsh)"
-  elif [[ -n "${BASH_VERSION:-}" ]]; then eval "$(direnv hook bash)"
+# direnv hook, cached like dircolors and pyenv init above — `direnv hook <shell>`
+# spawns direnv (~7ms) to emit text that only changes when direnv itself does.
+# Keyed on the binary's mtime, the same invalidation pyenv-init uses.
+#
+# The generated hook hard-codes the absolute path of the direnv that produced it,
+# so a cache built against a different install would keep calling the old one.
+# Only one direnv exists here (/opt/homebrew/bin), and a brew upgrade rewrites the
+# binary and so invalidates this. If a second install ever appears on PATH, key
+# the cache on the resolved path rather than just its mtime.
+if command -v direnv >/dev/null 2>&1; then
+  _direnv_shell=""
+  [[ -n "${ZSH_VERSION:-}" ]] && _direnv_shell="zsh"
+  [[ -n "${BASH_VERSION:-}" ]] && _direnv_shell="bash"
+  if [[ -n "$_direnv_shell" ]]; then
+    _direnv_bin="$(command -v direnv)"
+    _direnv_cache="$DOTFILES_CACHE_DIR/direnv-hook.$_direnv_shell.sh"
+    if [[ ! -s "$_direnv_cache" || "$_direnv_bin" -nt "$_direnv_cache" ]]; then
+      direnv hook "$_direnv_shell" > "$_direnv_cache"
+    fi
+    source "$_direnv_cache"
+    unset _direnv_bin _direnv_cache
   fi
-}
+  unset _direnv_shell
+fi
 
 
 # _path_prepend and _dotfiles_hoist_path deliberately stay defined. They used to
