@@ -72,7 +72,14 @@ export OTEL_DEBUG=1
 export OTEL_EXPORTER_OTLP_PROTOCOL="http/protobuf"
 export OTEL_EXPORTER_OTLP_COMPRESSION="gzip"
 export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
-export OTEL_SERVICE_NAME="claude-code-hooks"
+# OTEL_SERVICE_NAME is deliberately NOT exported here. A global export hands
+# the file shipper's identity ("claude-code-hooks") to every process on the
+# machine — and traces from that exact service name are the ONLY signal that
+# proves the shipper is alive (see ~/.claude/CLAUDE.md), so any other process
+# inheriting it corrupts stall detection silently. The hooks don't need the
+# export: hooks/lib/service-identity.ts falls back to the same name in code.
+# Anything else that needs a service name must set it in its own env
+# (e.g. the observability-toolkit MCP server pins its own in ~/.claude.json).
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
 
 # ---------- Sentry ----------

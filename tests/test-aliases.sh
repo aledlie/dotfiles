@@ -68,7 +68,9 @@ _check "DOPPLER_CONFIG_PRODUCTION is production" '[ "$DOPPLER_CONFIG_PRODUCTION"
 # --- OTEL static exports ---
 _check "OTEL_EXPORTER_OTLP_PROTOCOL set" '[ "$OTEL_EXPORTER_OTLP_PROTOCOL" = "http/protobuf" ]'
 _check "OTEL_EXPORTER_OTLP_COMPRESSION set" '[ "$OTEL_EXPORTER_OTLP_COMPRESSION" = "gzip" ]'
-_check "OTEL_SERVICE_NAME set" '[ "$OTEL_SERVICE_NAME" = "claude-code-hooks" ]'
+# Guard, not export: a global OTEL_SERVICE_NAME hands the file shipper's
+# identity to every process and corrupts shipper-stall detection (2026-08-13).
+_check "OTEL_SERVICE_NAME not exported" '[ -z "$OTEL_SERVICE_NAME" ]'
 
 # --- Sentry static exports ---
 _check "SENTRY_DISPLAY_NAME set" '[ "$SENTRY_DISPLAY_NAME" = "integrity" ]'
