@@ -86,6 +86,9 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-$(secret GI
 # Hugging Face Hub token from Doppler (silences huggingface_hub auth warnings).
 export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 
+# AgentMail API key from Doppler.
+export AGENTMAIL_API_KEY="${AGENTMAIL_API_KEY:-$(secret AGENTMAIL_API_KEY 2>/dev/null)}"
+
 # Keep $path unique. zsh ties it to $PATH and, on a duplicate, keeps the FIRST
 # occurrence — so this both dedupes and preserves priority. It is a safety net,
 # not the mechanism: _path_prepend still removes before prepending, because
