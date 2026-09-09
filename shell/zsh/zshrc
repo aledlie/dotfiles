@@ -89,6 +89,20 @@ export HF_TOKEN="${HF_TOKEN:-$(secret HF_TOKEN 2>/dev/null)}"
 # AgentMail API key from Doppler.
 export AGENTMAIL_API_KEY="${AGENTMAIL_API_KEY:-$(secret AGENTMAIL_API_KEY 2>/dev/null)}"
 
+# LLM-as-Judge key from Doppler. Deliberately NOT exported as ANTHROPIC_API_KEY:
+# that name is also read by Claude Code itself, and setting it would switch the
+# CLI off its subscription login onto API-key billing. The quality-evaluation
+# hook reads this name first (hooks/handlers/stop-quality-evaluation.ts).
+export LLM_JUDGE_ANTHROPIC_KEY="${LLM_JUDGE_ANTHROPIC_KEY:-$(secret LLM_JUDGE_ANTHROPIC_KEY 2>/dev/null)}"
+
+# xAI key from Doppler, for the LLM-as-Judge cross-family arm (AA3 Gate 3b:
+# does a judge sharing the primary model's family still detect bad output?).
+# Unprefixed name is safe here — nothing else in this environment reads it — and
+# the judge accepts LLM_JUDGE_XAI_KEY first if you ever need to scope it.
+# Hooks are spawned per event and inherit only the shell env, so this must be
+# exported before the CLI starts; settings.json `env` does not reach hooks.
+export XAI_API_KEY="${XAI_API_KEY:-$(secret XAI_API_KEY 2>/dev/null)}"
+
 # Keep $path unique. zsh ties it to $PATH and, on a duplicate, keeps the FIRST
 # occurrence — so this both dedupes and preserves priority. It is a safety net,
 # not the mechanism: _path_prepend still removes before prepending, because
