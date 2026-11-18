@@ -16,10 +16,5 @@ export SHELL_DIR="$DOTFILES_DIR/shell"
 # Platform detection lives in install.sh (detect_arch/detect_ostype); at runtime
 # common.sh sets $PLATFORM, the only platform variable the shell config consumes.
 
-# Disable kiro-cli-term (figterm) PTY wrapper to prevent inline completion parse errors with pipes
-# Fixes: "(eval):486: parse error near '|'" caused by figterm v1.28.1 misidentifying programmatic
-# commands as user input and triggering zsh completion on pipe characters
-export SHOULD_QTERM_LAUNCH=1
-
 # Load common shell configuration shared with bash
 [[ -f "$SHELL_DIR/common.sh" ]] && source "$SHELL_DIR/common.sh"

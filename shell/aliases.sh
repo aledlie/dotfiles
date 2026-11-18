@@ -80,7 +80,6 @@ alias home="cd ~"
 alias -- -="cd -"
 
 # Shortcuts
-alias dropbox="cd ~/Dropbox\ \(Personal\)"
 alias downloads="cd ~/Downloads"
 alias desktop="cd ~/Desktop"
 alias code="cd ~/code"
@@ -89,11 +88,11 @@ alias h="history"
 # Common project paths
 # (named cdjobs, not jobs — `jobs` would shadow the job-control builtin)
 alias cdjobs="cd ~/code/jobs"
-alias integrity-ai="cd ~/code/is-public-sites/IntegrityStudioLandingPage"
+alias integrity-ai="cd ~/code/is-public-sites/IntegrityLandingPage"
 alias obtool="cd ~/.claude/mcp-servers/observability-toolkit"
 alias obtool-ui="cd ~/.claude/mcp-servers/observability-toolkit/dashboard"
 alias tcad="cd ~/code/is-public-sites/tcad-scraper"
-alias blog="cd ~/code/PersonalSite"
+alias blog="cd ~/code/personal-site"
 alias reports="cd ~/reports"
 alias ast="cd ~/code/ast-grep-mcp"
 
@@ -152,7 +151,6 @@ if [[ "$OSTYPE" == darwin* ]]; then
     alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
 
     # Network monitoring
-    alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
     httpdump() { sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E 'Host\: .*|GET /.*'; }
 
     # Trash and system logs

@@ -69,9 +69,6 @@ unset _STAMP _STAMP_MTIME _SYNC_SCRIPT
 # Load zsh prompt customization (from the repo, matching bashrc)
 [[ -f "$SHELL_DIR/zsh/prompt.zsh" ]] && source "$SHELL_DIR/zsh/prompt.zsh"
 
-# Drop stale /opt/pmk path entries
-path=(${path:#/opt/pmk*})
-
 # Warm the Doppler cache once, in THIS shell, before the two reads below.
 # `secret` populates it lazily, but each $(...) below is a subshell: the fetch
 # would happen inside the fork and die with it, so both reads would pay their own
