@@ -175,6 +175,10 @@ if [[ "$OSTYPE" == "darwin"* ]] && [[ -t 0 ]]; then
 fi
 
 
+# pipx builds venvs on this interpreter unless given --python. Its own default is
+# the Homebrew python it runs on, which fails to import pyexpat on macOS 26.
+export PIPX_DEFAULT_PYTHON="$PYENV_ROOT/versions/3.14.0/bin/python3"
+
 # Python via pyenv (PYENV_ROOT and the shims are set up in the PATH section above)
 if command -v pyenv >/dev/null 2>&1; then
   _pyenv_shell=""
