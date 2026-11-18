@@ -103,12 +103,13 @@ export LLM_JUDGE_ANTHROPIC_KEY="${LLM_JUDGE_ANTHROPIC_KEY:-$(secret LLM_JUDGE_AN
 # exported before the CLI starts; settings.json `env` does not reach hooks.
 export XAI_API_KEY="${XAI_API_KEY:-$(secret XAI_API_KEY 2>/dev/null)}"
 
-# AA3 Gate 3b collection: both meta-eval arms from one session population.
-# Same-family arm = the primary judge's model; cross-family arm = grok-4.3
-# (5.1s vs grok-4.6's 18.3s inside a Stop hook). Rate 1 meta-evaluates every
+# AA3 Gate 3b collection: all meta-eval arms from one session population.
+# Same-family arm = the primary judge's model; cross-family arms = grok-4.3
+# (5.1s vs grok-4.6's 18.3s inside a Stop hook) and gpt-5.4-mini (key: Doppler
+# OPEN_AI_KEY, project LLM_MULTI_ARM_JUDGE_KEY). Rate 1 meta-evaluates every
 # judged score (~0.3 explanation_quality records/session vs 0.03 at the 0.1
 # default). Unset both to stop collecting. Read at hook spawn: restart the CLI.
-export META_EVAL_JUDGE_MODELS="${META_EVAL_JUDGE_MODELS:-claude-haiku-4-5-20251001,grok-4.3}"
+export META_EVAL_JUDGE_MODELS="${META_EVAL_JUDGE_MODELS:-claude-haiku-4-5-20251001,grok-4.3,gpt-5.4-mini}"
 export META_EVAL_SAMPLE_RATE="${META_EVAL_SAMPLE_RATE:-1}"
 
 # Keep $path unique. zsh ties it to $PATH and, on a duplicate, keeps the FIRST
