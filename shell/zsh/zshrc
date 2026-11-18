@@ -36,16 +36,10 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 export OTEL_CONFIG_DIR="$HOME/.claude"
 
-# OTLP ingest endpoint for the detached telemetry shipper (hooks/lib/shipper/span-shipper.ts).
-# Set here, unconditionally, because neither of the other two sources reaches the
-# hook processes that actually ship: settings.json `env` does not propagate to them,
-# and ~/.claude/.envrc only applies under directories direnv has loaded. Without it
-# shipTelemetry short-circuits to `outcome: "no-endpoint"` and writes nothing --
-# silently, because metrics are the only signal that depends on it (the MCP server
-# exports its own spans and logs inline, so a dead shipper still looks healthy).
-# Static, non-secret value: auth is separate and already satisfied by OBTOOL_API_KEY,
-# which hasOtlpAuth() accepts on its own, so no credential belongs in this file.
-# Stalled 2026-07-27 -> 08-01 this way; ~159 MB of metrics went unshipped.
+# OTLP ingest endpoint for processes started from this shell. Claude Code hooks
+# never see it: the CLI strips every OTEL_* variable from hook processes, so the
+# detached shipper (hooks/lib/shipper/span-shipper.ts) reads the endpoint from
+# ~/.claude/settings.json instead. ~/.claude/README.md § Hook environment.
 export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_EXPORTER_OTLP_ENDPOINT:-https://ingest.integritystudio.ai}"
 
 zmodload zsh/datetime
@@ -88,16 +82,17 @@ export AGENTMAIL_API_KEY="${AGENTMAIL_API_KEY:-$(secret AGENTMAIL_API_KEY 2>/dev
 
 # LLM-as-Judge key from Doppler. Deliberately NOT exported as ANTHROPIC_API_KEY:
 # that name is also read by Claude Code itself, and setting it would switch the
-# CLI off its subscription login onto API-key billing. The quality-evaluation
-# hook reads this name first (hooks/handlers/stop-quality-evaluation.ts).
+# CLI off its subscription login onto API-key billing. For judge runs started
+# from this shell, which read the env first. Hooks never receive it:
+# CLAUDE_CODE_SUBPROCESS_ENV_SCRUB strips credentials from them, and the detached
+# judge resolves the same name from Doppler (~/.claude/README.md § Hook environment).
 export LLM_JUDGE_ANTHROPIC_KEY="${LLM_JUDGE_ANTHROPIC_KEY:-$(secret LLM_JUDGE_ANTHROPIC_KEY 2>/dev/null)}"
 
 # xAI key from Doppler, for the LLM-as-Judge cross-family arm (AA3 Gate 3b:
 # does a judge sharing the primary model's family still detect bad output?).
 # Unprefixed name is safe here — nothing else in this environment reads it — and
 # the judge accepts LLM_JUDGE_XAI_KEY first if you ever need to scope it.
-# Hooks are spawned per event and inherit only the shell env, so this must be
-# exported before the CLI starts; settings.json `env` does not reach hooks.
+# Like the key above, it reaches shell-started judge runs only, not hooks.
 export XAI_API_KEY="${XAI_API_KEY:-$(secret XAI_API_KEY 2>/dev/null)}"
 
 # AA3 Gate 3b collection: all meta-eval arms from one session population.
