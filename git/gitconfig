@@ -24,3 +24,5 @@
 	lg = log --oneline --graph --decorate --all
 	last = log -1 HEAD
 	unstage = reset HEAD --
+[credential "https://git.heroku.com"]
+	helper = !heroku git:credentials
