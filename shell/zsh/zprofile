@@ -1,6 +1,3 @@
-# Kiro CLI pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.pre.zsh"
-
 # zshrc is sourced automatically by zsh for interactive shells; no manual source needed
 
 # Repair PATH after /etc/zprofile's path_helper, which hoists /etc/paths to the
@@ -13,6 +10,3 @@
 # Non-login shells need no repair at all — _path_prepend forces position, so the
 # zshenv pass already yields the intended order, whatever PATH was inherited.
 _dotfiles_hoist_path
-
-# Kiro CLI post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zprofile.post.zsh"

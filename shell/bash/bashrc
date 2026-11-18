@@ -1,6 +1,3 @@
-# Kiro CLI pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash"
-
 # Bash configuration
 # Locate the repo by resolving this file's own symlink. install.sh symlinks
 # ~/.bashrc -> $DOTFILES_DIR/shell/bash/bashrc; resolving that link lets the
@@ -39,6 +36,3 @@ shopt -s cdspell           # autocorrect typos in path names when using cd
 [[ -f "$DOTFILES_DIR/shell/bash/prompt.bash" ]] && source "$DOTFILES_DIR/shell/bash/prompt.bash"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-# Kiro CLI post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"
