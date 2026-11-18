@@ -38,7 +38,7 @@ _path_prepend() {
 
 # Every PATH entry this repo owns, in ASCENDING priority — _path_prepend puts the
 # last call at the front. Grouped so macOS login shells can re-run the whole set
-# after path_helper; see the call in zsh/zshrc.
+# after path_helper; see the call in zsh/zprofile.
 _dotfiles_hoist_path() {
   _path_prepend "$HOME/.local/bin"
   _path_prepend "$HOME/.pub-cache/bin"
@@ -77,7 +77,7 @@ export OTEL_EXPORTER_OTLP_TIMEOUT="5000"
 # machine — and traces from that exact service name are the ONLY signal that
 # proves the shipper is alive (see ~/.claude/CLAUDE.md), so any other process
 # inheriting it corrupts stall detection silently. The hooks don't need the
-# export: hooks/lib/service-identity.ts falls back to the same name in code.
+# export: hooks/lib/otel/service-identity.ts falls back to the same name in code.
 # Anything else that needs a service name must set it in its own env
 # (e.g. the observability-toolkit MCP server pins its own in ~/.claude.json).
 export OTEL_RESOURCE_ATTRIBUTES="deployment.environment=development,service.version=1.0.0,user.name=${USER}"
@@ -240,7 +240,7 @@ fi
 # be unset here as hygiene, which left every later PATH repair to hand-roll its
 # own mechanism — zsh/zshrc grew three (a pmk filter using zsh array syntax, a
 # `pyenv init` re-eval, a `brew shellenv` block) for one job. Keeping the helper
-# available is what lets zsh/zshrc re-run the same ordering after path_helper
+# available is what lets zsh/zprofile re-run the same ordering after path_helper
 # instead of reimplementing it.
 
 [[ -f "$SHELL_DIR/doppler-secrets.sh" ]] && source "$SHELL_DIR/doppler-secrets.sh"

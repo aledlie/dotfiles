@@ -36,7 +36,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 export OTEL_CONFIG_DIR="$HOME/.claude"
 
-# OTLP ingest endpoint for the detached telemetry shipper (hooks/lib/span-shipper.ts).
+# OTLP ingest endpoint for the detached telemetry shipper (hooks/lib/shipper/span-shipper.ts).
 # Set here, unconditionally, because neither of the other two sources reaches the
 # hook processes that actually ship: settings.json `env` does not propagate to them,
 # and ~/.claude/.envrc only applies under directories direnv has loaded. Without it

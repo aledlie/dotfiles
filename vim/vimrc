@@ -177,7 +177,7 @@ if (&t_Co == 256 || has('gui_running'))
     set guitablabel=%M\ %t
 endif
 
-" silent! — plugin may be absent on a fresh install (before submodule init / :PlugInstall)
+" silent! — plugin may be absent on a fresh install (before :PlugInstall)
 silent! colorscheme solarized
 
 " Use Unix as the standard file type
