@@ -16,11 +16,6 @@
 
 ### Low (P4)
 
-- **Doppler startup fetch hardening** — `shell/doppler-secrets.sh` now runs
-  `load_doppler_cache` on every shell start (network call); offline or on a
-  slow network this delays startup until the doppler CLI fails. Consider an
-  interactive-shell-only guard or a short-TTL disk cache fallback.
-  *Deferred from 2026-07-13 doppler eager-fetch change.*
 - **Lazy-load heavy vim plugins** — nerdtree, tagbar, fzf.vim, and ale load
   eagerly at startup; vim-plug supports `{ 'on': ... }` lazy loading. Review
   finding that was cut by the 15-finding cap in the 2026-07-13 review.
