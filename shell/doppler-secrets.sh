@@ -189,6 +189,9 @@ load_doppler_cache() {
 
   DOPPLER_CACHE_PROJECT="$project"
   DOPPLER_CACHE_CONFIG="$config"
+  # Without this, the next reader's _doppler_ensure_cache reloads the defaults
+  # over an explicit load (a `prd` cache silently became `dev`).
+  _DOPPLER_LOAD_ATTEMPTED=1
 
   _rebuild_doppler_all_secrets
 }
