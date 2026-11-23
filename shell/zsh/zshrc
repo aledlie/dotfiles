@@ -123,3 +123,6 @@ typeset -U path
 # running. direnv guards against double registration, so the second eval only
 # ever cost an extra subprocess per shell start — but it read as though one of
 # the two were load-bearing.
+
+# sentry
+fpath=("/Users/alyshialedlie/.local/share/zsh/site-functions" $fpath); if [[ -o interactive ]]; then if ! (( $+functions[compdef] )); then autoload -Uz compinit; compinit; fi; autoload -Uz _sentry; compdef _sentry sentry; fi
